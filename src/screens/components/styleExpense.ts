@@ -5,9 +5,9 @@ export const stylesExpense = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#dfdcdc",
+        backgroundColor: "#ffffff",
         borderRadius: 3,
-        padding: 8,
+        padding: 7,
         marginVertical: 8,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -31,7 +31,7 @@ export const stylesExpense = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: "bold",
-        color: "#d81212", // Branco para destaque
+        color: "#000000", // Branco para destaque
         marginBottom: 4, // Espaço abaixo do título
     },
     dateTime: {

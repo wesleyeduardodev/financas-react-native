@@ -29,15 +29,24 @@ export const stylesHome = StyleSheet.create({
         marginLeft: 8,
     },
     expenseCard: {
-        backgroundColor: "#FFFFFF", // Cartão com fundo branco
         borderRadius: 8,
-        padding: 5,
+        padding: 6,
         marginBottom: 5,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 2,
+    },
+    expenseCardEntrada: {
+        backgroundColor: "#E6F4EA", // Verde claro para Entrada
+        borderLeftWidth: 4,
+        borderLeftColor: "#28A745", // Verde escuro para destaque
+    },
+    expenseCardSaida: {
+        backgroundColor: "#FCE6E6", // Vermelho claro para Saída
+        borderLeftWidth: 4,
+        borderLeftColor: "#DC3545", // Vermelho escuro para destaque
     },
     expenseValue: {
         fontSize: 16,

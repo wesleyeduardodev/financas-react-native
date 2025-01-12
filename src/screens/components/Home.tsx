@@ -163,7 +163,12 @@ export function Home() {
                 renderItem={({ item }) => (
                     <Swipeable renderRightActions={() => renderRightActions(item.id)}>
                         <TouchableOpacity
-                            style={stylesHome.expenseCard}
+                            style={[
+                                stylesHome.expenseCard,
+                                item.tipoRegistro === 0
+                                    ? stylesHome.expenseCardEntrada // Estilo para Entrada
+                                    : stylesHome.expenseCardSaida, // Estilo para Saída
+                            ]}
                             onPress={() => {
                                 setExpenseToEdit(item);
                                 setIsExpenseModalVisible(true);
@@ -189,6 +194,7 @@ export function Home() {
                     <Text style={stylesHome.listEmptyText}>Nenhum registro financeiro encontrado.</Text>
                 )}
             />
+
 
 
             <View style={stylesHome.summaryContainer}>
