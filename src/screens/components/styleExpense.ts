@@ -1,44 +1,50 @@
 import { StyleSheet } from "react-native";
-import {Expense} from "./Expense";
 
 export const stylesExpense = StyleSheet.create({
     container: {
-        backgroundColor: "#1F1E25",
-        borderRadius: 5,
-        padding: 15,
-        marginBottom: 10,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        backgroundColor: "#f9f9f9",
+        borderRadius: 8,
+        padding: 16,
+        marginVertical: 8,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
     },
     info: {
         flex: 1,
     },
     value: {
-        color: "#FFF",
         fontSize: 18,
         fontWeight: "bold",
+        color: "#333",
     },
-    category: {
-        color: "#A9A9A9",
+    detail: {
         fontSize: 14,
+        color: "#666",
+        marginTop: 4,
     },
     dateTime: {
-        color: "#696969",
         fontSize: 12,
+        color: "#999",
+        marginTop: 8,
     },
     actions: {
         flexDirection: "row",
-        gap: 8,
     },
     editButton: {
-        backgroundColor: "#317bcf",
+        backgroundColor: "#4CAF50",
         padding: 8,
-        borderRadius: 5,
+        borderRadius: 4,
+        marginRight: 8,
     },
     deleteButton: {
-        backgroundColor: "#E23C44",
+        backgroundColor: "#F44336",
         padding: 8,
-        borderRadius: 5,
+        borderRadius: 4,
     },
 });

@@ -25,62 +25,80 @@ export function Home() {
     }, []);
 
     const fetchExpenses = async () => {
+        console.log("Iniciando a requisição para buscar registros financeiros...");
         try {
-            const response = await api.get("/expenses");
+            const response = await api.get("/registros-financeiros");
+            console.log("Resposta recebida com sucesso. Dados retornados:");
+            console.table(response.data);
             setExpenses(response.data);
         } catch (error: any) {
+            console.error("Erro ao carregar registros financeiros:", error.response?.data || error);
             Alert.alert(
-                "Erro ao carregar gastos",
-                error.message || "Não foi possível carregar os gastos."
+                "Erro ao carregar registros financeiros",
+                error.response?.data?.message || error.message || "Não foi possível carregar os registros financeiros."
             );
         }
     };
 
     const fetchCategories = async () => {
+        console.log("Iniciando a requisição para buscar categorias...");
         try {
-            const response = await api.get("/categories");
+            const response = await api.get("/categorias-registro-financeiros");
+            console.log("Resposta recebida com sucesso. Categorias retornadas:");
+            console.table(response.data);
             setCategories(response.data);
         } catch (error: any) {
+            console.error("Erro ao carregar categorias:", error.response?.data || error);
             Alert.alert(
                 "Erro ao carregar categorias",
-                error.message || "Não foi possível carregar as categorias."
+                error.response?.data?.message || error.message || "Não foi possível carregar as categorias."
             );
         }
     };
 
     const handleAddExpense = async (newExpense: ExpenseProps) => {
+        console.log("Iniciando a adição de um novo registro financeiro:", newExpense);
         try {
-            const response = await api.post("/expenses", newExpense);
+            const response = await api.post("/registros-financeiros", newExpense);
+            console.log("Registro financeiro adicionado com sucesso. Resposta:", response.data);
             setExpenses((prev) => [...prev, response.data]);
         } catch (error: any) {
-            Alert.alert("Erro ao adicionar gasto", error.message || "Erro desconhecido.");
+            console.error("Erro ao adicionar registro financeiro:", error.response?.data || error);
+            Alert.alert("Erro ao adicionar registro financeiro", error.message || "Erro desconhecido.");
         }
     };
 
     const handleEditExpense = async (id: number, updatedExpense: Partial<ExpenseProps>) => {
+        console.log(`Iniciando a edição do registro financeiro com ID ${id}. Dados atualizados:`, updatedExpense);
         try {
-            const response = await api.put(`/expenses/${id}`, updatedExpense);
+            const response = await api.put(`/registros-financeiros/${id}`, updatedExpense);
+            console.log("Registro financeiro atualizado com sucesso. Resposta:", response.data);
             setExpenses((prev) =>
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
         } catch (error: any) {
-            Alert.alert("Erro ao editar gasto", error.message || "Erro desconhecido.");
+            console.error("Erro ao editar registro financeiro:", error.response?.data || error);
+            Alert.alert("Erro ao editar registro financeiro", error.message || "Erro desconhecido.");
         }
     };
 
     const handleRemoveExpense = async (id: number) => {
+        console.log(`Iniciando a remoção do registro financeiro com ID ${id}...`);
         try {
-            await api.delete(`/expenses/${id}`);
+            await api.delete(`/registros-financeiros/${id}`);
+            console.log(`Registro financeiro com ID ${id} removido com sucesso.`);
             setExpenses((prev) => prev.filter((expense) => expense.id !== id));
         } catch (error: any) {
-            Alert.alert("Erro ao remover gasto", error.message || "Erro desconhecido.");
+            console.error("Erro ao remover registro financeiro:", error.response?.data || error);
+            Alert.alert("Erro ao remover registro financeiro", error.message || "Erro desconhecido.");
         }
     };
 
     const confirmRemoveExpense = (id: number) => {
+        console.log(`Confirmação de remoção solicitada para o registro financeiro com ID ${id}.`);
         Alert.alert(
             "Confirmar Remoção",
-            "Tem certeza que deseja remover este gasto?",
+            "Tem certeza que deseja remover este registro financeiro?",
             [
                 { text: "Cancelar", style: "cancel" },
                 {
@@ -93,17 +111,17 @@ export function Home() {
     };
 
     const openNewExpenseModal = () => {
+        console.log("Abrindo modal para criação de um novo registro financeiro.");
         setExpenseToEdit(null); // Limpa o estado para garantir que será um novo registro
         setIsExpenseModalVisible(true);
     };
 
     return (
         <View style={stylesHome.container}>
-            {/* Botões lado a lado */}
             <View style={stylesHome.buttonContainer}>
                 <TouchableOpacity
                     style={stylesHome.addButton}
-                    onPress={openNewExpenseModal} // Usa a nova função para abrir o modal
+                    onPress={openNewExpenseModal}
                 >
                     <Icon name="add" size={28} color="#FFF" />
                     <Text style={stylesHome.addButtonText}>Registro Financeiro</Text>
@@ -111,14 +129,16 @@ export function Home() {
 
                 <TouchableOpacity
                     style={stylesHome.addButton}
-                    onPress={() => navigation.navigate("CategoryScreen")}
+                    onPress={() => {
+                        console.log("Navegando para a tela de categorias.");
+                        navigation.navigate("CategoryScreen");
+                    }}
                 >
                     <Icon name="category" size={28} color="#FFF" />
                     <Text style={stylesHome.addButtonText}>Categorias</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Lista de despesas */}
             <FlatList
                 data={expenses}
                 keyExtractor={(item) => item.id.toString()}
@@ -126,18 +146,18 @@ export function Home() {
                     <Expense
                         {...item}
                         onEdit={() => {
+                            console.log("Abrindo modal para edição do registro financeiro:", item);
                             setExpenseToEdit(item);
                             setIsExpenseModalVisible(true);
                         }}
-                        onRemove={() => confirmRemoveExpense(item.id)} // Adicionada a confirmação
+                        onRemove={() => confirmRemoveExpense(item.id)}
                     />
                 )}
                 ListEmptyComponent={() => (
-                    <Text style={stylesHome.listEmptyText}>Nenhum gasto registrado.</Text>
+                    <Text style={stylesHome.listEmptyText}>Nenhum registro financeiro encontrado.</Text>
                 )}
             />
 
-            {/* Modal de edição de gasto */}
             {isExpenseModalVisible && (
                 <ExpenseFormModal
                     visible={isExpenseModalVisible}
@@ -145,13 +165,18 @@ export function Home() {
                     categories={categories}
                     onSave={(expense: Partial<ExpenseProps>) => {
                         if (expenseToEdit) {
+                            console.log("Salvando edição do registro financeiro:", expense);
                             handleEditExpense(expenseToEdit.id, expense);
                         } else {
+                            console.log("Criando novo registro financeiro:", expense);
                             handleAddExpense(expense as ExpenseProps);
                         }
                         setIsExpenseModalVisible(false);
                     }}
-                    onClose={() => setIsExpenseModalVisible(false)}
+                    onClose={() => {
+                        console.log("Fechando modal de registro financeiro.");
+                        setIsExpenseModalVisible(false);
+                    }}
                 />
             )}
         </View>

@@ -19,10 +19,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/financas.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.wesleyeduardo.financas"
     },
     "web": {
       "favicon": "./assets/financas.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "97c7c48e-aaa9-46ab-aa1c-d65270260e83"
+      }
     }
   }
 }
