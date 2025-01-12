@@ -41,7 +41,10 @@ export function Expense({
     return (
         <View style={stylesExpense.container}>
             <View style={stylesExpense.info}>
-                <Text style={stylesExpense.value}>R$ {valor.toFixed(2).replace('.', ',')}</Text>
+                <Text style={stylesExpense.value}>
+                    R$ {valor
+                    .toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </Text>
                 <Text style={stylesExpense.title}>{titulo}</Text>
                 <Text style={stylesExpense.detail}>Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
                 <Text style={stylesExpense.detail}>Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>

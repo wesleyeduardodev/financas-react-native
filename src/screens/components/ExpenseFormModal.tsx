@@ -99,7 +99,7 @@ export function ExpenseFormModal({
                         value={value}
                         onChangeText={(text) => {
                             const formattedText = text.replace(/[^0-9.,]/g, '').replace('.', ',');
-                            const regex = /^(\d{1,6})(,\d{0,2})?$/;
+                            const regex = /^(\d{1,15})(,\d{0,2})?$/;
                             if (regex.test(formattedText) || formattedText === '') {
                                 setValue(formattedText);
                             }
