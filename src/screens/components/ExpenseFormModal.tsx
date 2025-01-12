@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Modal, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Modal, View, Text, TextInput, TouchableOpacity, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { ExpenseProps } from "./Expense";
 import { stylesExpenseFormModal } from "./styleExpenseFormModal";
 import { format } from "date-fns";
@@ -38,9 +39,9 @@ export function ExpenseFormModal({
     const [tipoTransacao, setTipoTransacao] = useState(expense?.tipoTransacao || 0);
     const [value, setValue] = useState<string>(expense?.valor.toString() || "");
     const [category, setCategory] = useState<number>(expense?.idCategoria || categories[0]?.id || 0);
-    const [dateTime, setDateTime] = useState<string>(
-        expense?.dataTransacao || format(new Date(), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })
-    );
+    const [date, setDate] = useState<Date>(expense?.dataTransacao ? new Date(expense.dataTransacao) : new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
     const [idUsuario, setIdUsuario] = useState<number>(expense?.idUsuario || 1); // ID fictício para simulação
 
     useEffect(() => {
@@ -49,19 +50,35 @@ export function ExpenseFormModal({
             setTipoTransacao(expense.tipoTransacao);
             setValue(expense.valor.toString());
             setCategory(expense.idCategoria);
-            setDateTime(expense.dataTransacao);
+            setDate(new Date(expense.dataTransacao));
             setIdUsuario(expense.idUsuario);
         }
     }, [expense]);
 
-    const formatDateTime = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return format(date, "dd/MM/yyyy HH:mm:ss", { locale: ptBR });
-        } catch (error) {
-            console.error("Erro ao formatar data:", error);
-            return dateString;
+    const formatDateTimeForAPI = (date: Date) => format(date, "dd/MM/yyyy HH:mm:ss", { locale: ptBR });
+
+    const handleDateChange = (event: any, selectedDate?: Date) => {
+        if (selectedDate) {
+            const currentDate = selectedDate || date;
+            setDate((prevDate) => {
+                const updatedDate = new Date(prevDate);
+                updatedDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+                return updatedDate;
+            });
         }
+        setShowDatePicker(false);
+    };
+
+    const handleTimeChange = (event: any, selectedTime?: Date) => {
+        if (selectedTime) {
+            const currentTime = selectedTime || date;
+            setDate((prevDate) => {
+                const updatedTime = new Date(prevDate);
+                updatedTime.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
+                return updatedTime;
+            });
+        }
+        setShowTimePicker(false);
     };
 
     return (
@@ -121,13 +138,38 @@ export function ExpenseFormModal({
                     ))}
                 </Picker>
 
-                {/* Data da Transação */}
-                <TextInput
+                {/* Data e Hora */}
+                <TouchableOpacity
                     style={stylesExpenseFormModal.input}
-                    placeholder="Data da Transação (dd/MM/yyyy HH:mm:ss)"
-                    value={dateTime}
-                    onChangeText={(text) => setDateTime(formatDateTime(text))}
-                />
+                    onPress={() => setShowDatePicker(true)}
+                >
+                    <Text>Selecionar Data: {format(date, "dd/MM/yyyy", { locale: ptBR })}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={stylesExpenseFormModal.input}
+                    onPress={() => setShowTimePicker(true)}
+                >
+                    <Text>Selecionar Hora: {format(date, "HH:mm", { locale: ptBR })}</Text>
+                </TouchableOpacity>
+
+                {showDatePicker && (
+                    <DateTimePicker
+                        value={date}
+                        mode="date"
+                        display="default"
+                        onChange={handleDateChange}
+                    />
+                )}
+
+                {showTimePicker && (
+                    <DateTimePicker
+                        value={date}
+                        mode="time"
+                        is24Hour={true}
+                        display="default"
+                        onChange={handleTimeChange}
+                    />
+                )}
 
                 {/* Botão de Salvar */}
                 <TouchableOpacity
@@ -138,7 +180,7 @@ export function ExpenseFormModal({
                             tipoTransacao,
                             valor: parseFloat(value),
                             idCategoria: category,
-                            dataTransacao: formatDateTime(dateTime),
+                            dataTransacao: formatDateTimeForAPI(date), // Formata a data no envio
                             idUsuario,
                         })
                     }
