@@ -97,6 +97,7 @@ export function CategoryScreen() {
                         onRemove={() => confirmRemoveCategory(item.id)} // Adicionada a confirmação
                     />
                 )}
+                showsVerticalScrollIndicator={false}
                 ListEmptyComponent={() => (
                     <Text style={stylesCategoryScreen.listEmptyText}>
                         Nenhuma categoria registrada.

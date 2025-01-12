@@ -153,6 +153,7 @@ export function Home() {
                         onRemove={() => confirmRemoveExpense(item.id)}
                     />
                 )}
+                showsVerticalScrollIndicator={false}
                 ListEmptyComponent={() => (
                     <Text style={stylesHome.listEmptyText}>Nenhum registro financeiro encontrado.</Text>
                 )}
