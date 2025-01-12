@@ -16,14 +16,33 @@ export const stylesCategoryFormModal = StyleSheet.create({
         marginBottom: 20,
         textAlign: "center",
     },
+    fieldContainer: {
+        marginBottom: 20,
+        width: "100%",
+    },
+    label: {
+        color: "#FFF",
+        fontSize: 14,
+        fontWeight: "bold",
+        marginBottom: 5,
+    },
     input: {
         backgroundColor: "#2D2D2D",
         color: "#FFF",
         borderRadius: 5,
         padding: 15,
-        marginBottom: 20,
-        width: "100%",
         fontSize: 16,
+        width: "100%",
+    },
+    textarea: {
+        height: 120,
+        textAlignVertical: "top", // Alinha o texto no topo
+    },
+    charCounter: {
+        color: "#A9A9A9",
+        fontSize: 12,
+        textAlign: "right",
+        marginTop: 5,
     },
     saveButton: {
         backgroundColor: "#317bcf",

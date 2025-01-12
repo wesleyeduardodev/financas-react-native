@@ -39,21 +39,32 @@ export function CategoryFormModal({
                     {category ? "Editar Categoria" : "Nova Categoria"}
                 </Text>
 
-                <TextInput
-                    style={stylesCategoryFormModal.input}
-                    placeholder="Nome da Categoria"
-                    placeholderTextColor="#A9A9A9"
-                    value={name}
-                    onChangeText={setName}
-                />
+                <View style={stylesCategoryFormModal.fieldContainer}>
+                    <Text style={stylesCategoryFormModal.label}>Nome</Text>
+                    <TextInput
+                        style={stylesCategoryFormModal.input}
+                        placeholderTextColor="#A9A9A9"
+                        value={name}
+                        onChangeText={setName}
+                    />
+                </View>
 
-                <TextInput
-                    style={stylesCategoryFormModal.input}
-                    placeholder="Descrição"
-                    placeholderTextColor="#A9A9A9"
-                    value={descricao}
-                    onChangeText={setDescricao}
-                />
+                <View style={stylesCategoryFormModal.fieldContainer}>
+                    <Text style={stylesCategoryFormModal.label}>Descrição</Text>
+                    <TextInput
+                        style={[stylesCategoryFormModal.input, stylesCategoryFormModal.textarea]}
+                        placeholder="(até 250 caracteres)"
+                        placeholderTextColor="#A9A9A9"
+                        value={descricao}
+                        multiline={true}
+                        maxLength={250}
+                        onChangeText={setDescricao}
+                    />
+                    <Text style={stylesCategoryFormModal.charCounter}>
+                        {descricao.length}/250
+                    </Text>
+                </View>
+
 
                 <TouchableOpacity
                     style={stylesCategoryFormModal.saveButton}
