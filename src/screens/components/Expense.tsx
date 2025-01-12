@@ -5,7 +5,6 @@ import { stylesExpense } from "./styleExpense";
 export type ExpenseProps = {
     id: number;
     titulo: string; // Novo campo
-    descricao: string; // Novo campo
     tipoRegistro: number; // Tipo de Registro (0 = Entrada, 1 = Saída)
     tipoTransacao: number; // Tipo de Transação (0 = Pix, 1 = Crédito, etc.)
     idCategoria: number;
@@ -30,12 +29,9 @@ const tipoTransacaoOptions: Record<number, string> = {
 };
 
 export function Expense({
-                            id,
                             titulo,
-                            descricao,
                             tipoRegistro,
                             tipoTransacao,
-                            idCategoria,
                             nomeCategoria,
                             valor,
                             dataTransacao,

@@ -38,7 +38,6 @@ export function ExpenseFormModal({
     const [value, setValue] = useState<string>(expense?.valor.toString() || "");
     const [category, setCategory] = useState<number>(expense?.idCategoria || categories[0]?.id || 0);
     const [titulo, setTitulo] = useState<string>(expense?.titulo || "");
-    const [descricao, setDescricao] = useState<string>(expense?.descricao || "");
     const [dateTimeISO, setDateTimeISO] = useState<string>(
         expense?.dataTransacao || new Date().toISOString()
     );
@@ -79,13 +78,6 @@ export function ExpenseFormModal({
                     placeholder="Título"
                     value={titulo}
                     onChangeText={setTitulo}
-                />
-
-                <TextInput
-                    style={stylesExpenseFormModal.input}
-                    placeholder="Descrição"
-                    value={descricao}
-                    onChangeText={setDescricao}
                 />
 
                 <Picker
@@ -167,7 +159,6 @@ export function ExpenseFormModal({
                     onPress={() =>
                         onSave({
                             titulo,
-                            descricao,
                             tipoRegistro,
                             tipoTransacao,
                             valor: parseFloat(value),
