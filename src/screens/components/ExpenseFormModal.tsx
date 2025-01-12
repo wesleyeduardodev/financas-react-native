@@ -80,6 +80,14 @@ export function ExpenseFormModal({
                     onChangeText={setTitulo}
                 />
 
+                <TextInput
+                    style={stylesExpenseFormModal.input}
+                    placeholder="Valor"
+                    keyboardType="numeric"
+                    value={value}
+                    onChangeText={setValue}
+                />
+
                 <Picker
                     selectedValue={tipoRegistro}
                     style={stylesExpenseFormModal.picker}
@@ -100,13 +108,7 @@ export function ExpenseFormModal({
                     ))}
                 </Picker>
 
-                <TextInput
-                    style={stylesExpenseFormModal.input}
-                    placeholder="Valor"
-                    keyboardType="numeric"
-                    value={value}
-                    onChangeText={setValue}
-                />
+
 
                 <Picker
                     selectedValue={category}
@@ -118,14 +120,26 @@ export function ExpenseFormModal({
                     ))}
                 </Picker>
 
-                <TouchableOpacity
-                    style={stylesExpenseFormModal.datePickerButton}
-                    onPress={() => setShowDatePicker(true)}
-                >
-                    <Text style={stylesExpenseFormModal.datePickerText}>
-                        Selecionar Data: {new Date(dateTimeISO).toLocaleDateString()}
-                    </Text>
-                </TouchableOpacity>
+                {/* Seleção de Data e Hora Lado a Lado */}
+                <View style={stylesExpenseFormModal.dateTimeContainer}>
+                    <TouchableOpacity
+                        style={stylesExpenseFormModal.datePickerButton}
+                        onPress={() => setShowDatePicker(true)}
+                    >
+                        <Text style={stylesExpenseFormModal.datePickerText}>
+                            Data: {new Date(dateTimeISO).toLocaleDateString()}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={stylesExpenseFormModal.datePickerButton}
+                        onPress={() => setShowTimePicker(true)}
+                    >
+                        <Text style={stylesExpenseFormModal.datePickerText}>
+                            Hora: {new Date(dateTimeISO).toLocaleTimeString()}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
                 {showDatePicker && (
                     <DateTimePicker
@@ -135,15 +149,6 @@ export function ExpenseFormModal({
                         onChange={handleDateChange}
                     />
                 )}
-
-                <TouchableOpacity
-                    style={stylesExpenseFormModal.datePickerButton}
-                    onPress={() => setShowTimePicker(true)}
-                >
-                    <Text style={stylesExpenseFormModal.datePickerText}>
-                        Selecionar Hora: {new Date(dateTimeISO).toLocaleTimeString()}
-                    </Text>
-                </TouchableOpacity>
 
                 {showTimePicker && (
                     <DateTimePicker

@@ -146,7 +146,6 @@ export function Home() {
                     <Expense
                         id={item.id}
                         titulo={item.titulo}
-                        descricao={item.descricao}
                         tipoRegistro={item.tipoRegistro}
                         tipoTransacao={item.tipoTransacao}
                         idCategoria={item.idCategoria}

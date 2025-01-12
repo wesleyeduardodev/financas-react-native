@@ -16,24 +16,30 @@ export const stylesExpenseFormModal = StyleSheet.create({
         textAlign: "center",
     },
     picker: {
-        backgroundColor: "#2D2D2D",
+        backgroundColor: "#4c4b4b",
+        color: "#FFF",
+        borderRadius: 5,
+        padding: 5,
+        marginBottom: 10,
+    },
+    input: {
+        backgroundColor: "#4c4b4b",
         color: "#FFF",
         borderRadius: 5,
         padding: 10,
         marginBottom: 15,
     },
-    input: {
-        backgroundColor: "#2D2D2D",
-        color: "#FFF",
-        borderRadius: 5,
-        padding: 10,
+    dateTimeContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
         marginBottom: 15,
     },
     datePickerButton: {
+        flex: 1,
         backgroundColor: "#444",
         padding: 12,
         borderRadius: 5,
-        marginBottom: 15,
+        marginHorizontal: 5,
     },
     datePickerText: {
         color: "#FFF",
