@@ -9,8 +9,8 @@ export type ExpenseProps = {
     tipoTransacao: number; // Tipo de Transação (0 = Pix, 1 = Crédito, etc.)
     idCategoria: number;
     nomeCategoria: string;
-    valor: number;
-    dataTransacao: string; // Formato: dd/MM/yyyy HH:mm:ss
+    valor: number; // Valor decimal
+    dataTransacao: string; // Formato ISO 8601 (yyyy-MM-ddTHH:mm:ssZ)
     onEdit: () => void;
     onRemove: () => void;
 };
@@ -41,12 +41,12 @@ export function Expense({
     return (
         <View style={stylesExpense.container}>
             <View style={stylesExpense.info}>
-                <Text style={stylesExpense.value}>R$ {valor.toFixed(2)}</Text>
+                <Text style={stylesExpense.value}>R$ {valor.toFixed(2).replace('.', ',')}</Text>
                 <Text style={stylesExpense.title}>{titulo}</Text>
                 <Text style={stylesExpense.detail}>Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
                 <Text style={stylesExpense.detail}>Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>
                 <Text style={stylesExpense.detail}>Categoria: {nomeCategoria}</Text>
-                <Text style={stylesExpense.dateTime}>{dataTransacao}</Text>
+                <Text style={stylesExpense.dateTime}>{new Date(dataTransacao).toLocaleString()}</Text>
             </View>
             <View style={stylesExpense.actions}>
                 <TouchableOpacity style={stylesExpense.editButton} onPress={onEdit}>

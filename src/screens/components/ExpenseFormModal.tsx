@@ -35,7 +35,9 @@ export function ExpenseFormModal({
                                  }: ExpenseFormModalProps) {
     const [tipoRegistro, setTipoRegistro] = useState(expense?.tipoRegistro || 0);
     const [tipoTransacao, setTipoTransacao] = useState(expense?.tipoTransacao || 0);
-    const [value, setValue] = useState<string>(expense?.valor.toString() || "");
+    const [value, setValue] = useState<string>(
+        expense?.valor ? expense.valor.toFixed(2).replace('.', ',') : ''
+    );
     const [category, setCategory] = useState<number>(expense?.idCategoria || categories[0]?.id || 0);
     const [titulo, setTitulo] = useState<string>(expense?.titulo || "");
     const [dateTimeISO, setDateTimeISO] = useState<string>(
@@ -45,7 +47,14 @@ export function ExpenseFormModal({
     const [showTimePicker, setShowTimePicker] = useState(false);
 
     useEffect(() => {
-        setDateTimeISO(expense?.dataTransacao || new Date().toISOString());
+        if (expense) {
+            setTipoRegistro(expense.tipoRegistro);
+            setTipoTransacao(expense.tipoTransacao);
+            setValue(expense.valor.toFixed(2).replace('.', ','));
+            setCategory(expense.idCategoria);
+            setTitulo(expense.titulo);
+            setDateTimeISO(expense.dataTransacao);
+        }
     }, [expense]);
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -85,7 +94,13 @@ export function ExpenseFormModal({
                     placeholder="Valor"
                     keyboardType="numeric"
                     value={value}
-                    onChangeText={setValue}
+                    onChangeText={(text) => {
+                        const formattedText = text.replace(/[^0-9.,]/g, '').replace('.', ',');
+                        const regex = /^(\d{1,6})(,\d{0,2})?$/;
+                        if (regex.test(formattedText) || formattedText === '') {
+                            setValue(formattedText);
+                        }
+                    }}
                 />
 
                 <Picker
@@ -108,8 +123,6 @@ export function ExpenseFormModal({
                     ))}
                 </Picker>
 
-
-
                 <Picker
                     selectedValue={category}
                     style={stylesExpenseFormModal.picker}
@@ -120,7 +133,6 @@ export function ExpenseFormModal({
                     ))}
                 </Picker>
 
-                {/* Seleção de Data e Hora Lado a Lado */}
                 <View style={stylesExpenseFormModal.dateTimeContainer}>
                     <TouchableOpacity
                         style={stylesExpenseFormModal.datePickerButton}
@@ -166,9 +178,9 @@ export function ExpenseFormModal({
                             titulo,
                             tipoRegistro,
                             tipoTransacao,
-                            valor: parseFloat(value),
+                            valor: parseFloat(value.replace(',', '.')), // Converter para número decimal
                             idCategoria: category,
-                            dataTransacao: dateTimeISO, // Enviado no formato ISO 8601
+                            dataTransacao: dateTimeISO,
                         })
                     }
                 >
