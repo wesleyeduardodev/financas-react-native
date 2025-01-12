@@ -92,16 +92,21 @@ export function Home() {
         );
     };
 
+    const openNewExpenseModal = () => {
+        setExpenseToEdit(null); // Limpa o estado para garantir que será um novo registro
+        setIsExpenseModalVisible(true);
+    };
+
     return (
         <View style={stylesHome.container}>
             {/* Botões lado a lado */}
             <View style={stylesHome.buttonContainer}>
                 <TouchableOpacity
                     style={stylesHome.addButton}
-                    onPress={() => setIsExpenseModalVisible(true)}
+                    onPress={openNewExpenseModal} // Usa a nova função para abrir o modal
                 >
                     <Icon name="add" size={28} color="#FFF" />
-                    <Text style={stylesHome.addButtonText}>Adicionar Gasto</Text>
+                    <Text style={stylesHome.addButtonText}>Registro Financeiro</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
