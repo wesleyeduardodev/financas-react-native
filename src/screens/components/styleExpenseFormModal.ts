@@ -15,19 +15,28 @@ export const stylesExpenseFormModal = StyleSheet.create({
         marginBottom: 20,
         textAlign: "center",
     },
-    picker: {
-        backgroundColor: "#4c4b4b",
+    fieldContainer: {
+        marginBottom: 15,
+    },
+    label: {
         color: "#FFF",
-        borderRadius: 5,
-        padding: 5,
-        marginBottom: 10,
+        fontSize: 14,
+        fontWeight: "bold",
+        marginBottom: 5,
     },
     input: {
         backgroundColor: "#4c4b4b",
         color: "#FFF",
         borderRadius: 5,
         padding: 10,
-        marginBottom: 15,
+        fontSize: 16,
+    },
+    picker: {
+        backgroundColor: "#4c4b4b",
+        color: "#FFF",
+        borderRadius: 5,
+        padding: 5,
+        marginBottom: 10,
     },
     dateTimeContainer: {
         flexDirection: "row",

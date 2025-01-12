@@ -78,30 +78,35 @@ export function ExpenseFormModal({
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
             <View style={stylesExpenseFormModal.container}>
-                <Text style={stylesExpenseFormModal.title}>
-                    {expense ? "Editar Registro" : "Novo Registro"}
-                </Text>
 
-                <TextInput
-                    style={stylesExpenseFormModal.input}
-                    placeholder="Título"
-                    value={titulo}
-                    onChangeText={setTitulo}
-                />
 
-                <TextInput
-                    style={stylesExpenseFormModal.input}
-                    placeholder="Valor"
-                    keyboardType="numeric"
-                    value={value}
-                    onChangeText={(text) => {
-                        const formattedText = text.replace(/[^0-9.,]/g, '').replace('.', ',');
-                        const regex = /^(\d{1,6})(,\d{0,2})?$/;
-                        if (regex.test(formattedText) || formattedText === '') {
-                            setValue(formattedText);
-                        }
-                    }}
-                />
+                <View style={stylesExpenseFormModal.fieldContainer}>
+                    <Text style={stylesExpenseFormModal.label}>Título</Text>
+                    <TextInput
+                        style={stylesExpenseFormModal.input}
+                       // placeholder="Digite o título"
+                        value={titulo}
+                        onChangeText={setTitulo}
+                    />
+                </View>
+
+                <View style={stylesExpenseFormModal.fieldContainer}>
+                    <Text style={stylesExpenseFormModal.label}>Valor</Text>
+                    <TextInput
+                        style={stylesExpenseFormModal.input}
+                       // placeholder="Digite o valor"
+                        keyboardType="numeric"
+                        value={value}
+                        onChangeText={(text) => {
+                            const formattedText = text.replace(/[^0-9.,]/g, '').replace('.', ',');
+                            const regex = /^(\d{1,6})(,\d{0,2})?$/;
+                            if (regex.test(formattedText) || formattedText === '') {
+                                setValue(formattedText);
+                            }
+                        }}
+                    />
+                </View>
+
 
                 <Picker
                     selectedValue={tipoRegistro}
