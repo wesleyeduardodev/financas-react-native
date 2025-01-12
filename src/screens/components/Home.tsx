@@ -149,6 +149,7 @@ export function Home() {
                         tipoRegistro={item.tipoRegistro}
                         tipoTransacao={item.tipoTransacao}
                         idCategoria={item.idCategoria}
+                        nomeCategoria={item.nomeCategoria}
                         dataTransacao={item.dataTransacao}
                         onEdit={() => {
                             console.log("Abrindo modal para edição do registro financeiro:", item);

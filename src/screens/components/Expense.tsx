@@ -7,6 +7,7 @@ export type ExpenseProps = {
     tipoRegistro: number; // Tipo de Registro (0 = Entrada, 1 = Saída)
     tipoTransacao: number; // Tipo de Transação (0 = Pix, 1 = Crédito, etc.)
     idCategoria: number;
+    nomeCategoria: string;
     valor: number;
     dataTransacao: string; // Formato: dd/MM/yyyy HH:mm:ss
     titulo: string; // Novo campo
@@ -34,6 +35,7 @@ export function Expense({
                             tipoRegistro,
                             tipoTransacao,
                             idCategoria,
+                            nomeCategoria,
                             valor,
                             dataTransacao,
                             titulo,
@@ -49,7 +51,7 @@ export function Expense({
                 <Text style={stylesExpense.value}>R$ {valor.toFixed(2)}</Text>
                 <Text style={stylesExpense.detail}>Tipo Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
                 <Text style={stylesExpense.detail}>Tipo Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>
-                <Text style={stylesExpense.detail}>Categoria ID: {idCategoria}</Text>
+                <Text style={stylesExpense.detail}>Categoria: {nomeCategoria}</Text>
                 <Text style={stylesExpense.dateTime}>{dataTransacao}</Text>
             </View>
             <View style={stylesExpense.actions}>
