@@ -56,13 +56,27 @@ export function CategoryScreen() {
         }
     };
 
+    const confirmRemoveCategory = (id: number) => {
+        Alert.alert(
+            "Confirmar Remoção",
+            "Tem certeza que deseja remover esta categoria?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                {
+                    text: "Remover",
+                    style: "destructive",
+                    onPress: () => handleRemoveCategory(id),
+                },
+            ]
+        );
+    };
+
     return (
         <View style={stylesCategoryScreen.container}>
-            {/* Botão para adicionar nova categoria */}
             <TouchableOpacity
                 style={stylesCategoryScreen.addButton}
                 onPress={() => {
-                    setCategoryToEdit(null); // Garante que é uma nova categoria
+                    setCategoryToEdit(null);
                     setIsCategoryModalVisible(true);
                 }}
             >
@@ -70,7 +84,6 @@ export function CategoryScreen() {
                 <Text style={stylesCategoryScreen.addButtonText}>Adicionar Categoria</Text>
             </TouchableOpacity>
 
-            {/* Lista de categorias */}
             <FlatList
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
@@ -81,7 +94,7 @@ export function CategoryScreen() {
                             setCategoryToEdit(item);
                             setIsCategoryModalVisible(true);
                         }}
-                        onRemove={() => handleRemoveCategory(item.id)}
+                        onRemove={() => confirmRemoveCategory(item.id)} // Adicionada a confirmação
                     />
                 )}
                 ListEmptyComponent={() => (
@@ -91,7 +104,6 @@ export function CategoryScreen() {
                 )}
             />
 
-            {/* Modal para adicionar ou editar categoria */}
             {isCategoryModalVisible && (
                 <CategoryFormModal
                     visible={isCategoryModalVisible}

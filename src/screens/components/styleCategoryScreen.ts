@@ -3,17 +3,18 @@ import { StyleSheet } from "react-native";
 export const stylesCategoryScreen = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F5F5F5",
+        backgroundColor: "#F0F4F8",
         padding: 16,
     },
     addButton: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#6200EE",
+        backgroundColor: "#4CAF50",
         padding: 12,
         borderRadius: 8,
         marginBottom: 16,
+        elevation: 2,
     },
     addButtonText: {
         color: "#FFF",

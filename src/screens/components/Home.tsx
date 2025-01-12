@@ -6,23 +6,22 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { stylesHome } from "./styleHome";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../services/types"; // Ajuste conforme o caminho dos tipos
+import { RootStackParamList } from "../services/types";
 import { api } from "../services/api";
 import { CategoryProps } from "./Category";
 
-// Definindo o tipo de navegação
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 export function Home() {
     const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
-    const [categories, setCategories] = useState<CategoryProps[]>([]); // Estado para as categorias
+    const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
     const [expenseToEdit, setExpenseToEdit] = useState<ExpenseProps | null>(null);
     const navigation = useNavigation<HomeScreenNavigationProp>();
 
     useEffect(() => {
         fetchExpenses();
-        fetchCategories(); // Certifique-se de carregar as categorias
+        fetchCategories();
     }, []);
 
     const fetchExpenses = async () => {
@@ -40,7 +39,7 @@ export function Home() {
     const fetchCategories = async () => {
         try {
             const response = await api.get("/categories");
-            setCategories(response.data); // Armazena as categorias no estado
+            setCategories(response.data);
         } catch (error: any) {
             Alert.alert(
                 "Erro ao carregar categorias",
@@ -78,6 +77,21 @@ export function Home() {
         }
     };
 
+    const confirmRemoveExpense = (id: number) => {
+        Alert.alert(
+            "Confirmar Remoção",
+            "Tem certeza que deseja remover este gasto?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                {
+                    text: "Remover",
+                    style: "destructive",
+                    onPress: () => handleRemoveExpense(id),
+                },
+            ]
+        );
+    };
+
     return (
         <View style={stylesHome.container}>
             {/* Botões lado a lado */}
@@ -87,7 +101,7 @@ export function Home() {
                     onPress={() => setIsExpenseModalVisible(true)}
                 >
                     <Icon name="add" size={28} color="#FFF" />
-                    <Text style={stylesHome.addButtonText}>Item</Text>
+                    <Text style={stylesHome.addButtonText}>Adicionar Gasto</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -110,7 +124,7 @@ export function Home() {
                             setExpenseToEdit(item);
                             setIsExpenseModalVisible(true);
                         }}
-                        onRemove={() => handleRemoveExpense(item.id)}
+                        onRemove={() => confirmRemoveExpense(item.id)} // Adicionada a confirmação
                     />
                 )}
                 ListEmptyComponent={() => (
@@ -123,7 +137,7 @@ export function Home() {
                 <ExpenseFormModal
                     visible={isExpenseModalVisible}
                     expense={expenseToEdit}
-                    categories={categories} // Passa as categorias para o modal
+                    categories={categories}
                     onSave={(expense: Partial<ExpenseProps>) => {
                         if (expenseToEdit) {
                             handleEditExpense(expenseToEdit.id, expense);
