@@ -4,15 +4,14 @@ import { stylesExpense } from "./styleExpense";
 
 export type ExpenseProps = {
     id: number;
+    titulo: string; // Novo campo
+    descricao: string; // Novo campo
     tipoRegistro: number; // Tipo de Registro (0 = Entrada, 1 = Saída)
     tipoTransacao: number; // Tipo de Transação (0 = Pix, 1 = Crédito, etc.)
     idCategoria: number;
     nomeCategoria: string;
     valor: number;
     dataTransacao: string; // Formato: dd/MM/yyyy HH:mm:ss
-    titulo: string; // Novo campo
-    descricao: string; // Novo campo
-    idUsuario: number;
     onEdit: () => void;
     onRemove: () => void;
 };
@@ -32,25 +31,24 @@ const tipoTransacaoOptions: Record<number, string> = {
 
 export function Expense({
                             id,
+                            titulo,
+                            descricao,
                             tipoRegistro,
                             tipoTransacao,
                             idCategoria,
                             nomeCategoria,
                             valor,
                             dataTransacao,
-                            titulo,
-                            descricao,
                             onEdit,
                             onRemove,
                         }: ExpenseProps) {
     return (
         <View style={stylesExpense.container}>
             <View style={stylesExpense.info}>
-                <Text style={stylesExpense.title}>{titulo}</Text>
-                <Text style={stylesExpense.detail}>{descricao}</Text>
                 <Text style={stylesExpense.value}>R$ {valor.toFixed(2)}</Text>
-                <Text style={stylesExpense.detail}>Tipo Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
-                <Text style={stylesExpense.detail}>Tipo Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>
+                <Text style={stylesExpense.title}>{titulo}</Text>
+                <Text style={stylesExpense.detail}>Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
+                <Text style={stylesExpense.detail}>Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>
                 <Text style={stylesExpense.detail}>Categoria: {nomeCategoria}</Text>
                 <Text style={stylesExpense.dateTime}>{dataTransacao}</Text>
             </View>

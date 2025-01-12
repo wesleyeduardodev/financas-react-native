@@ -144,12 +144,14 @@ export function Home() {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <Expense
-                        valor={item.valor}
+                        id={item.id}
                         titulo={item.titulo}
+                        descricao={item.descricao}
                         tipoRegistro={item.tipoRegistro}
                         tipoTransacao={item.tipoTransacao}
                         idCategoria={item.idCategoria}
                         nomeCategoria={item.nomeCategoria}
+                        valor={item.valor}
                         dataTransacao={item.dataTransacao}
                         onEdit={() => {
                             console.log("Abrindo modal para edição do registro financeiro:", item);

@@ -31,7 +31,7 @@ export const stylesExpense = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: "bold",
-        color: "#FFF", // Branco para destaque
+        color: "#d81212", // Branco para destaque
         marginBottom: 4, // Espaço abaixo do título
     },
     dateTime: {
