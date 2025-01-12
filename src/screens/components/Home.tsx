@@ -158,7 +158,7 @@ export function Home() {
             </View>
 
             <FlatList
-                data={expenses}
+                data={expenses.sort((a, b) => new Date(b.dataTransacao).getTime() - new Date(a.dataTransacao).getTime())}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <Swipeable renderRightActions={() => renderRightActions(item.id)}>
@@ -189,6 +189,7 @@ export function Home() {
                     <Text style={stylesHome.listEmptyText}>Nenhum registro financeiro encontrado.</Text>
                 )}
             />
+
 
             <View style={stylesHome.summaryContainer}>
                 <Text style={stylesHome.summaryText}>
