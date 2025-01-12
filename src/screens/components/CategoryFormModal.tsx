@@ -40,6 +40,7 @@ export function CategoryFormModal({
                 <TextInput
                     style={stylesCategoryFormModal.input}
                     placeholder="Nome da Categoria"
+                    placeholderTextColor="#A9A9A9"
                     value={name}
                     onChangeText={setName}
                 />

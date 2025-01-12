@@ -17,7 +17,7 @@ export function CategoryScreen() {
 
     const fetchCategories = async () => {
         try {
-            const response = await api.get("/categories");
+            const response = await api.get("/categorias-registro-financeiros");
             setCategories(response.data);
         } catch (error: any) {
             Alert.alert(
@@ -29,7 +29,7 @@ export function CategoryScreen() {
 
     const handleAddCategory = async (newCategory: CategoryProps) => {
         try {
-            const response = await api.post("/categories", newCategory);
+            const response = await api.post("/categorias-registro-financeiros", newCategory);
             setCategories((prev) => [...prev, response.data]);
         } catch (error: any) {
             Alert.alert("Erro ao adicionar categoria", error.message || "Erro desconhecido.");
@@ -38,7 +38,7 @@ export function CategoryScreen() {
 
     const handleEditCategory = async (id: number, updatedCategory: Partial<CategoryProps>) => {
         try {
-            const response = await api.put(`/categories/${id}`, updatedCategory);
+            const response = await api.put(`/categorias-registro-financeiros/${id}`, updatedCategory);
             setCategories((prev) =>
                 prev.map((category) => (category.id === id ? response.data : category))
             );
@@ -49,7 +49,7 @@ export function CategoryScreen() {
 
     const handleRemoveCategory = async (id: number) => {
         try {
-            await api.delete(`/categories/${id}`);
+            await api.delete(`/categorias-registro-financeiros/${id}`);
             setCategories((prev) => prev.filter((category) => category.id !== id));
         } catch (error: any) {
             Alert.alert("Erro ao remover categoria", error.message || "Erro desconhecido.");
