@@ -1,31 +1,34 @@
 import { StyleSheet } from "react-native";
-import {Home} from "./Home";
 
 export const stylesHome = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#131016",
-        padding: 20,
+        backgroundColor: "#F5F5F5",
+        padding: 16,
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 16,
     },
     addButton: {
-        backgroundColor: "#317bcf",
+        flex: 1,
         flexDirection: "row",
-        justifyContent: "center",
         alignItems: "center",
-        borderRadius: 8,
+        justifyContent: "center",
+        backgroundColor: "#6200EE",
         padding: 12,
-        marginBottom: 16,
+        borderRadius: 8,
+        marginHorizontal: 4,
     },
     addButtonText: {
         color: "#FFF",
-        fontSize: 18,
         fontWeight: "bold",
         marginLeft: 8,
     },
     listEmptyText: {
-        color: "#FFF",
+        color: "#888",
         textAlign: "center",
-        fontSize: 16,
-        marginTop: 32,
+        marginTop: 16,
     },
 });

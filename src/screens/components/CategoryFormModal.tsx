@@ -6,7 +6,7 @@ import {
     TextInput,
     TouchableOpacity,
 } from "react-native";
-import { CategoryProps } from "../Category/Category";
+import { CategoryProps } from "./Category";
 import { stylesCategoryFormModal } from "./styleCategoryFormModal";
 
 type CategoryFormModalProps = {

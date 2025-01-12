@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Modal, View, Text, TextInput, TouchableOpacity } from "react-native";
-import { ExpenseProps } from "../Expense/Expense";
+import { ExpenseProps } from "./Expense";
 import { Picker } from "@react-native-picker/picker";
 import { stylesExpenseFormModal } from "./styleExpenseFormModal";
 

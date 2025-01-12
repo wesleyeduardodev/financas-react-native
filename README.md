@@ -70,10 +70,18 @@ Certifique-se de instalar as dependências necessárias para o projeto. Abaixo e
    npm install --save-dev @types/react-native-vector-icons
    ```
 
-3. **Menus**
+4. **Menus**
    ```bash
    npm install @react-native-picker/picker
    ```
+
+5**Navegação**
+   ```bash
+   npm install @react-navigation/native
+   ```
+
+
+npm install @react-navigation/native @react-navigation/stack
 
 ---
 
