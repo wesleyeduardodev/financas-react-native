@@ -5,14 +5,16 @@ import { stylesCategory } from "./styleCategory";
 export type CategoryProps = {
     id: number;
     nome: string;
+    descricao: string; // Novo campo
     onEdit: () => void;
     onRemove: () => void;
 };
 
-export function Category({ id, nome, onEdit, onRemove }: CategoryProps) {
+export function Category({ id, nome, descricao, onEdit, onRemove }: CategoryProps) {
     return (
         <View style={stylesCategory.container}>
             <Text style={stylesCategory.name}>{nome}</Text>
+            <Text style={stylesCategory.description}>{descricao}</Text>
             <View style={stylesCategory.actions}>
                 <TouchableOpacity style={stylesCategory.editButton} onPress={onEdit}>
                     <Icon name="edit" size={20} color="#FFF" />

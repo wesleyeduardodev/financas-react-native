@@ -23,10 +23,12 @@ export function CategoryFormModal({
                                       onClose,
                                   }: CategoryFormModalProps) {
     const [name, setName] = useState(category?.nome || "");
+    const [descricao, setDescricao] = useState(category?.descricao || "");
 
     useEffect(() => {
         if (category) {
             setName(category.nome);
+            setDescricao(category.descricao);
         }
     }, [category]);
 
@@ -45,6 +47,14 @@ export function CategoryFormModal({
                     onChangeText={setName}
                 />
 
+                <TextInput
+                    style={stylesCategoryFormModal.input}
+                    placeholder="Descrição"
+                    placeholderTextColor="#A9A9A9"
+                    value={descricao}
+                    onChangeText={setDescricao}
+                />
+
                 <TouchableOpacity
                     style={stylesCategoryFormModal.saveButton}
                     onPress={() => {
@@ -52,7 +62,7 @@ export function CategoryFormModal({
                             alert("O nome da categoria é obrigatório.");
                             return;
                         }
-                        onSave({ nome: name });
+                        onSave({ nome: name, descricao });
                     }}
                 >
                     <Text style={stylesCategoryFormModal.buttonText}>Salvar</Text>
