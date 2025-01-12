@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const stylesHome = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F7F9FC", // Fundo claro e neutro
+        backgroundColor: "#F7F9FC", // Fundo claro
         padding: 16,
     },
     buttonContainer: {
@@ -17,19 +17,19 @@ export const stylesHome = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#28A745", // Verde suave
+        backgroundColor: "#28A745", // Verde para adicionar
         padding: 12,
         borderRadius: 8,
         marginHorizontal: 4,
         elevation: 2,
     },
     addButtonText: {
-        color: "#FFF", // Texto branco nos botões
+        color: "#FFF",
         fontWeight: "bold",
         marginLeft: 8,
     },
     expenseCard: {
-        backgroundColor: "#FFFFFF", // Fundo branco para os cartões
+        backgroundColor: "#FFFFFF", // Cartão com fundo branco
         borderRadius: 8,
         padding: 16,
         marginBottom: 12,
@@ -37,60 +37,58 @@ export const stylesHome = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 3,
-        elevation: 2, // Sombra leve para elevação
+        elevation: 2,
     },
     expenseValue: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#333333", // Texto escuro para destaque
+        color: "#333333", // Valor destacado em preto suave
     },
     expenseDate: {
         fontSize: 12,
-        color: "#666666", // Texto cinza claro para informações secundárias
+        color: "#666666", // Cinza para datas
         marginTop: 4,
     },
-    actionButton: {
+    actionContainer: {
         flexDirection: "row",
+        alignItems: "center",
         justifyContent: "flex-end",
-        marginTop: 8,
+        backgroundColor: "#F8F9FA", // Fundo neutro para os botões de ação
+        borderRadius: 8,
+        marginBottom: 12,
+        padding: 16,
     },
     editButton: {
         backgroundColor: "#17A2B8", // Azul suave
-        padding: 8,
+        padding: 12,
         borderRadius: 4,
         marginRight: 8,
+        alignItems: "center",
+        justifyContent: "center",
     },
     deleteButton: {
-        backgroundColor: "#DC3545", // Vermelho suave
-        padding: 8,
+        backgroundColor: "#DC3545", // Vermelho para remover
+        padding: 12,
         borderRadius: 4,
+        alignItems: "center",
+        justifyContent: "center",
     },
     listEmptyText: {
-        color: "#888888", // Cinza para mensagens vazias
+        color: "#888888", // Texto em cinza suave para lista vazia
         textAlign: "center",
         marginTop: 16,
     },
     summaryContainer: {
-        backgroundColor: "#64b554", // Cinza claro para o fundo do resumo
-        padding: 5,
+        backgroundColor: "#64b554", // Verde para o resumo
+        padding: 8,
         borderRadius: 8,
         marginTop: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
         elevation: 2,
     },
     summaryText: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#495057", // Texto escuro para o resumo
+        color: "#FFF", // Texto branco no resumo
         marginBottom: 8,
-    },
-    totalText: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: "#212529", // Destaque para o saldo final
-        marginTop: 8,
     },
 });

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Expense, ExpenseProps } from "./Expense";
 import { ExpenseFormModal } from "./ExpenseFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -93,7 +94,7 @@ export function Home() {
     };
 
     const openNewExpenseModal = () => {
-        setExpenseToEdit(null); // Limpa o estado para garantir que será um novo registro
+        setExpenseToEdit(null);
         setIsExpenseModalVisible(true);
     };
 
@@ -110,6 +111,29 @@ export function Home() {
     };
 
     const { entrada, saida } = calculateSums();
+
+    const renderRightActions = (id: number) => (
+        <View style={stylesHome.actionContainer}>
+       {/*     <TouchableOpacity
+                style={stylesHome.editButton}
+                onPress={() => {
+                    const expenseToEdit = expenses.find((expense) => expense.id === id);
+                    if (expenseToEdit) {
+                        setExpenseToEdit(expenseToEdit);
+                        setIsExpenseModalVisible(true);
+                    }
+                }}
+            >
+                <Icon name="edit" size={24} color="#FFF" />
+            </TouchableOpacity>*/}
+            <TouchableOpacity
+                style={stylesHome.deleteButton}
+                onPress={() => confirmRemoveExpense(id)}
+            >
+                <Icon name="delete" size={24} color="#FFF" />
+            </TouchableOpacity>
+        </View>
+    );
 
     return (
         <View style={stylesHome.container}>
@@ -137,21 +161,28 @@ export function Home() {
                 data={expenses}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Expense
-                        id={item.id}
-                        titulo={item.titulo}
-                        tipoRegistro={item.tipoRegistro}
-                        tipoTransacao={item.tipoTransacao}
-                        idCategoria={item.idCategoria}
-                        nomeCategoria={item.nomeCategoria}
-                        valor={item.valor}
-                        dataTransacao={item.dataTransacao}
-                        onEdit={() => {
-                            setExpenseToEdit(item);
-                            setIsExpenseModalVisible(true);
-                        }}
-                        onRemove={() => confirmRemoveExpense(item.id)}
-                    />
+                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+                        <TouchableOpacity
+                            style={stylesHome.expenseCard}
+                            onPress={() => {
+                                setExpenseToEdit(item);
+                                setIsExpenseModalVisible(true);
+                            }}
+                        >
+                            <Expense
+                                id={item.id}
+                                titulo={item.titulo}
+                                tipoRegistro={item.tipoRegistro}
+                                tipoTransacao={item.tipoTransacao}
+                                idCategoria={item.idCategoria}
+                                nomeCategoria={item.nomeCategoria}
+                                valor={item.valor}
+                                dataTransacao={item.dataTransacao}
+                                onEdit={() => {}}
+                                onRemove={() => {}}
+                            />
+                        </TouchableOpacity>
+                    </Swipeable>
                 )}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={() => (
@@ -159,31 +190,26 @@ export function Home() {
                 )}
             />
 
-            {/* Componente de Soma */}
             <View style={stylesHome.summaryContainer}>
                 <Text style={stylesHome.summaryText}>
-                    Entradas: {""}
-                    {new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                    }).format(entrada)}
+                    Entradas: {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                }).format(entrada)}
                 </Text>
                 <Text style={stylesHome.summaryText}>
-                    Saídas: {""}
-                    {new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                    }).format(saida)}
+                    Saídas: {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                }).format(saida)}
                 </Text>
                 <Text style={stylesHome.summaryText}>
-                    Saldo: {""}
-                    {new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                    }).format(entrada - saida)}
+                    Saldo: {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                }).format(entrada - saida)}
                 </Text>
             </View>
-
 
             {isExpenseModalVisible && (
                 <ExpenseFormModal

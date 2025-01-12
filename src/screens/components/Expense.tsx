@@ -48,14 +48,6 @@ export function Expense({
                 <Text style={stylesExpense.detail}>Categoria: {nomeCategoria}</Text>
                 <Text style={stylesExpense.dateTime}>{new Date(dataTransacao).toLocaleString()}</Text>
             </View>
-            <View style={stylesExpense.actions}>
-                <TouchableOpacity style={stylesExpense.editButton} onPress={onEdit}>
-                    <Icon name="edit" size={20} color="#FFF" />
-                </TouchableOpacity>
-                <TouchableOpacity style={stylesExpense.deleteButton} onPress={onRemove}>
-                    <Icon name="delete" size={20} color="#FFF" />
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }
