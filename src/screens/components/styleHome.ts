@@ -10,6 +10,7 @@ export const stylesHome = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 16,
+        marginTop: 20
     },
     addButton: {
         flex: 1,
