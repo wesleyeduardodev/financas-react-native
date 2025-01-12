@@ -39,44 +39,26 @@ export function ExpenseFormModal({
     const [tipoTransacao, setTipoTransacao] = useState(expense?.tipoTransacao || 0);
     const [value, setValue] = useState<string>(expense?.valor.toString() || "");
     const [category, setCategory] = useState<number>(expense?.idCategoria || categories[0]?.id || 0);
+    const [titulo, setTitulo] = useState<string>(expense?.titulo || "");
+    const [descricao, setDescricao] = useState<string>(expense?.descricao || "");
     const [date, setDate] = useState<Date>(expense?.dataTransacao ? new Date(expense.dataTransacao) : new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
-    const [idUsuario, setIdUsuario] = useState<number>(expense?.idUsuario || 1);
-
-    useEffect(() => {
-        if (expense) {
-            setTipoRegistro(expense.tipoRegistro);
-            setTipoTransacao(expense.tipoTransacao);
-            setValue(expense.valor.toString());
-            setCategory(expense.idCategoria);
-            setDate(new Date(expense.dataTransacao));
-            setIdUsuario(expense.idUsuario);
-        }
-    }, [expense]);
 
     const formatDateTimeForAPI = (date: Date) => format(date, "dd/MM/yyyy HH:mm:ss", { locale: ptBR });
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
         if (selectedDate) {
-            const currentDate = selectedDate || date;
-            setDate((prevDate) => {
-                const updatedDate = new Date(prevDate);
-                updatedDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-                return updatedDate;
-            });
+            setDate(selectedDate);
         }
         setShowDatePicker(false);
     };
 
     const handleTimeChange = (event: any, selectedTime?: Date) => {
         if (selectedTime) {
-            const currentTime = selectedTime || date;
-            setDate((prevDate) => {
-                const updatedTime = new Date(prevDate);
-                updatedTime.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
-                return updatedTime;
-            });
+            const updatedTime = new Date(date);
+            updatedTime.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+            setDate(updatedTime);
         }
         setShowTimePicker(false);
     };
@@ -88,6 +70,22 @@ export function ExpenseFormModal({
                     {expense ? "Editar Registro" : "Novo Registro"}
                 </Text>
 
+                {/* Título */}
+                <TextInput
+                    style={stylesExpenseFormModal.input}
+                    placeholder="Título"
+                    value={titulo}
+                    onChangeText={setTitulo}
+                />
+
+                {/* Descrição */}
+                <TextInput
+                    style={stylesExpenseFormModal.input}
+                    placeholder="Descrição"
+                    value={descricao}
+                    onChangeText={setDescricao}
+                />
+
                 {/* Tipo de Registro */}
                 <Picker
                     selectedValue={tipoRegistro}
@@ -95,11 +93,7 @@ export function ExpenseFormModal({
                     onValueChange={(itemValue) => setTipoRegistro(itemValue)}
                 >
                     {tipoRegistroOptions.map((option) => (
-                        <Picker.Item
-                            key={option.codigo}
-                            label={option.descricao}
-                            value={option.codigo}
-                        />
+                        <Picker.Item key={option.codigo} label={option.descricao} value={option.codigo} />
                     ))}
                 </Picker>
 
@@ -110,11 +104,7 @@ export function ExpenseFormModal({
                     onValueChange={(itemValue) => setTipoTransacao(itemValue)}
                 >
                     {tipoTransacaoOptions.map((option) => (
-                        <Picker.Item
-                            key={option.codigo}
-                            label={option.descricao}
-                            value={option.codigo}
-                        />
+                        <Picker.Item key={option.codigo} label={option.descricao} value={option.codigo} />
                     ))}
                 </Picker>
 
@@ -122,7 +112,6 @@ export function ExpenseFormModal({
                 <TextInput
                     style={stylesExpenseFormModal.input}
                     placeholder="Valor"
-                    placeholderTextColor="#A9A9A9"
                     keyboardType="numeric"
                     value={value}
                     onChangeText={setValue}
@@ -139,21 +128,13 @@ export function ExpenseFormModal({
                     ))}
                 </Picker>
 
-                {/* Data e Hora */}
+                {/* Data da Transação */}
                 <TouchableOpacity
                     style={stylesExpenseFormModal.datePickerButton}
                     onPress={() => setShowDatePicker(true)}
                 >
                     <Text style={stylesExpenseFormModal.datePickerText}>
                         Selecionar Data: {format(date, "dd/MM/yyyy", { locale: ptBR })}
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={stylesExpenseFormModal.datePickerButton}
-                    onPress={() => setShowTimePicker(true)}
-                >
-                    <Text style={stylesExpenseFormModal.datePickerText}>
-                        Selecionar Hora: {format(date, "HH:mm", { locale: ptBR })}
                     </Text>
                 </TouchableOpacity>
 
@@ -166,34 +147,43 @@ export function ExpenseFormModal({
                     />
                 )}
 
+                <TouchableOpacity
+                    style={stylesExpenseFormModal.datePickerButton}
+                    onPress={() => setShowTimePicker(true)}
+                >
+                    <Text style={stylesExpenseFormModal.datePickerText}>
+                        Selecionar Hora: {format(date, "HH:mm", { locale: ptBR })}
+                    </Text>
+                </TouchableOpacity>
+
                 {showTimePicker && (
                     <DateTimePicker
                         value={date}
                         mode="time"
-                        is24Hour={true}
                         display="default"
                         onChange={handleTimeChange}
                     />
                 )}
 
-                {/* Botão de Salvar */}
+                {/* Botão Salvar */}
                 <TouchableOpacity
                     style={stylesExpenseFormModal.saveButton}
                     onPress={() =>
                         onSave({
+                            titulo,
+                            descricao,
                             tipoRegistro,
                             tipoTransacao,
                             valor: parseFloat(value),
                             idCategoria: category,
                             dataTransacao: formatDateTimeForAPI(date),
-                            idUsuario,
                         })
                     }
                 >
                     <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
                 </TouchableOpacity>
 
-                {/* Botão de Cancelar */}
+                {/* Botão Cancelar */}
                 <TouchableOpacity
                     style={stylesExpenseFormModal.cancelButton}
                     onPress={onClose}

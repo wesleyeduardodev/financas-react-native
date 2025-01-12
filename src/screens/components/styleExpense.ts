@@ -28,6 +28,12 @@ export const stylesExpense = StyleSheet.create({
         color: "#666",
         marginTop: 4,
     },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#FFF", // Branco para destaque
+        marginBottom: 4, // Espaço abaixo do título
+    },
     dateTime: {
         fontSize: 12,
         color: "#999",

@@ -9,6 +9,8 @@ export type ExpenseProps = {
     idCategoria: number;
     valor: number;
     dataTransacao: string; // Formato: dd/MM/yyyy HH:mm:ss
+    titulo: string; // Novo campo
+    descricao: string; // Novo campo
     idUsuario: number;
     onEdit: () => void;
     onRemove: () => void;
@@ -34,18 +36,20 @@ export function Expense({
                             idCategoria,
                             valor,
                             dataTransacao,
-                            idUsuario,
+                            titulo,
+                            descricao,
                             onEdit,
                             onRemove,
                         }: ExpenseProps) {
     return (
         <View style={stylesExpense.container}>
             <View style={stylesExpense.info}>
+                <Text style={stylesExpense.title}>{titulo}</Text>
+                <Text style={stylesExpense.detail}>{descricao}</Text>
                 <Text style={stylesExpense.value}>R$ {valor.toFixed(2)}</Text>
                 <Text style={stylesExpense.detail}>Tipo Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
                 <Text style={stylesExpense.detail}>Tipo Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>
                 <Text style={stylesExpense.detail}>Categoria ID: {idCategoria}</Text>
-                <Text style={stylesExpense.detail}>Usuário ID: {idUsuario}</Text>
                 <Text style={stylesExpense.dateTime}>{dataTransacao}</Text>
             </View>
             <View style={stylesExpense.actions}>
