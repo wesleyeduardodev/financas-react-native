@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Category, CategoryProps } from "./Category";
 import { CategoryFormModal } from "./CategoryFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -71,6 +72,29 @@ export function CategoryScreen() {
         );
     };
 
+    const renderRightActions = (id: number) => (
+        <View style={stylesCategoryScreen.actionContainer}>
+           {/* <TouchableOpacity
+                style={stylesCategoryScreen.editButton}
+                onPress={() => {
+                    const categoryToEdit = categories.find((category) => category.id === id);
+                    if (categoryToEdit) {
+                        setCategoryToEdit(categoryToEdit);
+                        setIsCategoryModalVisible(true);
+                    }
+                }}
+            >
+                <Icon name="edit" size={24} color="#FFF" />
+            </TouchableOpacity>*/}
+            <TouchableOpacity
+                style={stylesCategoryScreen.deleteButton}
+                onPress={() => confirmRemoveCategory(id)}
+            >
+                <Icon name="delete" size={24} color="#FFF" />
+            </TouchableOpacity>
+        </View>
+    );
+
     return (
         <View style={stylesCategoryScreen.container}>
             <TouchableOpacity
@@ -88,14 +112,21 @@ export function CategoryScreen() {
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Category
-                        {...item}
-                        onEdit={() => {
-                            setCategoryToEdit(item);
-                            setIsCategoryModalVisible(true);
-                        }}
-                        onRemove={() => confirmRemoveCategory(item.id)} // Adicionada a confirmação
-                    />
+                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+                        <TouchableOpacity
+                            style={stylesCategoryScreen.categoryCard}
+                            onPress={() => {
+                                setCategoryToEdit(item);
+                                setIsCategoryModalVisible(true);
+                            }}
+                        >
+                            <Category
+                                {...item}
+                                onEdit={() => {}}
+                                onRemove={() => {}}
+                            />
+                        </TouchableOpacity>
+                    </Swipeable>
                 )}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={() => (
