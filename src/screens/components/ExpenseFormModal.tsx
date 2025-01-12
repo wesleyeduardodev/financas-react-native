@@ -42,7 +42,7 @@ export function ExpenseFormModal({
     const [date, setDate] = useState<Date>(expense?.dataTransacao ? new Date(expense.dataTransacao) : new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
-    const [idUsuario, setIdUsuario] = useState<number>(expense?.idUsuario || 1); // ID fictício para simulação
+    const [idUsuario, setIdUsuario] = useState<number>(expense?.idUsuario || 1);
 
     useEffect(() => {
         if (expense) {
@@ -91,7 +91,7 @@ export function ExpenseFormModal({
                 {/* Tipo de Registro */}
                 <Picker
                     selectedValue={tipoRegistro}
-                    style={stylesExpenseFormModal.input}
+                    style={stylesExpenseFormModal.picker}
                     onValueChange={(itemValue) => setTipoRegistro(itemValue)}
                 >
                     {tipoRegistroOptions.map((option) => (
@@ -106,7 +106,7 @@ export function ExpenseFormModal({
                 {/* Tipo de Transação */}
                 <Picker
                     selectedValue={tipoTransacao}
-                    style={stylesExpenseFormModal.input}
+                    style={stylesExpenseFormModal.picker}
                     onValueChange={(itemValue) => setTipoTransacao(itemValue)}
                 >
                     {tipoTransacaoOptions.map((option) => (
@@ -122,6 +122,7 @@ export function ExpenseFormModal({
                 <TextInput
                     style={stylesExpenseFormModal.input}
                     placeholder="Valor"
+                    placeholderTextColor="#A9A9A9"
                     keyboardType="numeric"
                     value={value}
                     onChangeText={setValue}
@@ -130,7 +131,7 @@ export function ExpenseFormModal({
                 {/* Categoria */}
                 <Picker
                     selectedValue={category}
-                    style={stylesExpenseFormModal.input}
+                    style={stylesExpenseFormModal.picker}
                     onValueChange={(itemValue) => setCategory(itemValue)}
                 >
                     {categories.map((cat) => (
@@ -140,16 +141,20 @@ export function ExpenseFormModal({
 
                 {/* Data e Hora */}
                 <TouchableOpacity
-                    style={stylesExpenseFormModal.input}
+                    style={stylesExpenseFormModal.datePickerButton}
                     onPress={() => setShowDatePicker(true)}
                 >
-                    <Text>Selecionar Data: {format(date, "dd/MM/yyyy", { locale: ptBR })}</Text>
+                    <Text style={stylesExpenseFormModal.datePickerText}>
+                        Selecionar Data: {format(date, "dd/MM/yyyy", { locale: ptBR })}
+                    </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={stylesExpenseFormModal.input}
+                    style={stylesExpenseFormModal.datePickerButton}
                     onPress={() => setShowTimePicker(true)}
                 >
-                    <Text>Selecionar Hora: {format(date, "HH:mm", { locale: ptBR })}</Text>
+                    <Text style={stylesExpenseFormModal.datePickerText}>
+                        Selecionar Hora: {format(date, "HH:mm", { locale: ptBR })}
+                    </Text>
                 </TouchableOpacity>
 
                 {showDatePicker && (
@@ -180,7 +185,7 @@ export function ExpenseFormModal({
                             tipoTransacao,
                             valor: parseFloat(value),
                             idCategoria: category,
-                            dataTransacao: formatDateTimeForAPI(date), // Formata a data no envio
+                            dataTransacao: formatDateTimeForAPI(date),
                             idUsuario,
                         })
                     }
