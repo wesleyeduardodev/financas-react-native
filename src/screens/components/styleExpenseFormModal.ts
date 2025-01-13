@@ -68,6 +68,10 @@ export const stylesExpenseFormModal = StyleSheet.create({
         borderRadius: 5,
         alignItems: "center",
     },
+    scrollView: {
+        flexGrow: 1,
+        justifyContent: "center",
+    },
     buttonText: {
         color: "#FFF",
         fontWeight: "bold",
