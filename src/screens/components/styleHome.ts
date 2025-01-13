@@ -39,12 +39,12 @@ export const stylesHome = StyleSheet.create({
         elevation: 2,
     },
     expenseCardEntrada: {
-        backgroundColor: "#E6F4EA", // Verde claro para Entrada
+        backgroundColor: "#92f4ae", // Verde claro para Entrada
         borderLeftWidth: 4,
         borderLeftColor: "#28A745", // Verde escuro para destaque
     },
     expenseCardSaida: {
-        backgroundColor: "#FCE6E6", // Vermelho claro para Saída
+        backgroundColor: "#f18a8a", // Vermelho claro para Saída
         borderLeftWidth: 4,
         borderLeftColor: "#DC3545", // Vermelho escuro para destaque
     },
