@@ -180,7 +180,16 @@ export function Home() {
                     </View>
                 )}
                 renderHiddenItem={({ item }) => (
-                    <View style={stylesHome.actionContainer}>
+                    <View style={stylesHome.hiddenItemContainer}>
+                        <TouchableOpacity
+                            style={stylesHome.editButton}
+                            onPress={() => {
+                                setExpenseToEdit(item); // Define o item para edição
+                                setIsExpenseModalVisible(true); // Abre o modal de edição
+                            }}
+                        >
+                            <Icon name="edit" size={24} color="#FFF" />
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={stylesHome.deleteButton}
                             onPress={() => confirmRemoveExpense(item.id)}
@@ -189,10 +198,10 @@ export function Home() {
                         </TouchableOpacity>
                     </View>
                 )}
-                rightOpenValue={-75} // Define o tamanho do botão ao arrastar para a esquerda
+                rightOpenValue={-150} // Define o tamanho total para os dois botões ao arrastar para a esquerda
                 disableRightSwipe={true} // Impede o swipe da esquerda para a direita
                 stopLeftSwipe={0} // Impede que o swipe vá para a esquerda sem limite
-                closeOnRowPress={true} // Fecha o botão caso o usuário toque fora
+                closeOnRowPress={true} // Fecha os botões ocultos ao tocar fora
             />
 
             <View style={stylesHome.summaryContainer}>

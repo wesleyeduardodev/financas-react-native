@@ -58,14 +58,7 @@ export const stylesHome = StyleSheet.create({
         color: "#666666", // Cinza para datas
         marginTop: 4,
     },
-    editButton: {
-        backgroundColor: "#17A2B8", // Azul suave
-        padding: 12,
-        borderRadius: 4,
-        marginRight: 8,
-        alignItems: "center",
-        justifyContent: "center",
-    },
+
 
     listEmptyText: {
         color: "#888888", // Texto em cinza suave para lista vazia
@@ -96,13 +89,31 @@ export const stylesHome = StyleSheet.create({
         marginVertical: 5,
         paddingHorizontal: 10,
     },
-    deleteButton: {
-        backgroundColor: "#E23C44",
-        width: 75,
+
+
+
+
+    hiddenItemContainer: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        marginVertical: 5,
+        borderRadius: 5,
+        overflow: "hidden",
+    },
+    editButton: {
+        backgroundColor: "#4CAF50", // Verde para edição
         justifyContent: "center",
         alignItems: "center",
+        width: 75,
         height: "100%",
-        borderRadius: 5,
     },
-
+    deleteButton: {
+        backgroundColor: "#E23C44", // Vermelho para exclusão
+        justifyContent: "center",
+        alignItems: "center",
+        width: 75,
+        height: "100%",
+    },
 });
