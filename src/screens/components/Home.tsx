@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
-import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Expense, ExpenseProps } from "./Expense";
@@ -50,7 +48,6 @@ export function Home() {
         }
     };
 
-    // Recarregar categorias ao retornar para a tela Home
     useFocusEffect(
         useCallback(() => {
             fetchCategories();
@@ -197,8 +194,6 @@ export function Home() {
                 stopLeftSwipe={0} // Impede que o swipe vá para a esquerda sem limite
                 closeOnRowPress={true} // Fecha o botão caso o usuário toque fora
             />
-
-
 
             <View style={stylesHome.summaryContainer}>
                 <Text style={stylesHome.summaryText}>
