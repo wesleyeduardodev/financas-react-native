@@ -3,7 +3,9 @@ import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { SwipeListView } from "react-native-swipe-list-view";
 import { Expense, ExpenseProps } from "./Expense";
 import { ExpenseFormModal } from "./ExpenseFormModal";
 import { stylesHome } from "./styleHome";
@@ -151,42 +153,47 @@ export function Home() {
                 </TouchableOpacity>
             </View>
 
-            <FlatList
+            <SwipeListView
                 data={expenses.sort((a, b) => new Date(b.dataTransacao).getTime() - new Date(a.dataTransacao).getTime())}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+                    <TouchableOpacity
+                        style={[
+                            stylesHome.expenseCard,
+                            item.tipoRegistro === 0
+                                ? stylesHome.expenseCardEntrada
+                                : stylesHome.expenseCardSaida,
+                        ]}
+                        onPress={() => {
+                            setExpenseToEdit(item);
+                            setIsExpenseModalVisible(true);
+                        }}
+                    >
+                        <Expense
+                            id={item.id}
+                            titulo={item.titulo}
+                            tipoRegistro={item.tipoRegistro}
+                            tipoTransacao={item.tipoTransacao}
+                            idCategoria={item.idCategoria}
+                            nomeCategoria={item.nomeCategoria}
+                            valor={item.valor}
+                            dataTransacao={item.dataTransacao}
+                            onEdit={() => {}}
+                            onRemove={() => {}}
+                        />
+                    </TouchableOpacity>
+                )}
+                renderHiddenItem={({ item }) => (
+                    <View style={stylesHome.actionContainer}>
                         <TouchableOpacity
-                            style={[
-                                stylesHome.expenseCard,
-                                item.tipoRegistro === 0
-                                    ? stylesHome.expenseCardEntrada
-                                    : stylesHome.expenseCardSaida,
-                            ]}
-                            onPress={() => {
-                                setExpenseToEdit(item);
-                                setIsExpenseModalVisible(true);
-                            }}
+                            style={stylesHome.deleteButton}
+                            onPress={() => confirmRemoveExpense(item.id)}
                         >
-                            <Expense
-                                id={item.id}
-                                titulo={item.titulo}
-                                tipoRegistro={item.tipoRegistro}
-                                tipoTransacao={item.tipoTransacao}
-                                idCategoria={item.idCategoria}
-                                nomeCategoria={item.nomeCategoria}
-                                valor={item.valor}
-                                dataTransacao={item.dataTransacao}
-                                onEdit={() => {}}
-                                onRemove={() => {}}
-                            />
+                            <Icon name="delete" size={24} color="#FFF" />
                         </TouchableOpacity>
-                    </Swipeable>
+                    </View>
                 )}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                    <Text style={stylesHome.listEmptyText}>Nenhum registro financeiro encontrado.</Text>
-                )}
+                rightOpenValue={-75} // Ajuste para o tamanho do botão "delete"
             />
 
             <View style={stylesHome.summaryContainer}>

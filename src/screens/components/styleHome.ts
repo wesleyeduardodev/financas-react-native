@@ -58,15 +58,6 @@ export const stylesHome = StyleSheet.create({
         color: "#666666", // Cinza para datas
         marginTop: 4,
     },
-    actionContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        backgroundColor: "#F8F9FA", // Fundo neutro para os botões de ação
-        borderRadius: 8,
-        marginBottom: 12,
-        padding: 16,
-    },
     editButton: {
         backgroundColor: "#17A2B8", // Azul suave
         padding: 12,
@@ -75,13 +66,7 @@ export const stylesHome = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    deleteButton: {
-        backgroundColor: "#DC3545", // Vermelho para remover
-        padding: 12,
-        borderRadius: 4,
-        alignItems: "center",
-        justifyContent: "center",
-    },
+
     listEmptyText: {
         color: "#888888", // Texto em cinza suave para lista vazia
         textAlign: "center",
@@ -100,4 +85,24 @@ export const stylesHome = StyleSheet.create({
         color: "#FFF", // Texto branco no resumo
         marginBottom: 8,
     },
+
+
+    actionContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "flex-end",
+        backgroundColor: "#e4d8d8",
+        borderRadius: 5,
+        marginVertical: 5,
+        paddingHorizontal: 10,
+    },
+    deleteButton: {
+        backgroundColor: "#E23C44",
+        width: 75,
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        borderRadius: 5,
+    },
+
 });

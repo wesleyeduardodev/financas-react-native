@@ -83,7 +83,7 @@ Certifique-se de instalar as dependências necessárias para o projeto. Abaixo e
 
 npm install @react-navigation/native @react-navigation/stack
 npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons @react-native-community/masked-view
-
+npm install react-native-swipe-list-view
 npm install date-fns
 
 
