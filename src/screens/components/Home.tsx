@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import {useState, useEffect, useCallback} from "react";
+import {Alert, Text, TouchableOpacity, View} from "react-native";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
+import {StackNavigationProp} from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { SwipeListView } from "react-native-swipe-list-view";
-import { Expense, ExpenseProps } from "./Expense";
-import { ExpenseFormModal } from "./ExpenseFormModal";
-import { stylesHome } from "./styleHome";
-import { RootStackParamList } from "../services/types";
-import { api } from "../services/api";
-import { CategoryProps } from "./Category";
+import {SwipeListView} from "react-native-swipe-list-view";
+import {Expense, ExpenseProps} from "./Expense";
+import {ExpenseFormModal} from "./ExpenseFormModal";
+import {stylesHome} from "./styleHome";
+import {RootStackParamList} from "../services/types";
+import {api} from "../services/api";
+import {CategoryProps} from "./Category";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
@@ -88,7 +88,7 @@ export function Home() {
             "Confirmar Remoção",
             "Tem certeza que deseja remover este registro financeiro?",
             [
-                { text: "Cancelar", style: "cancel" },
+                {text: "Cancelar", style: "cancel"},
                 {
                     text: "Remover",
                     style: "destructive",
@@ -103,31 +103,6 @@ export function Home() {
         setIsExpenseModalVisible(true);
     };
 
-    const calculateSums = () => {
-        const entrada = expenses
-            .filter((expense) => expense.tipoRegistro === 0)
-            .reduce((sum, expense) => sum + expense.valor, 0);
-
-        const saida = expenses
-            .filter((expense) => expense.tipoRegistro === 1)
-            .reduce((sum, expense) => sum + expense.valor, 0);
-
-        return { entrada, saida };
-    };
-
-    const { entrada, saida } = calculateSums();
-
-    const renderRightActions = (id: number) => (
-        <View style={stylesHome.actionContainer}>
-            <TouchableOpacity
-                style={stylesHome.deleteButton}
-                onPress={() => confirmRemoveExpense(id)}
-            >
-                <Icon name="delete" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-    );
-
     return (
         <View style={stylesHome.container}>
             <View style={stylesHome.buttonContainer}>
@@ -135,7 +110,7 @@ export function Home() {
                     style={stylesHome.addButton}
                     onPress={openNewExpenseModal}
                 >
-                    <Icon name="add" size={28} color="#FFF" />
+                    <Icon name="add" size={28} color="#FFF"/>
                     <Text style={stylesHome.addButtonText}>Registro Financeiro</Text>
                 </TouchableOpacity>
 
@@ -145,7 +120,7 @@ export function Home() {
                         navigation.navigate("CategoryScreen");
                     }}
                 >
-                    <Icon name="category" size={28} color="#FFF" />
+                    <Icon name="category" size={28} color="#FFF"/>
                     <Text style={stylesHome.addButtonText}>Categorias</Text>
                 </TouchableOpacity>
             </View>
@@ -156,7 +131,7 @@ export function Home() {
                         new Date(b.dataTransacao).getTime() - new Date(a.dataTransacao).getTime()
                 )}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                     <View
                         style={[
                             stylesHome.expenseCard,
@@ -174,12 +149,14 @@ export function Home() {
                             nomeCategoria={item.nomeCategoria}
                             valor={item.valor}
                             dataTransacao={item.dataTransacao}
-                            onEdit={() => {}}
-                            onRemove={() => {}}
+                            onEdit={() => {
+                            }}
+                            onRemove={() => {
+                            }}
                         />
                     </View>
                 )}
-                renderHiddenItem={({ item }) => (
+                renderHiddenItem={({item}) => (
                     <View style={stylesHome.hiddenItemContainer}>
                         <TouchableOpacity
                             style={stylesHome.editButton}
@@ -188,42 +165,21 @@ export function Home() {
                                 setIsExpenseModalVisible(true); // Abre o modal de edição
                             }}
                         >
-                            <Icon name="edit" size={24} color="#FFF" />
+                            <Icon name="edit" size={24} color="#FFF"/>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={stylesHome.deleteButton}
                             onPress={() => confirmRemoveExpense(item.id)}
                         >
-                            <Icon name="delete" size={24} color="#FFF" />
+                            <Icon name="delete" size={24} color="#FFF"/>
                         </TouchableOpacity>
                     </View>
                 )}
-                rightOpenValue={-150} // Define o tamanho total para os dois botões ao arrastar para a esquerda
-                disableRightSwipe={true} // Impede o swipe da esquerda para a direita
-                stopLeftSwipe={0} // Impede que o swipe vá para a esquerda sem limite
-                closeOnRowPress={true} // Fecha os botões ocultos ao tocar fora
+                rightOpenValue={-75} // Ajuste conforme necessário
+                disableRightSwipe={true}
+                stopLeftSwipe={0}
+                closeOnRowPress={true}
             />
-
-            <View style={stylesHome.summaryContainer}>
-                <Text style={stylesHome.summaryText}>
-                    Entradas: {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(entrada)}
-                </Text>
-                <Text style={stylesHome.summaryText}>
-                    Saídas: {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(saida)}
-                </Text>
-                <Text style={stylesHome.summaryText}>
-                    Saldo: {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                }).format(entrada - saida)}
-                </Text>
-            </View>
 
             {isExpenseModalVisible && (
                 <ExpenseFormModal
@@ -238,9 +194,7 @@ export function Home() {
                         }
                         setIsExpenseModalVisible(false);
                     }}
-                    onClose={() => {
-                        setIsExpenseModalVisible(false);
-                    }}
+                    onClose={() => setIsExpenseModalVisible(false)}
                 />
             )}
         </View>
