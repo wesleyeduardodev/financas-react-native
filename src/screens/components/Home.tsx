@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { Expense, ExpenseProps } from "./Expense";
 import { ExpenseFormModal } from "./ExpenseFormModal";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { stylesHome } from "./styleHome";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../services/types";
 import { api } from "../services/api";
 import { CategoryProps } from "./Category";
@@ -22,7 +22,6 @@ export function Home() {
 
     useEffect(() => {
         fetchExpenses();
-        fetchCategories();
     }, []);
 
     const fetchExpenses = async () => {
@@ -48,6 +47,13 @@ export function Home() {
             );
         }
     };
+
+    // Recarregar categorias ao retornar para a tela Home
+    useFocusEffect(
+        useCallback(() => {
+            fetchCategories();
+        }, [])
+    );
 
     const handleAddExpense = async (newExpense: ExpenseProps) => {
         try {
@@ -114,18 +120,6 @@ export function Home() {
 
     const renderRightActions = (id: number) => (
         <View style={stylesHome.actionContainer}>
-       {/*     <TouchableOpacity
-                style={stylesHome.editButton}
-                onPress={() => {
-                    const expenseToEdit = expenses.find((expense) => expense.id === id);
-                    if (expenseToEdit) {
-                        setExpenseToEdit(expenseToEdit);
-                        setIsExpenseModalVisible(true);
-                    }
-                }}
-            >
-                <Icon name="edit" size={24} color="#FFF" />
-            </TouchableOpacity>*/}
             <TouchableOpacity
                 style={stylesHome.deleteButton}
                 onPress={() => confirmRemoveExpense(id)}
@@ -166,8 +160,8 @@ export function Home() {
                             style={[
                                 stylesHome.expenseCard,
                                 item.tipoRegistro === 0
-                                    ? stylesHome.expenseCardEntrada // Estilo para Entrada
-                                    : stylesHome.expenseCardSaida, // Estilo para Saída
+                                    ? stylesHome.expenseCardEntrada
+                                    : stylesHome.expenseCardSaida,
                             ]}
                             onPress={() => {
                                 setExpenseToEdit(item);
@@ -194,8 +188,6 @@ export function Home() {
                     <Text style={stylesHome.listEmptyText}>Nenhum registro financeiro encontrado.</Text>
                 )}
             />
-
-
 
             <View style={stylesHome.summaryContainer}>
                 <Text style={stylesHome.summaryText}>
