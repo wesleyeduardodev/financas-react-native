@@ -154,20 +154,19 @@ export function Home() {
             </View>
 
             <SwipeListView
-                data={expenses.sort((a, b) => new Date(b.dataTransacao).getTime() - new Date(a.dataTransacao).getTime())}
+                data={expenses.sort(
+                    (a, b) =>
+                        new Date(b.dataTransacao).getTime() - new Date(a.dataTransacao).getTime()
+                )}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity
+                    <View
                         style={[
                             stylesHome.expenseCard,
                             item.tipoRegistro === 0
                                 ? stylesHome.expenseCardEntrada
                                 : stylesHome.expenseCardSaida,
                         ]}
-                        onPress={() => {
-                            setExpenseToEdit(item);
-                            setIsExpenseModalVisible(true);
-                        }}
                     >
                         <Expense
                             id={item.id}
@@ -181,7 +180,7 @@ export function Home() {
                             onEdit={() => {}}
                             onRemove={() => {}}
                         />
-                    </TouchableOpacity>
+                    </View>
                 )}
                 renderHiddenItem={({ item }) => (
                     <View style={stylesHome.actionContainer}>
@@ -193,8 +192,13 @@ export function Home() {
                         </TouchableOpacity>
                     </View>
                 )}
-                rightOpenValue={-75} // Ajuste para o tamanho do botão "delete"
+                rightOpenValue={-75} // Define o tamanho do botão ao arrastar para a esquerda
+                disableRightSwipe={true} // Impede o swipe da esquerda para a direita
+                stopLeftSwipe={0} // Impede que o swipe vá para a esquerda sem limite
+                closeOnRowPress={true} // Fecha o botão caso o usuário toque fora
             />
+
+
 
             <View style={stylesHome.summaryContainer}>
                 <Text style={stylesHome.summaryText}>
