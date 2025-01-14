@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { stylesFilterModal } from "./styleFilterModal";
 import { api } from "../services/api";
 
@@ -13,6 +14,8 @@ type FilterModalProps = {
         tipoTransacao: number | null;
         categoria: number | null;
         subCategoria: number | null;
+        startDate: string | null;
+        endDate: string | null;
     }) => void;
 };
 
@@ -26,15 +29,18 @@ export function FilterModal({
     const [tipoTransacao, setTipoTransacao] = useState<number | null>(null);
     const [categoria, setCategoria] = useState<number | null>(null);
     const [subCategoria, setSubCategoria] = useState<number | null>(null);
-    const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]); // Estado para subcategorias
+    const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
-    // Carrega subcategorias quando a categoria é selecionada
     useEffect(() => {
         if (categoria) {
             fetchSubCategories(categoria);
         } else {
             setSubCategories([]);
-            setSubCategoria(null); // Reseta a subcategoria ao limpar a categoria
+            setSubCategoria(null);
         }
     }, [categoria]);
 
@@ -48,6 +54,11 @@ export function FilterModal({
                 error.response?.data?.message || error.message || "Não foi possível carregar as subcategorias."
             );
         }
+    };
+
+    const formatDateToISODateOnly = (date: Date | null): string | null => {
+        if (!date) return null;
+        return date.toISOString().split("T")[0]; // Retorna apenas a parte "YYYY-MM-DD"
     };
 
     return (
@@ -114,11 +125,69 @@ export function FilterModal({
                     </View>
                 )}
 
+                {/* Filtro de Data Inicial */}
+                <View style={stylesFilterModal.datePickerContainer}>
+                    <Text style={stylesFilterModal.label}>Data Inicial:</Text>
+                    <TouchableOpacity
+                        style={stylesFilterModal.dateButton}
+                        onPress={() => setShowStartDatePicker(true)}
+                    >
+                        <Text style={stylesFilterModal.dateButtonText}>
+                            {startDate ? startDate.toLocaleDateString() : "Selecione uma data"}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Filtro de Data Final */}
+                <View style={stylesFilterModal.datePickerContainer}>
+                    <Text style={stylesFilterModal.label}>Data Final:</Text>
+                    <TouchableOpacity
+                        style={stylesFilterModal.dateButton}
+                        onPress={() => setShowEndDatePicker(true)}
+                    >
+                        <Text style={stylesFilterModal.dateButtonText}>
+                            {endDate ? endDate.toLocaleDateString() : "Selecione uma data"}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* DateTimePickers */}
+                {showStartDatePicker && (
+                    <DateTimePicker
+                        value={startDate || new Date()}
+                        mode="date"
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                            setShowStartDatePicker(false);
+                            if (selectedDate) setStartDate(selectedDate);
+                        }}
+                    />
+                )}
+
+                {showEndDatePicker && (
+                    <DateTimePicker
+                        value={endDate || new Date()}
+                        mode="date"
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                            setShowEndDatePicker(false);
+                            if (selectedDate) setEndDate(selectedDate);
+                        }}
+                    />
+                )}
+
                 {/* Botões */}
                 <TouchableOpacity
                     style={stylesFilterModal.applyButton}
                     onPress={() =>
-                        onApplyFilters({ tipoRegistro, tipoTransacao, categoria, subCategoria })
+                        onApplyFilters({
+                            tipoRegistro,
+                            tipoTransacao,
+                            categoria,
+                            subCategoria,
+                            startDate: formatDateToISODateOnly(startDate),
+                            endDate: formatDateToISODateOnly(endDate),
+                        })
                     }
                 >
                     <Text style={stylesFilterModal.applyButtonText}>Aplicar Filtros</Text>

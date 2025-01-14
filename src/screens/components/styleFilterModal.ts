@@ -47,4 +47,23 @@ export const stylesFilterModal = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
     },
+    datePickerContainer: {
+        marginBottom: 15,
+    },
+    label: {
+        color: "#FFF",
+        fontSize: 14,
+        fontWeight: "bold",
+        marginBottom: 5,
+    },
+    dateButton: {
+        backgroundColor: "#4c4b4b",
+        padding: 10,
+        borderRadius: 5,
+        alignItems: "center",
+    },
+    dateButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+    },
 });
