@@ -6,6 +6,12 @@ export const stylesHome = StyleSheet.create({
         backgroundColor: "#F7F9FC",
         padding: 16,
     },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 16,
+    },
     addButton: {
         flexDirection: "row",
         alignItems: "center",
@@ -61,5 +67,58 @@ export const stylesHome = StyleSheet.create({
         alignItems: "center",
         width: 75,
         height: "50%",
+    },
+
+    filterButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#007BFF", // Cor azul para o botão de filtros
+        padding: 16,
+        borderRadius: 8,
+        marginLeft: 8, // Espaço entre os botões
+        elevation: 4,
+    },
+    filterButtonText: {
+        color: "#FFF",
+        fontWeight: "bold",
+        fontSize: 16,
+        marginLeft: 8,
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
+        padding: 20,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#FFF",
+        textAlign: "center",
+        marginBottom: 20,
+    },
+    applyButton: {
+        backgroundColor: "#28A745",
+        padding: 15,
+        borderRadius: 8,
+        alignItems: "center",
+        marginVertical: 10,
+    },
+    applyButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+    cancelButton: {
+        backgroundColor: "#DC3545",
+        padding: 15,
+        borderRadius: 8,
+        alignItems: "center",
+    },
+    cancelButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontWeight: "bold",
     },
 });
