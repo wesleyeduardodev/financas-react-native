@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { stylesFilterModal } from "./styleFilterModal";
+import { api } from "../services/api";
 
 type FilterModalProps = {
     visible: boolean;
@@ -25,12 +26,36 @@ export function FilterModal({
     const [tipoTransacao, setTipoTransacao] = useState<number | null>(null);
     const [categoria, setCategoria] = useState<number | null>(null);
     const [subCategoria, setSubCategoria] = useState<number | null>(null);
+    const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]); // Estado para subcategorias
+
+    // Carrega subcategorias quando a categoria é selecionada
+    useEffect(() => {
+        if (categoria) {
+            fetchSubCategories(categoria);
+        } else {
+            setSubCategories([]);
+            setSubCategoria(null); // Reseta a subcategoria ao limpar a categoria
+        }
+    }, [categoria]);
+
+    const fetchSubCategories = async (categoryId: number) => {
+        try {
+            const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            setSubCategories(response.data);
+        } catch (error: any) {
+            Alert.alert(
+                "Erro ao carregar subcategorias",
+                error.response?.data?.message || error.message || "Não foi possível carregar as subcategorias."
+            );
+        }
+    };
 
     return (
         <Modal visible={visible} transparent={true} animationType="slide">
             <View style={stylesFilterModal.container}>
                 <Text style={stylesFilterModal.title}>Filtros</Text>
 
+                {/* Filtro de Tipo de Registro */}
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={tipoRegistro}
@@ -43,6 +68,7 @@ export function FilterModal({
                     </Picker>
                 </View>
 
+                {/* Filtro de Tipo de Transação */}
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={tipoTransacao}
@@ -58,6 +84,7 @@ export function FilterModal({
                     </Picker>
                 </View>
 
+                {/* Filtro de Categoria */}
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={categoria}
@@ -71,6 +98,23 @@ export function FilterModal({
                     </Picker>
                 </View>
 
+                {/* Filtro de Subcategoria */}
+                {subCategories.length > 0 && (
+                    <View style={stylesFilterModal.pickerContainer}>
+                        <Picker
+                            selectedValue={subCategoria}
+                            onValueChange={(itemValue) => setSubCategoria(itemValue)}
+                            style={stylesFilterModal.picker}
+                        >
+                            <Picker.Item label="Todas as Subcategorias" value={null} />
+                            {subCategories.map((subCat) => (
+                                <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
+                            ))}
+                        </Picker>
+                    </View>
+                )}
+
+                {/* Botões */}
                 <TouchableOpacity
                     style={stylesFilterModal.applyButton}
                     onPress={() =>
