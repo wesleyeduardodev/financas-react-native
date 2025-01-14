@@ -83,6 +83,28 @@ export function ExpenseFormModal({
         }
     }, [category]);
 
+    const handleDateChange = (event: any, selectedDate?: Date) => {
+        setShowDatePicker(false);
+        if (selectedDate) {
+            const currentDate = new Date(dateTimeISO);
+            currentDate.setFullYear(
+                selectedDate.getFullYear(),
+                selectedDate.getMonth(),
+                selectedDate.getDate()
+            );
+            setDateTimeISO(currentDate.toISOString());
+        }
+    };
+
+    const handleTimeChange = (event: any, selectedTime?: Date) => {
+        setShowTimePicker(false);
+        if (selectedTime) {
+            const currentDate = new Date(dateTimeISO);
+            currentDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+            setDateTimeISO(currentDate.toISOString());
+        }
+    };
+
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
             <KeyboardAvoidingView
@@ -160,6 +182,44 @@ export function ExpenseFormModal({
                                     <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
                                 ))}
                             </Picker>
+                        )}
+
+                        <View style={stylesExpenseFormModal.dateTimeContainer}>
+                            <TouchableOpacity
+                                style={stylesExpenseFormModal.datePickerButton}
+                                onPress={() => setShowDatePicker(true)}
+                            >
+                                <Text style={stylesExpenseFormModal.datePickerText}>
+                                    Data: {new Date(dateTimeISO).toLocaleDateString()}
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={stylesExpenseFormModal.datePickerButton}
+                                onPress={() => setShowTimePicker(true)}
+                            >
+                                <Text style={stylesExpenseFormModal.datePickerText}>
+                                    Hora: {new Date(dateTimeISO).toLocaleTimeString()}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {showDatePicker && (
+                            <DateTimePicker
+                                value={new Date(dateTimeISO)}
+                                mode="date"
+                                display="default"
+                                onChange={handleDateChange}
+                            />
+                        )}
+
+                        {showTimePicker && (
+                            <DateTimePicker
+                                value={new Date(dateTimeISO)}
+                                mode="time"
+                                display="default"
+                                onChange={handleTimeChange}
+                            />
                         )}
 
                         <TouchableOpacity
