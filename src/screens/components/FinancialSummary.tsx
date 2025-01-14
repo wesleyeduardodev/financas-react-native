@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, Dimensions } from "react-native";
 import { api } from "../services/api";
 import { stylesFinancialSummary } from "./styleFinancialSummary";
+import { PieChart } from "react-native-chart-kit";
 
 export function FinancialSummary() {
     const [totalEntrada, setTotalEntrada] = useState(0);
@@ -36,6 +37,23 @@ export function FinancialSummary() {
         }
     };
 
+    const pieChartData = [
+        {
+            name: "Entrada",
+            total: totalEntrada,
+            color: "#28A745",
+            legendFontColor: "#333",
+            legendFontSize: 14,
+        },
+        {
+            name: "Saída",
+            total: totalSaida,
+            color: "#DC3545",
+            legendFontColor: "#333",
+            legendFontSize: 14,
+        },
+    ];
+
     return (
         <View style={stylesFinancialSummary.container}>
             <Text style={stylesFinancialSummary.title}>Resumo Financeiro</Text>
@@ -51,6 +69,22 @@ export function FinancialSummary() {
                 <Text style={stylesFinancialSummary.label}>Saldo Total:</Text>
                 <Text style={stylesFinancialSummary.valueSaldo}>R$ {saldoTotal.toFixed(2)}</Text>
             </View>
+
+            {/* Gráfico de Pizza */}
+            <Text style={stylesFinancialSummary.title}>Comparação de Totais</Text>
+            <PieChart
+                data={pieChartData}
+                width={Dimensions.get("window").width - 40} // Ajusta ao tamanho da tela
+                height={220}
+                chartConfig={{
+                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                }}
+                accessor={"total"}
+                backgroundColor={"transparent"}
+                paddingLeft={"10"}
+                absolute // Exibe valores absolutos no gráfico
+            />
         </View>
     );
 }
