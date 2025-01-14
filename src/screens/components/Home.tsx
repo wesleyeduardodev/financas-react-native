@@ -16,7 +16,7 @@ export function Home() {
     const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
     const [expenseToEdit, setExpenseToEdit] = useState<ExpenseProps | null>(null);
-    const [modalKey, setModalKey] = useState<number>(0); // Novo estado para forçar a redefinição do modal
+    const [modalKey, setModalKey] = useState<number>(0);
 
     useEffect(() => {
         fetchExpenses();
@@ -79,6 +79,24 @@ export function Home() {
         }
     };
 
+    const confirmRemoveExpense = (id: number) => {
+        Alert.alert(
+            "Confirmar Remoção",
+            "Tem certeza de que deseja remover este registro financeiro?",
+            [
+                {
+                    text: "Cancelar",
+                    style: "cancel",
+                },
+                {
+                    text: "Remover",
+                    style: "destructive",
+                    onPress: () => handleRemoveExpense(id), // Chama a função de remoção ao confirmar
+                },
+            ]
+        );
+    };
+
     const handleRemoveExpense = async (id: number) => {
         try {
             await api.delete(`/registros-financeiros/${id}`);
@@ -122,8 +140,8 @@ export function Home() {
                 <TouchableOpacity
                     style={stylesHome.addButton}
                     onPress={() => {
-                        setExpenseToEdit(null); // Limpa o registro a ser editado
-                        setModalKey((prevKey) => prevKey + 1); // Força a recriação do modal
+                        setExpenseToEdit(null);
+                        setModalKey((prevKey) => prevKey + 1);
                         setIsExpenseModalVisible(true);
                     }}
                 >
@@ -171,7 +189,7 @@ export function Home() {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={stylesHome.deleteButton}
-                            onPress={() => handleRemoveExpense(item.id)}
+                            onPress={() => confirmRemoveExpense(item.id)}
                         >
                             <Icon name="delete" size={24} color="#FFF" />
                         </TouchableOpacity>
@@ -184,7 +202,7 @@ export function Home() {
             />
 
             <ExpenseFormModal
-                key={modalKey} // Garante que o modal será recriado ao mudar a chave
+                key={modalKey}
                 visible={isExpenseModalVisible}
                 expense={expenseToEdit}
                 categories={categories}
