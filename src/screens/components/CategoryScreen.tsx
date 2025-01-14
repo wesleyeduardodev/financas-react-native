@@ -74,18 +74,6 @@ export function CategoryScreen() {
 
     const renderRightActions = (id: number) => (
         <View style={stylesCategoryScreen.actionContainer}>
-           {/* <TouchableOpacity
-                style={stylesCategoryScreen.editButton}
-                onPress={() => {
-                    const categoryToEdit = categories.find((category) => category.id === id);
-                    if (categoryToEdit) {
-                        setCategoryToEdit(categoryToEdit);
-                        setIsCategoryModalVisible(true);
-                    }
-                }}
-            >
-                <Icon name="edit" size={24} color="#FFF" />
-            </TouchableOpacity>*/}
             <TouchableOpacity
                 style={stylesCategoryScreen.deleteButton}
                 onPress={() => confirmRemoveCategory(id)}
@@ -120,11 +108,7 @@ export function CategoryScreen() {
                                 setIsCategoryModalVisible(true);
                             }}
                         >
-                            <Category
-                                {...item}
-                                onEdit={() => {}}
-                                onRemove={() => {}}
-                            />
+                            <Category {...item} />
                         </TouchableOpacity>
                     </Swipeable>
                 )}

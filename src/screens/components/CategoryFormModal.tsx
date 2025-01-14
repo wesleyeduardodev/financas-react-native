@@ -22,15 +22,22 @@ export function CategoryFormModal({
                                       onSave,
                                       onClose,
                                   }: CategoryFormModalProps) {
-    const [name, setName] = useState(category?.nome || "");
-    const [descricao, setDescricao] = useState(category?.descricao || "");
+    const [name, setName] = useState("");
+    const [descricao, setDescricao] = useState("");
 
     useEffect(() => {
         if (category) {
-            setName(category.nome);
-            setDescricao(category.descricao);
+            setName(category.nome || "");
+            setDescricao(category.descricao || "");
+        } else {
+            resetForm();
         }
     }, [category]);
+
+    const resetForm = () => {
+        setName("");
+        setDescricao("");
+    };
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
@@ -65,7 +72,6 @@ export function CategoryFormModal({
                     </Text>
                 </View>
 
-
                 <TouchableOpacity
                     style={stylesCategoryFormModal.saveButton}
                     onPress={() => {
@@ -74,6 +80,7 @@ export function CategoryFormModal({
                             return;
                         }
                         onSave({ nome: name, descricao });
+                        resetForm();
                     }}
                 >
                     <Text style={stylesCategoryFormModal.buttonText}>Salvar</Text>
@@ -81,7 +88,10 @@ export function CategoryFormModal({
 
                 <TouchableOpacity
                     style={stylesCategoryFormModal.cancelButton}
-                    onPress={onClose}
+                    onPress={() => {
+                        resetForm();
+                        onClose();
+                    }}
                 >
                     <Text style={stylesCategoryFormModal.buttonText}>Cancelar</Text>
                 </TouchableOpacity>

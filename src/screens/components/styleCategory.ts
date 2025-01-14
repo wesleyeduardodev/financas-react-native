@@ -2,42 +2,34 @@ import { StyleSheet } from "react-native";
 
 export const stylesCategory = StyleSheet.create({
     container: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#2D2D2D",
+        padding: 15,
+        backgroundColor: "#FFFFFF",
         borderRadius: 8,
-        padding: 16,
         marginVertical: 8,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 2,
+        elevation: 3,
+        borderLeftWidth: 5,
+        borderLeftColor: "#317bcf", // Linha de destaque na esquerda
     },
     name: {
-        fontSize: 18,
+        fontSize: 20, // Tamanho maior para destaque
         fontWeight: "bold",
-        color: "#FFF",
+        color: "#1144bd", // Cor de destaque
+        marginBottom: 8,
     },
     description: {
         fontSize: 14,
-        color: "#A9A9A9", // Cor de destaque para a descrição
-        marginTop: 4, // Espaço abaixo do título
-        fontStyle: "italic", // Opcional: estilo itálico para diferenciar
+        color: "#666",
+        marginTop: 10,
+        lineHeight: 20,
     },
-    actions: {
-        flexDirection: "row",
-    },
-    editButton: {
-        backgroundColor: "#317bcf",
-        padding: 8,
-        borderRadius: 4,
-        marginRight: 8,
-    },
-    deleteButton: {
-        backgroundColor: "#E23C44",
-        padding: 8,
-        borderRadius: 4,
+    descriptionEmpty: {
+        fontSize: 14,
+        color: "#999",
+        fontStyle: "italic",
+        marginTop: 10,
     },
 });
