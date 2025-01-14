@@ -85,6 +85,12 @@ npm install @react-navigation/native @react-navigation/stack
 npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons @react-native-community/masked-view
 npm install react-native-swipe-list-view
 npm install date-fns
+npm install @react-navigation/material-top-tabs react-native-tab-view
+npm install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context react-native-vector-icons react-native-get-random-values
+expo install react-native-reanimated
+npm install @react-navigation/drawer
+expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context react-native-vector-icons react-native-get-random-values
+
 
 
 ---
