@@ -21,9 +21,13 @@ export function Home() {
 
     const fetchExpenses = async () => {
         try {
+            //console.log("Iniciando a requisição para /registros-financeiros...");
             const response = await api.get("/registros-financeiros");
+            //console.log("Resposta recebida:", response.data); // Loga o retorno da API
             setExpenses(response.data);
+            //console.log("Registros financeiros carregados com sucesso.");
         } catch (error: any) {
+           // console.error("Erro ao carregar registros financeiros:", error); // Loga o erro completo no console
             Alert.alert(
                 "Erro ao carregar registros financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os registros financeiros."
@@ -115,8 +119,10 @@ export function Home() {
                             titulo={item.titulo}
                             tipoRegistro={item.tipoRegistro}
                             tipoTransacao={item.tipoTransacao}
-                            idSubCategoria={item.idSubCategoria}
+                            idCategoria={item.idCategoria}
                             nomeCategoria={item.nomeCategoria}
+                            idSubCategoria={item.idSubCategoria}
+                            nomeSubCategoria={item.nomeSubCategoria}
                             valor={item.valor}
                             dataTransacao={item.dataTransacao}
                             onEdit={() => {}}
