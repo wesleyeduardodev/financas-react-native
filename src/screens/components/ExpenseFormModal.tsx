@@ -48,7 +48,7 @@ export function ExpenseFormModal({
     const [value, setValue] = useState<string>(
         expense?.valor ? expense.valor.toFixed(2).replace(".", ",") : ""
     );
-    const [category, setCategory] = useState<number>(expense?.idCategoria || categories[0]?.id || 0);
+    const [category, setCategory] = useState<number>(expense?.idSubCategoria || categories[0]?.id || 0);
     const [subCategory, setSubCategory] = useState<number | null>(null);
     const [titulo, setTitulo] = useState<string>(expense?.titulo || "");
     const [dateTimeISO, setDateTimeISO] = useState<string>(
@@ -219,20 +219,24 @@ export function ExpenseFormModal({
 
                         <TouchableOpacity
                             style={stylesExpenseFormModal.saveButton}
-                            onPress={() =>
+                            onPress={() => {
+                                if (!subCategory) {
+                                    alert("Selecione uma subcategoria antes de salvar.");
+                                    return;
+                                }
                                 onSave({
                                     titulo,
                                     tipoRegistro,
                                     tipoTransacao,
                                     valor: parseFloat(value.replace(",", ".")),
-                                    idCategoria: category,
                                     idSubCategoria: subCategory,
                                     dataTransacao: dateTimeISO,
-                                })
-                            }
+                                });
+                            }}
                         >
                             <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
                         </TouchableOpacity>
+
 
                         <TouchableOpacity
                             style={stylesExpenseFormModal.cancelButton}

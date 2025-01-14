@@ -43,14 +43,22 @@ export function Home() {
         }
     };
 
-    const handleAddExpense = async (newExpense: ExpenseProps) => {
+    const handleAddExpense = async (newExpense: Partial<ExpenseProps>) => {
         try {
-            const response = await api.post("/registros-financeiros", newExpense);
+            const response = await api.post("/registros-financeiros", {
+                ...newExpense,
+                idCategoria: undefined,
+                idSubCategoria: newExpense.idSubCategoria,
+            });
             setExpenses((prev) => [...prev, response.data]);
         } catch (error: any) {
-            Alert.alert("Erro ao adicionar registro financeiro", error.message || "Erro desconhecido.");
+            Alert.alert(
+                "Erro ao adicionar registro financeiro",
+                error.message || "Erro desconhecido."
+            );
         }
     };
+
 
     const handleEditExpense = async (id: number, updatedExpense: Partial<ExpenseProps>) => {
         try {
@@ -107,7 +115,7 @@ export function Home() {
                             titulo={item.titulo}
                             tipoRegistro={item.tipoRegistro}
                             tipoTransacao={item.tipoTransacao}
-                            idCategoria={item.idCategoria}
+                            idSubCategoria={item.idSubCategoria}
                             nomeCategoria={item.nomeCategoria}
                             valor={item.valor}
                             dataTransacao={item.dataTransacao}

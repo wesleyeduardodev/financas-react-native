@@ -4,16 +4,17 @@ import { stylesExpense } from "./styleExpense";
 
 export type ExpenseProps = {
     id: number;
-    titulo: string; // Novo campo
-    tipoRegistro: number; // Tipo de Registro (0 = Entrada, 1 = Saída)
-    tipoTransacao: number; // Tipo de Transação (0 = Pix, 1 = Crédito, etc.)
-    idCategoria: number;
+    titulo: string;
+    tipoRegistro: number;
+    tipoTransacao: number;
+    idSubCategoria: number; // Novo campo
     nomeCategoria: string;
-    valor: number; // Valor decimal
-    dataTransacao: string; // Formato ISO 8601 (yyyy-MM-ddTHH:mm:ssZ)
+    valor: number;
+    dataTransacao: string;
     onEdit: () => void;
     onRemove: () => void;
 };
+
 
 const tipoRegistroOptions: Record<number, string> = {
     0: "Entrada",
