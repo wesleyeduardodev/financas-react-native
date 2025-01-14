@@ -4,12 +4,15 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SubCategory, SubCategoryProps } from "./SubCategory";
 import { SubCategoryFormModal } from "./SubCategoryFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Picker } from "@react-native-picker/picker"; // Para o seletor de categoria
 import { stylesSubCategoriesScreen } from "./styleSubCategoriesScreen";
 import { api } from "../services/api";
 
 export function SubCategoriesScreen() {
     const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
+    const [filteredSubCategories, setFilteredSubCategories] = useState<SubCategoryProps[]>([]); // Para filtragem
     const [categories, setCategories] = useState<{ id: number; nome: string }[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null); // Categoria selecionada
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [subCategoryToEdit, setSubCategoryToEdit] = useState<SubCategoryProps | null>(null);
 
@@ -17,6 +20,10 @@ export function SubCategoriesScreen() {
         fetchCategories();
         fetchSubCategories();
     }, []);
+
+    useEffect(() => {
+        filterSubCategoriesByCategory(selectedCategory);
+    }, [selectedCategory, subCategories]);
 
     const fetchCategories = async () => {
         try {
@@ -33,6 +40,16 @@ export function SubCategoriesScreen() {
             setSubCategories(response.data);
         } catch (error: any) {
             Alert.alert("Erro ao carregar subcategorias.", error.message || "Tente novamente.");
+        }
+    };
+
+    const filterSubCategoriesByCategory = (categoryId: number | null) => {
+        if (categoryId === null) {
+            setFilteredSubCategories(subCategories);
+        } else {
+            setFilteredSubCategories(
+                subCategories.filter((subCategory) => subCategory.idCategoria === categoryId)
+            );
         }
     };
 
@@ -106,6 +123,20 @@ export function SubCategoriesScreen() {
 
     return (
         <View style={stylesSubCategoriesScreen.container}>
+            {/* Seletor de Categoria */}
+            <View style={stylesSubCategoriesScreen.pickerContainer}>
+                <Picker
+                    selectedValue={selectedCategory}
+                    onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+                    style={stylesSubCategoriesScreen.picker}
+                >
+                    <Picker.Item label="Todas as Categorias" value={null} />
+                    {categories.map((category) => (
+                        <Picker.Item key={category.id} label={category.nome} value={category.id} />
+                    ))}
+                </Picker>
+            </View>
+
             <TouchableOpacity
                 style={stylesSubCategoriesScreen.addButton}
                 onPress={() => {
@@ -118,7 +149,7 @@ export function SubCategoriesScreen() {
             </TouchableOpacity>
 
             <FlatList
-                data={subCategories}
+                data={filteredSubCategories}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <Swipeable renderRightActions={() => renderRightActions(item.id)}>

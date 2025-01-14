@@ -6,6 +6,15 @@ export const stylesSubCategoriesScreen = StyleSheet.create({
         backgroundColor: "#F5F5F5",
         padding: 20,
     },
+    pickerContainer: {
+        marginBottom: 20,
+        backgroundColor: "#2D2D2D",
+        borderRadius: 8,
+        padding: 10,
+    },
+    picker: {
+        color: "#FFF",
+    },
     addButton: {
         backgroundColor: "#4CAF50",
         padding: 15,
