@@ -9,7 +9,7 @@ import {CategoryScreen} from "./src/screens/components/CategoryScreen";
 const Drawer = createDrawerNavigator();
 const Tab = createMaterialTopTabNavigator();
 
-function Tabs() {
+/*function Tabs() {
     return (
         <Tab.Navigator
             initialRouteName="Expenses"
@@ -40,7 +40,7 @@ function Tabs() {
                 }}
             />
 
-            {/* Aba Bike - opcional */}
+            {/!* Aba Bike - opcional *!/}
             <Tab.Screen
                 name="Subcategories"
                 component={CategoryScreen}
@@ -54,7 +54,7 @@ function Tabs() {
 
         </Tab.Navigator>
     );
-}
+}*/
 
 // Configuração do Drawer Navigator
 export default function App() {
@@ -70,7 +70,7 @@ export default function App() {
                 {/* Tela principal que exibe as abas */}
                 <Drawer.Screen
                     name="Home"
-                    component={Tabs}
+                    component={Home}//todo para voltar altere para Tabs
                     options={{
                         drawerIcon: ({color}) => (
                             <Icon name="home" size={20} color={color}/>
