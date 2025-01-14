@@ -3,12 +3,57 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Home } from "./src/screens/components/Home";
-import { CategoryScreen } from "./src/screens/components/CategoryScreen";
-import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen"; // Importando a tela de subcategorias
+import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
+import { FinancialSummary } from "./src/screens/components/FinancialSummary"; // Importando o resumo financeiro
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Drawer = createDrawerNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-// Configuração do Drawer Navigator
+function Tabs() {
+    return (
+        <Tab.Navigator
+            initialRouteName="Expenses"
+            screenOptions={{
+                tabBarStyle: { backgroundColor: "#4CAF50" },
+                tabBarActiveTintColor: "#FFF",
+                tabBarIndicatorStyle: { backgroundColor: "#FFF" },
+            }}
+        >
+            <Tab.Screen
+                name="Expenses"
+                component={Home}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="attach-money" size={20} color={color} />
+                    ),
+                    tabBarLabel: "Registro Financeiro",
+                }}
+            />
+            <Tab.Screen
+                name="Categories"
+                component={FinancialSummary} // Alterado para exibir o resumo financeiro
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="category" size={20} color={color} />
+                    ),
+                    tabBarLabel: "Resumo Financeiro", // Rótulo ajustado
+                }}
+            />
+            <Tab.Screen
+                name="Subcategories"
+                component={SubCategoriesScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="subdirectory-arrow-right" size={20} color={color} />
+                    ),
+                    tabBarLabel: "Subcategorias",
+                }}
+            />
+        </Tab.Navigator>
+    );
+}
+
 export default function App() {
     return (
         <NavigationContainer>
@@ -19,10 +64,9 @@ export default function App() {
                     headerTintColor: "#FFF",
                 }}
             >
-                {/* Tela principal que exibe as abas */}
                 <Drawer.Screen
                     name="Home"
-                    component={Home}
+                    component={Tabs}
                     options={{
                         drawerIcon: ({ color }) => (
                             <Icon name="home" size={20} color={color} />
@@ -30,18 +74,6 @@ export default function App() {
                         title: "Início",
                     }}
                 />
-                {/* Tela de Categorias como uma opção no Drawer */}
-                <Drawer.Screen
-                    name="Categories"
-                    component={CategoryScreen}
-                    options={{
-                        drawerIcon: ({ color }) => (
-                            <Icon name="category" size={20} color={color} />
-                        ),
-                        title: "Categorias",
-                    }}
-                />
-                {/* Tela de Subcategorias como uma nova opção no Drawer */}
                 <Drawer.Screen
                     name="Subcategories"
                     component={SubCategoriesScreen}
