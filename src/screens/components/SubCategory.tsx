@@ -17,6 +17,7 @@ export function SubCategory({
     return (
         <View style={stylesSubCategory.container}>
             <Text style={stylesSubCategory.name}>{nome}</Text>
+            <Text style={stylesSubCategory.descricaoCategoria}>Descrição: {descricao}</Text>
             <Text style={stylesSubCategory.category}>Categoria: {categoryName}</Text>
         </View>
     );

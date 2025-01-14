@@ -32,6 +32,12 @@ export const stylesSubCategory = StyleSheet.create({
         fontStyle: "italic",
         marginTop: 10,
     },
+    descricaoCategoria: {
+        fontSize: 10,
+        color: "#000000",
+        marginTop: 5,
+        fontWeight: "500",
+    },
     category: {
         fontSize: 14,
         color: "#317bcf",
