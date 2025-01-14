@@ -7,7 +7,7 @@ export const stylesSubCategoriesScreen = StyleSheet.create({
         padding: 20,
     },
     addButton: {
-        backgroundColor: "#007BFF",
+        backgroundColor: "#4CAF50",
         padding: 15,
         borderRadius: 8,
         flexDirection: "row",

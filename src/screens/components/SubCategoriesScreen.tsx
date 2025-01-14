@@ -39,7 +39,7 @@ export function SubCategoriesScreen() {
     const handleAddSubCategory = async (newSubCategory: Partial<SubCategoryProps>) => {
         try {
             const response = await api.post("/subcategorias-registro-financeiros", newSubCategory);
-            setSubCategories((prev) => [...prev, response.data]);
+            await fetchSubCategories(); // Atualiza a lista completa após a adição
         } catch (error: any) {
             Alert.alert("Erro ao adicionar subcategoria.", error.message || "Tente novamente.");
         }
@@ -99,6 +99,11 @@ export function SubCategoriesScreen() {
         </View>
     );
 
+    const getCategoryName = (idCategoria: number | null) => {
+        const category = categories.find((cat) => cat.id === idCategoria);
+        return category ? category.nome : "Sem Categoria";
+    };
+
     return (
         <View style={stylesSubCategoriesScreen.container}>
             <TouchableOpacity
@@ -124,7 +129,7 @@ export function SubCategoriesScreen() {
                                 setIsModalVisible(true);
                             }}
                         >
-                            <SubCategory {...item} />
+                            <SubCategory {...item} categoryName={getCategoryName(item.idCategoria)} />
                         </TouchableOpacity>
                     </Swipeable>
                 )}
