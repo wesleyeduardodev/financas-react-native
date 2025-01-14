@@ -73,7 +73,7 @@ export default function App() {
                         drawerIcon: ({ color }) => (
                             <Icon name="home" size={20} color={color} />
                         ),
-                        title: "Início",
+                        title: "Menus",
                     }}
                 />
                 <Drawer.Screen
