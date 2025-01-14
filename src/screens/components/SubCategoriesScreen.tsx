@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SubCategory, SubCategoryProps } from "./SubCategory";
 import { SubCategoryFormModal } from "./SubCategoryFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -49,7 +50,10 @@ export function SubCategoriesScreen() {
         updatedSubCategory: Partial<SubCategoryProps>
     ) => {
         try {
-            const response = await api.put(`/subcategorias-registro-financeiros/${id}`, updatedSubCategory);
+            const response = await api.put(
+                `/subcategorias-registro-financeiros/${id}`,
+                updatedSubCategory
+            );
             setSubCategories((prev) =>
                 prev.map((subCategory) =>
                     subCategory.id === id ? response.data : subCategory
@@ -75,7 +79,11 @@ export function SubCategoriesScreen() {
             "Tem certeza que deseja remover esta subcategoria?",
             [
                 { text: "Cancelar", style: "cancel" },
-                { text: "Remover", style: "destructive", onPress: () => handleRemoveSubCategory(id) },
+                {
+                    text: "Remover",
+                    style: "destructive",
+                    onPress: () => handleRemoveSubCategory(id),
+                },
             ]
         );
     };
@@ -108,15 +116,17 @@ export function SubCategoriesScreen() {
                 data={subCategories}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={stylesSubCategoriesScreen.subCategoryCard}
-                        onPress={() => {
-                            setSubCategoryToEdit(item);
-                            setIsModalVisible(true);
-                        }}
-                    >
-                        <SubCategory {...item} />
-                    </TouchableOpacity>
+                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+                        <TouchableOpacity
+                            style={stylesSubCategoriesScreen.subCategoryCard}
+                            onPress={() => {
+                                setSubCategoryToEdit(item);
+                                setIsModalVisible(true);
+                            }}
+                        >
+                            <SubCategory {...item} />
+                        </TouchableOpacity>
+                    </Swipeable>
                 )}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={() => (
