@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 export const stylesHome = StyleSheet.create({
     container: {
@@ -6,34 +6,28 @@ export const stylesHome = StyleSheet.create({
         backgroundColor: "#F7F9FC",
         padding: 16,
     },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginBottom: 16,
-        marginTop: 20,
-    },
     addButton: {
-        flex: 1,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#28A745",
-        padding: 12,
+        backgroundColor: "#28A745", // Cor verde para o botão
+        padding: 16,
         borderRadius: 8,
-        marginHorizontal: 4,
-        elevation: 2,
+        marginVertical: 16, // Espaçamento vertical
+        elevation: 4, // Sombra para destacar o botão
     },
     addButtonText: {
-        color: "#FFF",
+        color: "#FFF", // Texto branco
         fontWeight: "bold",
-        marginLeft: 8,
+        fontSize: 16,
+        marginLeft: 8, // Espaço entre o ícone e o texto
     },
     expenseCard: {
         borderRadius: 8,
         padding: 6,
         marginBottom: 5,
         shadowColor: "#000",
-        shadowOffset: {width: 0, height: 1},
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 2,

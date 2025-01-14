@@ -1,24 +1,18 @@
-import {useState, useEffect, useCallback} from "react";
-import {Alert, Text, TouchableOpacity, View} from "react-native";
-import {useFocusEffect, useNavigation} from "@react-navigation/native";
-import {StackNavigationProp} from "@react-navigation/stack";
+import { useState, useEffect } from "react";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import {SwipeListView} from "react-native-swipe-list-view";
-import {Expense, ExpenseProps} from "./Expense";
-import {ExpenseFormModal} from "./ExpenseFormModal";
-import {stylesHome} from "./styleHome";
-import {RootStackParamList} from "../services/types";
-import {api} from "../services/api";
-import {CategoryProps} from "./Category";
-
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
+import { SwipeListView } from "react-native-swipe-list-view";
+import { Expense, ExpenseProps } from "./Expense";
+import { ExpenseFormModal } from "./ExpenseFormModal";
+import { stylesHome } from "./styleHome";
+import { api } from "../services/api";
+import { CategoryProps } from "./Category";
 
 export function Home() {
     const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
     const [expenseToEdit, setExpenseToEdit] = useState<ExpenseProps | null>(null);
-    const navigation = useNavigation<HomeScreenNavigationProp>();
 
     useEffect(() => {
         fetchExpenses();
@@ -35,24 +29,6 @@ export function Home() {
             );
         }
     };
-
-    const fetchCategories = async () => {
-        try {
-            const response = await api.get("/categorias-registro-financeiros");
-            setCategories(response.data);
-        } catch (error: any) {
-            Alert.alert(
-                "Erro ao carregar categorias",
-                error.response?.data?.message || error.message || "Não foi possível carregar as categorias."
-            );
-        }
-    };
-
-    useFocusEffect(
-        useCallback(() => {
-            fetchCategories();
-        }, [])
-    );
 
     const handleAddExpense = async (newExpense: ExpenseProps) => {
         try {
@@ -83,21 +59,6 @@ export function Home() {
         }
     };
 
-    const confirmRemoveExpense = (id: number) => {
-        Alert.alert(
-            "Confirmar Remoção",
-            "Tem certeza que deseja remover este registro financeiro?",
-            [
-                {text: "Cancelar", style: "cancel"},
-                {
-                    text: "Remover",
-                    style: "destructive",
-                    onPress: () => handleRemoveExpense(id),
-                },
-            ]
-        );
-    };
-
     const openNewExpenseModal = () => {
         setExpenseToEdit(null);
         setIsExpenseModalVisible(true);
@@ -105,25 +66,13 @@ export function Home() {
 
     return (
         <View style={stylesHome.container}>
-            <View style={stylesHome.buttonContainer}>
-                <TouchableOpacity
-                    style={stylesHome.addButton}
-                    onPress={openNewExpenseModal}
-                >
-                    <Icon name="add" size={28} color="#FFF"/>
-                    <Text style={stylesHome.addButtonText}>Registro Financeiro</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={stylesHome.addButton}
-                    onPress={() => {
-                        navigation.navigate("CategoryScreen");
-                    }}
-                >
-                    <Icon name="category" size={28} color="#FFF"/>
-                    <Text style={stylesHome.addButtonText}>Categorias</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+                style={stylesHome.addButton}
+                onPress={openNewExpenseModal}
+            >
+                <Icon name="add" size={28} color="#FFF" />
+                <Text style={stylesHome.addButtonText}>Registro Financeiro</Text>
+            </TouchableOpacity>
 
             <SwipeListView
                 data={expenses.sort(
@@ -131,7 +80,7 @@ export function Home() {
                         new Date(b.dataTransacao).getTime() - new Date(a.dataTransacao).getTime()
                 )}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                     <View
                         style={[
                             stylesHome.expenseCard,
@@ -149,33 +98,31 @@ export function Home() {
                             nomeCategoria={item.nomeCategoria}
                             valor={item.valor}
                             dataTransacao={item.dataTransacao}
-                            onEdit={() => {
-                            }}
-                            onRemove={() => {
-                            }}
+                            onEdit={() => {}}
+                            onRemove={() => {}}
                         />
                     </View>
                 )}
-                renderHiddenItem={({item}) => (
+                renderHiddenItem={({ item }) => (
                     <View style={stylesHome.hiddenItemContainer}>
                         <TouchableOpacity
                             style={stylesHome.editButton}
                             onPress={() => {
-                                setExpenseToEdit(item); // Define o item para edição
-                                setIsExpenseModalVisible(true); // Abre o modal de edição
+                                setExpenseToEdit(item);
+                                setIsExpenseModalVisible(true);
                             }}
                         >
-                            <Icon name="edit" size={24} color="#FFF"/>
+                            <Icon name="edit" size={24} color="#FFF" />
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={stylesHome.deleteButton}
-                            onPress={() => confirmRemoveExpense(item.id)}
+                            onPress={() => handleRemoveExpense(item.id)}
                         >
-                            <Icon name="delete" size={24} color="#FFF"/>
+                            <Icon name="delete" size={24} color="#FFF" />
                         </TouchableOpacity>
                     </View>
                 )}
-                rightOpenValue={-75} // Ajuste conforme necessário
+                rightOpenValue={-75}
                 disableRightSwipe={true}
                 stopLeftSwipe={0}
                 closeOnRowPress={true}
