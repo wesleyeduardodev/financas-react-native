@@ -37,6 +37,8 @@ export function FinancialSummary() {
         }
     };
 
+    const total = totalEntrada + totalSaida;
+
     const pieChartData = [
         {
             name: "Entrada",
@@ -44,6 +46,7 @@ export function FinancialSummary() {
             color: "#28A745",
             legendFontColor: "#333",
             legendFontSize: 14,
+            percent: total > 0 ? ((totalEntrada / total) * 100).toFixed(2) : "0.00",
         },
         {
             name: "Saída",
@@ -51,29 +54,45 @@ export function FinancialSummary() {
             color: "#DC3545",
             legendFontColor: "#333",
             legendFontSize: 14,
+            percent: total > 0 ? ((totalSaida / total) * 100).toFixed(2) : "0.00",
         },
     ];
+
+    const formatCurrency = (value: number) => {
+        return value.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+        });
+    };
 
     return (
         <View style={stylesFinancialSummary.container}>
             <Text style={stylesFinancialSummary.title}>Resumo Financeiro</Text>
             <View style={stylesFinancialSummary.summaryCard}>
                 <Text style={stylesFinancialSummary.label}>Total de Entrada:</Text>
-                <Text style={stylesFinancialSummary.valueEntrada}>R$ {totalEntrada.toFixed(2)}</Text>
+                <Text style={stylesFinancialSummary.valueEntrada}>{formatCurrency(totalEntrada)}</Text>
             </View>
             <View style={stylesFinancialSummary.summaryCard}>
                 <Text style={stylesFinancialSummary.label}>Total de Saída:</Text>
-                <Text style={stylesFinancialSummary.valueSaida}>R$ {totalSaida.toFixed(2)}</Text>
+                <Text style={stylesFinancialSummary.valueSaida}>{formatCurrency(totalSaida)}</Text>
             </View>
             <View style={stylesFinancialSummary.summaryCard}>
                 <Text style={stylesFinancialSummary.label}>Saldo Total:</Text>
-                <Text style={stylesFinancialSummary.valueSaldo}>R$ {saldoTotal.toFixed(2)}</Text>
+                <Text style={stylesFinancialSummary.valueSaldo}>{formatCurrency(saldoTotal)}</Text>
             </View>
 
             {/* Gráfico de Pizza */}
             <Text style={stylesFinancialSummary.title}>Comparação de Totais</Text>
             <PieChart
-                data={pieChartData}
+                data={pieChartData.map((item) => ({
+                    name: item.name,
+                    total: item.total,
+                    color: item.color,
+                    legendFontColor: item.legendFontColor,
+                    legendFontSize: item.legendFontSize,
+                    label: `${item.percent}%`, // Percentual como label
+                }))}
                 width={Dimensions.get("window").width - 40} // Ajusta ao tamanho da tela
                 height={220}
                 chartConfig={{
@@ -83,7 +102,7 @@ export function FinancialSummary() {
                 accessor={"total"}
                 backgroundColor={"transparent"}
                 paddingLeft={"10"}
-                absolute // Exibe valores absolutos no gráfico
+                absolute={false} // Exibe percentuais dentro do gráfico
             />
         </View>
     );
