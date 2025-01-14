@@ -9,16 +9,18 @@ import { CategoryScreen } from "./src/screens/components/CategoryScreen";
 const Drawer = createDrawerNavigator();
 const Tab = createMaterialTopTabNavigator();
 
+// Configuração das abas
 function Tabs() {
     return (
         <Tab.Navigator
+            initialRouteName="Car" // Define a aba "Car" como inicial
             screenOptions={{
                 tabBarStyle: { backgroundColor: "#4CAF50" },
                 tabBarActiveTintColor: "#FFF",
                 tabBarIndicatorStyle: { backgroundColor: "#FFF" },
-                tabBarIconStyle: { size: 20 },
             }}
         >
+            {/* Aba Car que mostra o componente Home */}
             <Tab.Screen
                 name="Car"
                 component={Home}
@@ -29,6 +31,7 @@ function Tabs() {
                     tabBarLabel: "Carro",
                 }}
             />
+            {/* Aba Train que mostra o componente CategoryScreen */}
             <Tab.Screen
                 name="Train"
                 component={CategoryScreen}
@@ -39,6 +42,7 @@ function Tabs() {
                     tabBarLabel: "Trem",
                 }}
             />
+            {/* Aba Bike - opcional */}
             <Tab.Screen
                 name="Bike"
                 component={CategoryScreen}
@@ -53,6 +57,7 @@ function Tabs() {
     );
 }
 
+// Configuração do Drawer Navigator
 export default function App() {
     return (
         <NavigationContainer>
@@ -63,6 +68,7 @@ export default function App() {
                     headerTintColor: "#FFF",
                 }}
             >
+                {/* Tela principal que exibe as abas */}
                 <Drawer.Screen
                     name="Home"
                     component={Tabs}
@@ -73,6 +79,7 @@ export default function App() {
                         title: "Início",
                     }}
                 />
+                {/* Tela de Categorias como uma opção no Drawer */}
                 <Drawer.Screen
                     name="Categories"
                     component={CategoryScreen}
