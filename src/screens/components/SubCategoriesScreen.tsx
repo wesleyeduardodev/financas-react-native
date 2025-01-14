@@ -123,30 +123,32 @@ export function SubCategoriesScreen() {
 
     return (
         <View style={stylesSubCategoriesScreen.container}>
-            {/* Seletor de Categoria */}
-            <View style={stylesSubCategoriesScreen.pickerContainer}>
-                <Picker
-                    selectedValue={selectedCategory}
-                    onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-                    style={stylesSubCategoriesScreen.picker}
-                >
-                    <Picker.Item label="Todas as Categorias" value={null} />
-                    {categories.map((category) => (
-                        <Picker.Item key={category.id} label={category.nome} value={category.id} />
-                    ))}
-                </Picker>
-            </View>
+            {/* Seletor de Categoria e Botão de Adicionar */}
+            <View style={stylesSubCategoriesScreen.headerContainer}>
+                <View style={stylesSubCategoriesScreen.pickerContainer}>
+                    <Picker
+                        selectedValue={selectedCategory}
+                        onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+                        style={stylesSubCategoriesScreen.picker}
+                    >
+                        <Picker.Item label="Tudo" value={null} />
+                        {categories.map((category) => (
+                            <Picker.Item key={category.id} label={category.nome} value={category.id} />
+                        ))}
+                    </Picker>
+                </View>
 
-            <TouchableOpacity
-                style={stylesSubCategoriesScreen.addButton}
-                onPress={() => {
-                    setSubCategoryToEdit(null);
-                    setIsModalVisible(true);
-                }}
-            >
-                <Icon name="add" size={28} color="#FFF" />
-                <Text style={stylesSubCategoriesScreen.addButtonText}>Adicionar Subcategoria</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={stylesSubCategoriesScreen.addButton}
+                    onPress={() => {
+                        setSubCategoryToEdit(null);
+                        setIsModalVisible(true);
+                    }}
+                >
+                    <Icon name="add" size={28} color="#FFF" />
+                    <Text style={stylesSubCategoriesScreen.addButtonText}>Adicionar</Text>
+                </TouchableOpacity>
+            </View>
 
             <FlatList
                 data={filteredSubCategories}

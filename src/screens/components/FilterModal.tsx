@@ -14,8 +14,6 @@ type FilterModalProps = {
         tipoTransacao: number | null;
         categoria: number | null;
         subCategoria: number | null;
-        startDate: string | null;
-        endDate: string | null;
     }) => void;
 };
 
@@ -125,32 +123,6 @@ export function FilterModal({
                     </View>
                 )}
 
-                {/* Filtro de Data Inicial */}
-                <View style={stylesFilterModal.datePickerContainer}>
-                    <Text style={stylesFilterModal.label}>Data Inicial:</Text>
-                    <TouchableOpacity
-                        style={stylesFilterModal.dateButton}
-                        onPress={() => setShowStartDatePicker(true)}
-                    >
-                        <Text style={stylesFilterModal.dateButtonText}>
-                            {startDate ? startDate.toLocaleDateString() : "Selecione uma data"}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Filtro de Data Final */}
-                <View style={stylesFilterModal.datePickerContainer}>
-                    <Text style={stylesFilterModal.label}>Data Final:</Text>
-                    <TouchableOpacity
-                        style={stylesFilterModal.dateButton}
-                        onPress={() => setShowEndDatePicker(true)}
-                    >
-                        <Text style={stylesFilterModal.dateButtonText}>
-                            {endDate ? endDate.toLocaleDateString() : "Selecione uma data"}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
                 {/* DateTimePickers */}
                 {showStartDatePicker && (
                     <DateTimePicker
@@ -184,9 +156,7 @@ export function FilterModal({
                             tipoRegistro,
                             tipoTransacao,
                             categoria,
-                            subCategoria,
-                            startDate: formatDateToISODateOnly(startDate),
-                            endDate: formatDateToISODateOnly(endDate),
+                            subCategoria
                         })
                     }
                 >

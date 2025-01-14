@@ -6,30 +6,6 @@ export const stylesSubCategoriesScreen = StyleSheet.create({
         backgroundColor: "#F5F5F5",
         padding: 20,
     },
-    pickerContainer: {
-        marginBottom: 20,
-        backgroundColor: "#2D2D2D",
-        borderRadius: 8,
-        padding: 10,
-    },
-    picker: {
-        color: "#FFF",
-    },
-    addButton: {
-        backgroundColor: "#4CAF50",
-        padding: 15,
-        borderRadius: 8,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 20,
-    },
-    addButtonText: {
-        color: "#FFF",
-        fontSize: 16,
-        fontWeight: "bold",
-        marginLeft: 10,
-    },
     subCategoryCard: {
         backgroundColor: "#FFF",
         padding: 15,
@@ -57,5 +33,35 @@ export const stylesSubCategoriesScreen = StyleSheet.create({
         fontSize: 16,
         color: "#666",
         marginTop: 20,
+    },
+    headerContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    pickerContainer: {
+        flex: 1,
+        backgroundColor: "#4CAF50",
+        borderRadius: 8,
+        marginRight: 10, // Espaçamento entre o seletor e o botão
+    },
+    picker: {
+        color: "#FFF",
+        paddingHorizontal: 10,
+    },
+    addButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#4CAF50",
+        padding: 12,
+        borderRadius: 8,
+    },
+    addButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontWeight: "bold",
+        marginLeft: 5,
     },
 });
