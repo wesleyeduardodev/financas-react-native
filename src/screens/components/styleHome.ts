@@ -19,7 +19,7 @@ export const stylesHome = StyleSheet.create({
         backgroundColor: "#28A745", // Cor verde para o botão
         padding: 16,
         borderRadius: 8,
-        marginVertical: 16, // Espaçamento vertical
+        width: "48%", // Define a largura fixa para garantir alinhamento
         elevation: 4, // Sombra para destacar o botão
     },
     addButtonText: {
@@ -68,7 +68,6 @@ export const stylesHome = StyleSheet.create({
         width: 75,
         height: "50%",
     },
-
     filterButton: {
         flexDirection: "row",
         alignItems: "center",
@@ -76,7 +75,7 @@ export const stylesHome = StyleSheet.create({
         backgroundColor: "#007BFF", // Cor azul para o botão de filtros
         padding: 16,
         borderRadius: 8,
-        marginLeft: 8, // Espaço entre os botões
+        width: "48%", // Define a largura fixa para garantir alinhamento
         elevation: 4,
     },
     filterButtonText: {

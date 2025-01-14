@@ -123,7 +123,7 @@ export function Home() {
                     onPress={() => setIsExpenseModalVisible(true)}
                 >
                     <Icon name="add" size={28} color="#FFF" />
-                    <Text style={stylesHome.addButtonText}>Registro Financeiro</Text>
+                    <Text style={stylesHome.addButtonText}>Registro</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
