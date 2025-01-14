@@ -16,7 +16,7 @@ function Tabs() {
         <Tab.Navigator
             initialRouteName="Expenses"
             screenOptions={{
-                tabBarStyle: { backgroundColor: "#4CAF50" },
+                tabBarStyle: { backgroundColor: "#1144bd" },
                 tabBarActiveTintColor: "#FFF",
                 tabBarIndicatorStyle: { backgroundColor: "#FFF" },
                 swipeEnabled: false, // Desativando o swipe entre as telas
@@ -62,7 +62,7 @@ export default function App() {
             <Drawer.Navigator
                 screenOptions={{
                     drawerStyle: { backgroundColor: "#f4f4f4", width: 240 },
-                    headerStyle: { backgroundColor: "#4CAF50" },
+                    headerStyle: { backgroundColor: "#1144bd" },
                     headerTintColor: "#FFF",
                 }}
             >

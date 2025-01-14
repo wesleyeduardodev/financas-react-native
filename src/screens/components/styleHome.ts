@@ -72,7 +72,7 @@ export const stylesHome = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#007BFF", // Cor azul para o botão de filtros
+        backgroundColor: "#28A745", // Cor azul para o botão de filtros
         padding: 16,
         borderRadius: 8,
         width: "48%", // Define a largura fixa para garantir alinhamento

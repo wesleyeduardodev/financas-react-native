@@ -12,10 +12,11 @@ import { CategoryProps } from "./Category";
 export function Home() {
     const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
-    const [filteredExpenses, setFilteredExpenses] = useState<ExpenseProps[]>([]); // Novo estado para registros filtrados
+    const [filteredExpenses, setFilteredExpenses] = useState<ExpenseProps[]>([]);
     const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
     const [expenseToEdit, setExpenseToEdit] = useState<ExpenseProps | null>(null);
+    const [modalKey, setModalKey] = useState<number>(0); // Novo estado para forçar a redefinição do modal
 
     useEffect(() => {
         fetchExpenses();
@@ -26,7 +27,7 @@ export function Home() {
         try {
             const response = await api.get("/registros-financeiros");
             setExpenses(response.data);
-            setFilteredExpenses(response.data); // Inicializa os registros filtrados com todos os registros
+            setFilteredExpenses(response.data);
         } catch (error: any) {
             Alert.alert(
                 "Erro ao carregar registros financeiros",
@@ -120,7 +121,11 @@ export function Home() {
             <View style={stylesHome.header}>
                 <TouchableOpacity
                     style={stylesHome.addButton}
-                    onPress={() => setIsExpenseModalVisible(true)}
+                    onPress={() => {
+                        setExpenseToEdit(null); // Limpa o registro a ser editado
+                        setModalKey((prevKey) => prevKey + 1); // Força a recriação do modal
+                        setIsExpenseModalVisible(true);
+                    }}
                 >
                     <Icon name="add" size={28} color="#FFF" />
                     <Text style={stylesHome.addButtonText}>Registro</Text>
@@ -166,7 +171,7 @@ export function Home() {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={stylesHome.deleteButton}
-                            onPress={() => handleRemoveExpense(item.id)} // Mantido o método de exclusão
+                            onPress={() => handleRemoveExpense(item.id)}
                         >
                             <Icon name="delete" size={24} color="#FFF" />
                         </TouchableOpacity>
@@ -179,6 +184,7 @@ export function Home() {
             />
 
             <ExpenseFormModal
+                key={modalKey} // Garante que o modal será recriado ao mudar a chave
                 visible={isExpenseModalVisible}
                 expense={expenseToEdit}
                 categories={categories}

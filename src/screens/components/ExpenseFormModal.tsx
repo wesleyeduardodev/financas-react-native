@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Modal,
     View,
@@ -23,19 +23,6 @@ type ExpenseFormModalProps = {
     onClose: () => void;
 };
 
-const tipoRegistroOptions = [
-    { codigo: 0, descricao: "Entrada" },
-    { codigo: 1, descricao: "Saída" },
-];
-
-const tipoTransacaoOptions = [
-    { codigo: 0, descricao: "Pix" },
-    { codigo: 1, descricao: "Cartão de Crédito" },
-    { codigo: 2, descricao: "Cartão de Débito" },
-    { codigo: 3, descricao: "Dinheiro" },
-    { codigo: 4, descricao: "Boleto" },
-];
-
 export function ExpenseFormModal({
                                      visible,
                                      expense,
@@ -43,22 +30,51 @@ export function ExpenseFormModal({
                                      onSave,
                                      onClose,
                                  }: ExpenseFormModalProps) {
-    const [tipoRegistro, setTipoRegistro] = useState(expense?.tipoRegistro || 0);
-    const [tipoTransacao, setTipoTransacao] = useState(expense?.tipoTransacao || 0);
-    const [value, setValue] = useState<string>(
-        expense?.valor ? expense.valor.toFixed(2).replace(".", ",") : ""
-    );
-    const [category, setCategory] = useState<number>(expense?.idSubCategoria || categories[0]?.id || 0);
+    const [tipoRegistro, setTipoRegistro] = useState<number>(0);
+    const [tipoTransacao, setTipoTransacao] = useState<number>(0);
+    const [value, setValue] = useState<string>("");
+    const [category, setCategory] = useState<number | null>(null);
     const [subCategory, setSubCategory] = useState<number | null>(null);
-    const [titulo, setTitulo] = useState<string>(expense?.titulo || "");
-    const [dateTimeISO, setDateTimeISO] = useState<string>(
-        expense?.dataTransacao || new Date().toISOString()
-    );
+    const [titulo, setTitulo] = useState<string>("");
+    const [dateTimeISO, setDateTimeISO] = useState<string>(new Date().toISOString());
+    const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
-    const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
 
-    // Carrega as subcategorias sempre que a categoria for alterada
+    useEffect(() => {
+        if (expense) {
+            setTipoRegistro(expense.tipoRegistro || 0);
+            setTipoTransacao(expense.tipoTransacao || 0);
+            setValue(expense.valor ? expense.valor.toFixed(2).replace(".", ",") : "");
+            setCategory(expense.idCategoria || null);
+            setSubCategory(expense.idSubCategoria || null);
+            setTitulo(expense.titulo || "");
+            setDateTimeISO(expense.dataTransacao || new Date().toISOString());
+        } else {
+            resetForm();
+        }
+    }, [expense]);
+
+    const resetForm = () => {
+        setTipoRegistro(0);
+        setTipoTransacao(0);
+        setValue("");
+        setCategory(null);
+        setSubCategory(null);
+        setTitulo("");
+        setDateTimeISO(new Date().toISOString());
+        setSubCategories([]);
+    };
+
+    const loadSubCategories = async (categoryId: number) => {
+        try {
+            const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            setSubCategories(response.data);
+        } catch (error) {
+            console.error("Erro ao carregar subcategorias:", error);
+        }
+    };
+
     useEffect(() => {
         if (category) {
             loadSubCategories(category);
@@ -66,38 +82,6 @@ export function ExpenseFormModal({
             setSubCategories([]);
         }
     }, [category]);
-
-    const loadSubCategories = async (categoryId: number) => {
-        try {
-            const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
-            setSubCategories(response.data);
-            setSubCategory(null); // Reseta a subcategoria ao mudar de categoria
-        } catch (error) {
-            console.error("Erro ao carregar subcategorias:", error);
-        }
-    };
-
-    const handleDateChange = (event: any, selectedDate?: Date) => {
-        setShowDatePicker(false);
-        if (selectedDate) {
-            const currentDate = new Date(dateTimeISO);
-            currentDate.setFullYear(
-                selectedDate.getFullYear(),
-                selectedDate.getMonth(),
-                selectedDate.getDate()
-            );
-            setDateTimeISO(currentDate.toISOString());
-        }
-    };
-
-    const handleTimeChange = (event: any, selectedTime?: Date) => {
-        setShowTimePicker(false);
-        if (selectedTime) {
-            const currentDate = new Date(dateTimeISO);
-            currentDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
-            setDateTimeISO(currentDate.toISOString());
-        }
-    };
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
@@ -126,8 +110,7 @@ export function ExpenseFormModal({
                                     const formattedText = text
                                         .replace(/[^0-9.,]/g, "")
                                         .replace(".", ",");
-                                    const regex = /^(\d{1,15})(,\d{0,2})?$/;
-                                    if (regex.test(formattedText) || formattedText === "") {
+                                    if (/^(\d{1,15})(,\d{0,2})?$/.test(formattedText) || formattedText === "") {
                                         setValue(formattedText);
                                     }
                                 }}
@@ -139,9 +122,8 @@ export function ExpenseFormModal({
                             style={stylesExpenseFormModal.picker}
                             onValueChange={(itemValue) => setTipoRegistro(itemValue)}
                         >
-                            {tipoRegistroOptions.map((option) => (
-                                <Picker.Item key={option.codigo} label={option.descricao} value={option.codigo} />
-                            ))}
+                            <Picker.Item label="Entrada" value={0} />
+                            <Picker.Item label="Saída" value={1} />
                         </Picker>
 
                         <Picker
@@ -149,9 +131,11 @@ export function ExpenseFormModal({
                             style={stylesExpenseFormModal.picker}
                             onValueChange={(itemValue) => setTipoTransacao(itemValue)}
                         >
-                            {tipoTransacaoOptions.map((option) => (
-                                <Picker.Item key={option.codigo} label={option.descricao} value={option.codigo} />
-                            ))}
+                            <Picker.Item label="Pix" value={0} />
+                            <Picker.Item label="Cartão de Crédito" value={1} />
+                            <Picker.Item label="Cartão de Débito" value={2} />
+                            <Picker.Item label="Dinheiro" value={3} />
+                            <Picker.Item label="Boleto" value={4} />
                         </Picker>
 
                         <Picker
@@ -165,7 +149,6 @@ export function ExpenseFormModal({
                             ))}
                         </Picker>
 
-                        {/* Seletor de Subcategorias */}
                         {subCategories.length > 0 && (
                             <Picker
                                 selectedValue={subCategory}
@@ -177,44 +160,6 @@ export function ExpenseFormModal({
                                     <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
                                 ))}
                             </Picker>
-                        )}
-
-                        <View style={stylesExpenseFormModal.dateTimeContainer}>
-                            <TouchableOpacity
-                                style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowDatePicker(true)}
-                            >
-                                <Text style={stylesExpenseFormModal.datePickerText}>
-                                    Data: {new Date(dateTimeISO).toLocaleDateString()}
-                                </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowTimePicker(true)}
-                            >
-                                <Text style={stylesExpenseFormModal.datePickerText}>
-                                    Hora: {new Date(dateTimeISO).toLocaleTimeString()}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        {showDatePicker && (
-                            <DateTimePicker
-                                value={new Date(dateTimeISO)}
-                                mode="date"
-                                display="default"
-                                onChange={handleDateChange}
-                            />
-                        )}
-
-                        {showTimePicker && (
-                            <DateTimePicker
-                                value={new Date(dateTimeISO)}
-                                mode="time"
-                                display="default"
-                                onChange={handleTimeChange}
-                            />
                         )}
 
                         <TouchableOpacity
@@ -236,7 +181,6 @@ export function ExpenseFormModal({
                         >
                             <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
                         </TouchableOpacity>
-
 
                         <TouchableOpacity
                             style={stylesExpenseFormModal.cancelButton}
