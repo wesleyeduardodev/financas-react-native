@@ -6,15 +6,14 @@ export type SubCategoryProps = {
     nome: string;
     descricao: string;
     idCategoria: number; // Adicionar esta linha
-    categoriaNome: string;
+    descricaoCategoria: string;
 };
 
-export function SubCategory({ nome, descricao, categoriaNome }: SubCategoryProps) {
+export function SubCategory({ nome, descricao, descricaoCategoria }: SubCategoryProps) {
     return (
         <View style={stylesSubCategory.container}>
             <Text style={stylesSubCategory.name}>{nome}</Text>
-            <Text style={stylesSubCategory.description}>{descricao}</Text>
-            <Text style={stylesSubCategory.category}>Categoria: {categoriaNome}</Text>
+            <Text style={stylesSubCategory.category}>Categoria: {descricaoCategoria}</Text>
         </View>
     );
 }

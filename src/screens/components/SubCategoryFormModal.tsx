@@ -89,9 +89,8 @@ export function SubCategoryFormModal({
                     <View style={stylesSubCategoryFormModal.pickerContainer}>
                         <Picker
                             selectedValue={selectedCategory}
-                            onValueChange={(itemValue) =>
-                                setSelectedCategory(itemValue as number)
-                            }
+                            onValueChange={(itemValue) => setSelectedCategory(itemValue as number)}
+                            style={stylesSubCategoryFormModal.picker} // Estilo aplicado ao Picker
                         >
                             <Picker.Item label="Selecione uma categoria" value={null} />
                             {categories.map((category) => (
@@ -102,6 +101,8 @@ export function SubCategoryFormModal({
                                 />
                             ))}
                         </Picker>
+
+
                     </View>
                 </View>
 

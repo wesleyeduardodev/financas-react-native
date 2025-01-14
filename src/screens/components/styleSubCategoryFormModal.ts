@@ -46,6 +46,7 @@ export const stylesSubCategoryFormModal = StyleSheet.create({
     pickerContainer: {
         backgroundColor: "#2D2D2D",
         borderRadius: 5,
+        overflow: "hidden",
     },
     saveButton: {
         backgroundColor: "#317bcf",
@@ -68,5 +69,8 @@ export const stylesSubCategoryFormModal = StyleSheet.create({
         color: "#FFF",
         fontWeight: "bold",
         fontSize: 16,
+    },
+    picker: {
+        color: "#FFF", // Apenas o texto do item selecionado será branco
     },
 });
