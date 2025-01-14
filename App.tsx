@@ -22,37 +22,39 @@ function Tabs() {
         >
             {/* Aba Car que mostra o componente Home */}
             <Tab.Screen
-                name="Car"
+                name="Expenses"
                 component={Home}
                 options={{
                     tabBarIcon: ({ color }) => (
-                        <Icon name="directions-car" size={20} color={color} />
+                        <Icon name="attach-money" size={20} color={color} /> // Ícone relacionado a finanças
                     ),
-                    tabBarLabel: "Carro",
+                    tabBarLabel: "Registro Financeiro", // Novo rótulo
                 }}
             />
             {/* Aba Train que mostra o componente CategoryScreen */}
             <Tab.Screen
-                name="Train"
+                name="Categories"
                 component={CategoryScreen}
                 options={{
                     tabBarIcon: ({ color }) => (
-                        <Icon name="train" size={20} color={color} />
+                        <Icon name="category" size={20} color={color} /> // Ícone de categorias
                     ),
-                    tabBarLabel: "Trem",
+                    tabBarLabel: "Categorias", // Novo rótulo
                 }}
             />
+
             {/* Aba Bike - opcional */}
             <Tab.Screen
-                name="Bike"
+                name="Subcategories"
                 component={CategoryScreen}
                 options={{
                     tabBarIcon: ({ color }) => (
-                        <Icon name="directions-bike" size={20} color={color} />
+                        <Icon name="subdirectory-arrow-right" size={20} color={color} /> // Ícone para subcategorias
                     ),
-                    tabBarLabel: "Bicicleta",
+                    tabBarLabel: "Subcategorias", // Novo rótulo
                 }}
             />
+
         </Tab.Navigator>
     );
 }
