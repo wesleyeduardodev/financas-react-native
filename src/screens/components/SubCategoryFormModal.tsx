@@ -4,7 +4,7 @@ import {
     View,
     Text,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
 } from "react-native";
 import { SubCategoryProps } from "./SubCategory";
 import { Picker } from "@react-native-picker/picker";
@@ -28,16 +28,24 @@ export function SubCategoryFormModal({
     const [name, setName] = useState(subCategory?.nome || "");
     const [descricao, setDescricao] = useState(subCategory?.descricao || "");
     const [selectedCategory, setSelectedCategory] = useState<number | null>(
-        subCategory?.id || null
+        subCategory?.idCategoria || null
     );
 
     useEffect(() => {
         if (subCategory) {
             setName(subCategory.nome);
             setDescricao(subCategory.descricao);
-            setSelectedCategory(subCategory.id || null);
+            setSelectedCategory(subCategory.idCategoria || null);
+        } else {
+            resetForm();
         }
     }, [subCategory]);
+
+    const resetForm = () => {
+        setName("");
+        setDescricao("");
+        setSelectedCategory(null);
+    };
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
@@ -50,6 +58,8 @@ export function SubCategoryFormModal({
                     <Text style={stylesSubCategoryFormModal.label}>Nome</Text>
                     <TextInput
                         style={stylesSubCategoryFormModal.input}
+                        placeholder="Nome da Subcategoria"
+                        placeholderTextColor="#A9A9A9"
                         value={name}
                         onChangeText={setName}
                     />
@@ -58,27 +68,41 @@ export function SubCategoryFormModal({
                 <View style={stylesSubCategoryFormModal.fieldContainer}>
                     <Text style={stylesSubCategoryFormModal.label}>Descrição</Text>
                     <TextInput
-                        style={stylesSubCategoryFormModal.input}
+                        style={[
+                            stylesSubCategoryFormModal.input,
+                            stylesSubCategoryFormModal.textarea,
+                        ]}
+                        placeholder="(até 250 caracteres)"
+                        placeholderTextColor="#A9A9A9"
                         value={descricao}
+                        multiline={true}
+                        maxLength={250}
                         onChangeText={setDescricao}
-                        multiline
                     />
+                    <Text style={stylesSubCategoryFormModal.charCounter}>
+                        {descricao.length}/250
+                    </Text>
                 </View>
 
                 <View style={stylesSubCategoryFormModal.fieldContainer}>
                     <Text style={stylesSubCategoryFormModal.label}>Categoria</Text>
-                    <Picker
-                        selectedValue={selectedCategory}
-                        onValueChange={(itemValue) => setSelectedCategory(itemValue as number)}
-                    >
-                        {categories.map((category) => (
-                            <Picker.Item
-                                key={category.id}
-                                label={category.nome}
-                                value={category.id}
-                            />
-                        ))}
-                    </Picker>
+                    <View style={stylesSubCategoryFormModal.pickerContainer}>
+                        <Picker
+                            selectedValue={selectedCategory}
+                            onValueChange={(itemValue) =>
+                                setSelectedCategory(itemValue as number)
+                            }
+                        >
+                            <Picker.Item label="Selecione uma categoria" value={null} />
+                            {categories.map((category) => (
+                                <Picker.Item
+                                    key={category.id}
+                                    label={category.nome}
+                                    value={category.id}
+                                />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
 
                 <TouchableOpacity
@@ -96,7 +120,10 @@ export function SubCategoryFormModal({
 
                 <TouchableOpacity
                     style={stylesSubCategoryFormModal.cancelButton}
-                    onPress={onClose}
+                    onPress={() => {
+                        resetForm();
+                        onClose();
+                    }}
                 >
                     <Text style={stylesSubCategoryFormModal.buttonText}>Cancelar</Text>
                 </TouchableOpacity>
