@@ -16,6 +16,7 @@ export function Home() {
 
     useEffect(() => {
         fetchExpenses();
+        fetchCategories(); // Adicionamos a chamada para carregar categorias
     }, []);
 
     const fetchExpenses = async () => {
@@ -26,6 +27,18 @@ export function Home() {
             Alert.alert(
                 "Erro ao carregar registros financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os registros financeiros."
+            );
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const response = await api.get("/categorias-registro-financeiros"); // Endpoint para buscar categorias
+            setCategories(response.data);
+        } catch (error: any) {
+            Alert.alert(
+                "Erro ao carregar categorias",
+                error.response?.data?.message || error.message || "Não foi possível carregar as categorias."
             );
         }
     };
@@ -132,7 +145,7 @@ export function Home() {
                 <ExpenseFormModal
                     visible={isExpenseModalVisible}
                     expense={expenseToEdit}
-                    categories={categories}
+                    categories={categories} // Passando as categorias para o modal
                     onSave={(expense: Partial<ExpenseProps>) => {
                         if (expenseToEdit) {
                             handleEditExpense(expenseToEdit.id, expense);

@@ -13,6 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ExpenseProps } from "./Expense";
 import { stylesExpenseFormModal } from "./styleExpenseFormModal";
+import { api } from "../services/api";
 
 type ExpenseFormModalProps = {
     visible: boolean;
@@ -48,23 +49,33 @@ export function ExpenseFormModal({
         expense?.valor ? expense.valor.toFixed(2).replace(".", ",") : ""
     );
     const [category, setCategory] = useState<number>(expense?.idCategoria || categories[0]?.id || 0);
+    const [subCategory, setSubCategory] = useState<number | null>(null);
     const [titulo, setTitulo] = useState<string>(expense?.titulo || "");
     const [dateTimeISO, setDateTimeISO] = useState<string>(
         expense?.dataTransacao || new Date().toISOString()
     );
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
+    const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
 
+    // Carrega as subcategorias sempre que a categoria for alterada
     useEffect(() => {
-        if (expense) {
-            setTipoRegistro(expense.tipoRegistro);
-            setTipoTransacao(expense.tipoTransacao);
-            setValue(expense.valor.toFixed(2).replace(".", ","));
-            setCategory(expense.idCategoria);
-            setTitulo(expense.titulo);
-            setDateTimeISO(expense.dataTransacao);
+        if (category) {
+            loadSubCategories(category);
+        } else {
+            setSubCategories([]);
         }
-    }, [expense]);
+    }, [category]);
+
+    const loadSubCategories = async (categoryId: number) => {
+        try {
+            const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            setSubCategories(response.data);
+            setSubCategory(null); // Reseta a subcategoria ao mudar de categoria
+        } catch (error) {
+            console.error("Erro ao carregar subcategorias:", error);
+        }
+    };
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
         setShowDatePicker(false);
@@ -148,10 +159,25 @@ export function ExpenseFormModal({
                             style={stylesExpenseFormModal.picker}
                             onValueChange={(itemValue) => setCategory(itemValue)}
                         >
+                            <Picker.Item label="Selecione uma categoria" value={null} />
                             {categories.map((cat) => (
                                 <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
                             ))}
                         </Picker>
+
+                        {/* Seletor de Subcategorias */}
+                        {subCategories.length > 0 && (
+                            <Picker
+                                selectedValue={subCategory}
+                                style={stylesExpenseFormModal.picker}
+                                onValueChange={(itemValue) => setSubCategory(itemValue)}
+                            >
+                                <Picker.Item label="Selecione uma subcategoria" value={null} />
+                                {subCategories.map((subCat) => (
+                                    <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
+                                ))}
+                            </Picker>
+                        )}
 
                         <View style={stylesExpenseFormModal.dateTimeContainer}>
                             <TouchableOpacity
@@ -200,6 +226,7 @@ export function ExpenseFormModal({
                                     tipoTransacao,
                                     valor: parseFloat(value.replace(",", ".")),
                                     idCategoria: category,
+                                    idSubCategoria: subCategory,
                                     dataTransacao: dateTimeISO,
                                 })
                             }
