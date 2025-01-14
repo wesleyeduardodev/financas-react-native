@@ -36,7 +36,8 @@ export const stylesExpense = StyleSheet.create({
     },
     dateTime: {
         fontSize: 12,
-        color: "#999",
+        color: "#000000",
+        fontWeight: "bold",
         marginTop: 8,
     },
     actions: {
