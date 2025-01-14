@@ -33,13 +33,23 @@ function Tabs() {
                 }}
             />
             <Tab.Screen
-                name="Categories"
+                name="Summary"
                 component={FinancialSummary}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="bar-chart" size={20} color={color} />
+                    ),
+                    tabBarLabel: "Resumo Financeiro",
+                }}
+            />
+            <Tab.Screen
+                name="Categories"
+                component={CategoryScreen}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Icon name="category" size={20} color={color} />
                     ),
-                    tabBarLabel: "Resumo Financeiro",
+                    tabBarLabel: "Categorias",
                 }}
             />
             <Tab.Screen
@@ -49,7 +59,7 @@ function Tabs() {
                     tabBarIcon: ({ color }) => (
                         <Icon name="subdirectory-arrow-right" size={20} color={color} />
                     ),
-                    tabBarLabel: "Subcategorias",
+                    tabBarLabel: "SubCategorias",
                 }}
             />
         </Tab.Navigator>
