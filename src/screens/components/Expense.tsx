@@ -1,5 +1,5 @@
-import {View, Text} from "react-native";
-import {stylesExpense} from "./styleExpense";
+import { View, Text } from "react-native";
+import { stylesExpense } from "./styleExpense";
 
 export type ExpenseProps = {
     id: number;
@@ -42,19 +42,41 @@ export function Expense({
                             onEdit,
                             onRemove,
                         }: ExpenseProps) {
+    // Log para acompanhar a renderização do componente e os dados recebidos
+    console.log("Rendering Expense component", {
+        titulo,
+        tipoRegistro,
+        tipoTransacao,
+        idCategoria,
+        nomeCategoria,
+        idSubCategoria,
+        nomeSubCategoria,
+        valor,
+        dataTransacao,
+    });
+
     return (
         <View style={stylesExpense.container}>
             <View style={stylesExpense.info}>
                 <Text style={stylesExpense.value}>
                     R$ {valor
-                    .toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    .toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    })}
                 </Text>
                 <Text style={stylesExpense.title}>{titulo}</Text>
-                <Text style={stylesExpense.detail}>Registro: {tipoRegistroOptions[tipoRegistro]}</Text>
-                <Text style={stylesExpense.detail}>Transação: {tipoTransacaoOptions[tipoTransacao]}</Text>
+                <Text style={stylesExpense.detail}>
+                    Registro: {tipoRegistroOptions[tipoRegistro] || "Desconhecido"}
+                </Text>
+                <Text style={stylesExpense.detail}>
+                    Transação: {tipoTransacaoOptions[tipoTransacao] || "Desconhecido"}
+                </Text>
                 <Text style={stylesExpense.detail}>Categoria: {nomeCategoria}</Text>
                 <Text style={stylesExpense.detail}>SubCategoria: {nomeSubCategoria}</Text>
-                <Text style={stylesExpense.dateTime}>{new Date(dataTransacao).toLocaleString()}</Text>
+                <Text style={stylesExpense.dateTime}>
+                    {new Date(dataTransacao).toLocaleString()}
+                </Text>
             </View>
         </View>
     );

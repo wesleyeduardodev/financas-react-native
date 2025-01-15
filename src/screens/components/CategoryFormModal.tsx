@@ -25,16 +25,26 @@ export function CategoryFormModal({
     const [name, setName] = useState("");
     const [descricao, setDescricao] = useState("");
 
+    // Log quando o modal é aberto e o estado é inicializado
     useEffect(() => {
+        console.log(
+            visible
+                ? "CategoryFormModal opened"
+                : "CategoryFormModal closed"
+        );
+
         if (category) {
+            console.log("Editing category:", category);
             setName(category.nome || "");
             setDescricao(category.descricao || "");
         } else {
+            console.log("Creating new category");
             resetForm();
         }
-    }, [category]);
+    }, [category, visible]);
 
     const resetForm = () => {
+        console.log("Resetting form fields");
         setName("");
         setDescricao("");
     };
@@ -52,20 +62,29 @@ export function CategoryFormModal({
                         style={stylesCategoryFormModal.input}
                         placeholderTextColor="#A9A9A9"
                         value={name}
-                        onChangeText={setName}
+                        onChangeText={(text) => {
+                            console.log("Category name changed:", text);
+                            setName(text);
+                        }}
                     />
                 </View>
 
                 <View style={stylesCategoryFormModal.fieldContainer}>
                     <Text style={stylesCategoryFormModal.label}>Descrição</Text>
                     <TextInput
-                        style={[stylesCategoryFormModal.input, stylesCategoryFormModal.textarea]}
+                        style={[
+                            stylesCategoryFormModal.input,
+                            stylesCategoryFormModal.textarea,
+                        ]}
                         placeholder="(até 250 caracteres)"
                         placeholderTextColor="#A9A9A9"
                         value={descricao}
                         multiline={true}
                         maxLength={250}
-                        onChangeText={setDescricao}
+                        onChangeText={(text) => {
+                            console.log("Category description changed:", text);
+                            setDescricao(text);
+                        }}
                     />
                     <Text style={stylesCategoryFormModal.charCounter}>
                         {descricao.length}/250
@@ -76,9 +95,11 @@ export function CategoryFormModal({
                     style={stylesCategoryFormModal.saveButton}
                     onPress={() => {
                         if (!name.trim()) {
+                            console.log("Save failed: Name is required");
                             alert("O nome da categoria é obrigatório.");
                             return;
                         }
+                        console.log("Saving category:", { nome: name, descricao });
                         onSave({ nome: name, descricao });
                         resetForm();
                     }}
@@ -89,6 +110,7 @@ export function CategoryFormModal({
                 <TouchableOpacity
                     style={stylesCategoryFormModal.cancelButton}
                     onPress={() => {
+                        console.log("Cancel pressed, closing modal");
                         resetForm();
                         onClose();
                     }}

@@ -41,8 +41,11 @@ export function ExpenseFormModal({
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
 
+    // Log quando o modal é montado ou atualizado
     useEffect(() => {
+        console.log(visible ? "ExpenseFormModal opened" : "ExpenseFormModal closed");
         if (expense) {
+            console.log("Editing expense:", expense);
             setTipoRegistro(expense.tipoRegistro || 0);
             setTipoTransacao(expense.tipoTransacao || 0);
             setValue(expense.valor ? expense.valor.toFixed(2).replace(".", ",") : "");
@@ -51,11 +54,13 @@ export function ExpenseFormModal({
             setTitulo(expense.titulo || "");
             setDateTimeISO(expense.dataTransacao || new Date().toISOString());
         } else {
+            console.log("Creating new expense");
             resetForm();
         }
-    }, [expense]);
+    }, [expense, visible]);
 
     const resetForm = () => {
+        console.log("Resetting form fields");
         setTipoRegistro(0);
         setTipoTransacao(0);
         setValue("");
@@ -67,11 +72,15 @@ export function ExpenseFormModal({
     };
 
     const loadSubCategories = async (categoryId: number) => {
+        console.log("Loading subcategories for category ID:", categoryId);
         try {
-            const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            const response = await api.get(
+                `/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`
+            );
+            console.log("Subcategories loaded successfully:", response.data);
             setSubCategories(response.data);
         } catch (error) {
-            console.error("Erro ao carregar subcategorias:", error);
+            console.error("Error loading subcategories:", error);
         }
     };
 
@@ -79,6 +88,7 @@ export function ExpenseFormModal({
         if (category) {
             loadSubCategories(category);
         } else {
+            console.log("No category selected, clearing subcategories");
             setSubCategories([]);
         }
     }, [category]);
@@ -93,6 +103,7 @@ export function ExpenseFormModal({
                 selectedDate.getDate()
             );
             setDateTimeISO(currentDate.toISOString());
+            console.log("Date updated:", currentDate.toISOString());
         }
     };
 
@@ -102,6 +113,7 @@ export function ExpenseFormModal({
             const currentDate = new Date(dateTimeISO);
             currentDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
             setDateTimeISO(currentDate.toISOString());
+            console.log("Time updated:", currentDate.toISOString());
         }
     };
 
@@ -118,7 +130,10 @@ export function ExpenseFormModal({
                             <TextInput
                                 style={stylesExpenseFormModal.input}
                                 value={titulo}
-                                onChangeText={setTitulo}
+                                onChangeText={(text) => {
+                                    console.log("Título updated:", text);
+                                    setTitulo(text);
+                                }}
                             />
                         </View>
 
@@ -133,6 +148,7 @@ export function ExpenseFormModal({
                                         .replace(/[^0-9.,]/g, "")
                                         .replace(".", ",");
                                     if (/^(\d{1,15})(,\d{0,2})?$/.test(formattedText) || formattedText === "") {
+                                        console.log("Valor updated:", formattedText);
                                         setValue(formattedText);
                                     }
                                 }}
@@ -142,7 +158,10 @@ export function ExpenseFormModal({
                         <Picker
                             selectedValue={tipoRegistro}
                             style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setTipoRegistro(itemValue)}
+                            onValueChange={(itemValue) => {
+                                console.log("Tipo de registro updated:", itemValue);
+                                setTipoRegistro(itemValue);
+                            }}
                         >
                             <Picker.Item label="Entrada" value={0} />
                             <Picker.Item label="Saída" value={1} />
@@ -151,7 +170,10 @@ export function ExpenseFormModal({
                         <Picker
                             selectedValue={tipoTransacao}
                             style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setTipoTransacao(itemValue)}
+                            onValueChange={(itemValue) => {
+                                console.log("Tipo de transação updated:", itemValue);
+                                setTipoTransacao(itemValue);
+                            }}
                         >
                             <Picker.Item label="Pix" value={0} />
                             <Picker.Item label="Cartão de Crédito" value={1} />
@@ -163,7 +185,10 @@ export function ExpenseFormModal({
                         <Picker
                             selectedValue={category}
                             style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setCategory(itemValue)}
+                            onValueChange={(itemValue) => {
+                                console.log("Categoria selected:", itemValue);
+                                setCategory(itemValue);
+                            }}
                         >
                             <Picker.Item label="Selecione uma categoria" value={null} />
                             {categories.map((cat) => (
@@ -175,7 +200,10 @@ export function ExpenseFormModal({
                             <Picker
                                 selectedValue={subCategory}
                                 style={stylesExpenseFormModal.picker}
-                                onValueChange={(itemValue) => setSubCategory(itemValue)}
+                                onValueChange={(itemValue) => {
+                                    console.log("Subcategoria selected:", itemValue);
+                                    setSubCategory(itemValue);
+                                }}
                             >
                                 <Picker.Item label="Selecione uma subcategoria" value={null} />
                                 {subCategories.map((subCat) => (
@@ -184,59 +212,24 @@ export function ExpenseFormModal({
                             </Picker>
                         )}
 
-                        <View style={stylesExpenseFormModal.dateTimeContainer}>
-                            <TouchableOpacity
-                                style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowDatePicker(true)}
-                            >
-                                <Text style={stylesExpenseFormModal.datePickerText}>
-                                    Data: {new Date(dateTimeISO).toLocaleDateString()}
-                                </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowTimePicker(true)}
-                            >
-                                <Text style={stylesExpenseFormModal.datePickerText}>
-                                    Hora: {new Date(dateTimeISO).toLocaleTimeString()}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        {showDatePicker && (
-                            <DateTimePicker
-                                value={new Date(dateTimeISO)}
-                                mode="date"
-                                display="default"
-                                onChange={handleDateChange}
-                            />
-                        )}
-
-                        {showTimePicker && (
-                            <DateTimePicker
-                                value={new Date(dateTimeISO)}
-                                mode="time"
-                                display="default"
-                                onChange={handleTimeChange}
-                            />
-                        )}
-
                         <TouchableOpacity
                             style={stylesExpenseFormModal.saveButton}
                             onPress={() => {
                                 if (!subCategory) {
+                                    console.log("Save failed: Subcategory is required");
                                     alert("Selecione uma subcategoria antes de salvar.");
                                     return;
                                 }
-                                onSave({
+                                const expenseToSave = {
                                     titulo,
                                     tipoRegistro,
                                     tipoTransacao,
                                     valor: parseFloat(value.replace(",", ".")),
                                     idSubCategoria: subCategory,
                                     dataTransacao: dateTimeISO,
-                                });
+                                };
+                                console.log("Saving expense:", expenseToSave);
+                                onSave(expenseToSave);
                             }}
                         >
                             <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
@@ -244,7 +237,10 @@ export function ExpenseFormModal({
 
                         <TouchableOpacity
                             style={stylesExpenseFormModal.cancelButton}
-                            onPress={onClose}
+                            onPress={() => {
+                                console.log("Closing modal without saving");
+                                onClose();
+                            }}
                         >
                             <Text style={stylesExpenseFormModal.buttonText}>Cancelar</Text>
                         </TouchableOpacity>

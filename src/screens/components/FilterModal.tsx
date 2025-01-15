@@ -33,10 +33,18 @@ export function FilterModal({
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
+    // Log quando o modal é aberto ou fechado
+    useEffect(() => {
+        console.log(visible ? "FilterModal opened" : "FilterModal closed");
+    }, [visible]);
+
+    // Carregamento de subcategorias baseado na categoria selecionada
     useEffect(() => {
         if (categoria) {
+            console.log("Fetching subcategories for category ID:", categoria);
             fetchSubCategories(categoria);
         } else {
+            console.log("No category selected. Clearing subcategories.");
             setSubCategories([]);
             setSubCategoria(null);
         }
@@ -45,8 +53,10 @@ export function FilterModal({
     const fetchSubCategories = async (categoryId: number) => {
         try {
             const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            console.log("Subcategories loaded successfully:", response.data);
             setSubCategories(response.data);
         } catch (error: any) {
+            console.error("Error fetching subcategories:", error);
             Alert.alert(
                 "Erro ao carregar subcategorias",
                 error.response?.data?.message || error.message || "Não foi possível carregar as subcategorias."
@@ -56,7 +66,9 @@ export function FilterModal({
 
     const formatDateToISODateOnly = (date: Date | null): string | null => {
         if (!date) return null;
-        return date.toISOString().split("T")[0]; // Retorna apenas a parte "YYYY-MM-DD"
+        const isoDate = date.toISOString().split("T")[0]; // Retorna apenas a parte "YYYY-MM-DD"
+        console.log("Formatted date:", isoDate);
+        return isoDate;
     };
 
     return (
@@ -68,7 +80,10 @@ export function FilterModal({
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={tipoRegistro}
-                        onValueChange={(itemValue) => setTipoRegistro(itemValue)}
+                        onValueChange={(itemValue) => {
+                            console.log("Tipo de registro updated:", itemValue);
+                            setTipoRegistro(itemValue);
+                        }}
                         style={stylesFilterModal.picker}
                     >
                         <Picker.Item label="Todos os Tipos de Registro" value={null} />
@@ -81,7 +96,10 @@ export function FilterModal({
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={tipoTransacao}
-                        onValueChange={(itemValue) => setTipoTransacao(itemValue)}
+                        onValueChange={(itemValue) => {
+                            console.log("Tipo de transação updated:", itemValue);
+                            setTipoTransacao(itemValue);
+                        }}
                         style={stylesFilterModal.picker}
                     >
                         <Picker.Item label="Todos os Tipos de Transação" value={null} />
@@ -97,7 +115,10 @@ export function FilterModal({
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={categoria}
-                        onValueChange={(itemValue) => setCategoria(itemValue)}
+                        onValueChange={(itemValue) => {
+                            console.log("Categoria updated:", itemValue);
+                            setCategoria(itemValue);
+                        }}
                         style={stylesFilterModal.picker}
                     >
                         <Picker.Item label="Todas as Categorias" value={null} />
@@ -112,7 +133,10 @@ export function FilterModal({
                     <View style={stylesFilterModal.pickerContainer}>
                         <Picker
                             selectedValue={subCategoria}
-                            onValueChange={(itemValue) => setSubCategoria(itemValue)}
+                            onValueChange={(itemValue) => {
+                                console.log("Subcategoria updated:", itemValue);
+                                setSubCategoria(itemValue);
+                            }}
                             style={stylesFilterModal.picker}
                         >
                             <Picker.Item label="Todas as Subcategorias" value={null} />
@@ -131,7 +155,10 @@ export function FilterModal({
                         display="default"
                         onChange={(event, selectedDate) => {
                             setShowStartDatePicker(false);
-                            if (selectedDate) setStartDate(selectedDate);
+                            if (selectedDate) {
+                                console.log("Start date selected:", selectedDate);
+                                setStartDate(selectedDate);
+                            }
                         }}
                     />
                 )}
@@ -143,7 +170,10 @@ export function FilterModal({
                         display="default"
                         onChange={(event, selectedDate) => {
                             setShowEndDatePicker(false);
-                            if (selectedDate) setEndDate(selectedDate);
+                            if (selectedDate) {
+                                console.log("End date selected:", selectedDate);
+                                setEndDate(selectedDate);
+                            }
                         }}
                     />
                 )}
@@ -151,21 +181,30 @@ export function FilterModal({
                 {/* Botões */}
                 <TouchableOpacity
                     style={stylesFilterModal.applyButton}
-                    onPress={() =>
+                    onPress={() => {
+                        console.log("Applying filters:", {
+                            tipoRegistro,
+                            tipoTransacao,
+                            categoria,
+                            subCategoria,
+                        });
                         onApplyFilters({
                             tipoRegistro,
                             tipoTransacao,
                             categoria,
-                            subCategoria
-                        })
-                    }
+                            subCategoria,
+                        });
+                    }}
                 >
                     <Text style={stylesFilterModal.applyButtonText}>Aplicar Filtros</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={stylesFilterModal.cancelButton}
-                    onPress={onClose}
+                    onPress={() => {
+                        console.log("Filter modal closed without applying filters");
+                        onClose();
+                    }}
                 >
                     <Text style={stylesFilterModal.cancelButtonText}>Cancelar</Text>
                 </TouchableOpacity>

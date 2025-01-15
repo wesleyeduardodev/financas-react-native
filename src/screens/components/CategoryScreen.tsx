@@ -13,14 +13,18 @@ export function CategoryScreen() {
     const [categoryToEdit, setCategoryToEdit] = useState<CategoryProps | null>(null);
 
     useEffect(() => {
+        console.log("CategoryScreen mounted");
         fetchCategories();
     }, []);
 
     const fetchCategories = async () => {
+        console.log("Fetching categories...");
         try {
             const response = await api.get("/categorias-registro-financeiros");
+            console.log("Categories fetched successfully:", response.data);
             setCategories(response.data);
         } catch (error: any) {
+            console.error("Error fetching categories:", error);
             Alert.alert(
                 "Erro ao carregar categorias",
                 error.message || "Não foi possível carregar as categorias."
@@ -29,35 +33,48 @@ export function CategoryScreen() {
     };
 
     const handleAddCategory = async (newCategory: CategoryProps) => {
+        console.log("Adding new category:", newCategory);
         try {
             const response = await api.post("/categorias-registro-financeiros", newCategory);
+            console.log("Category added successfully:", response.data);
             setCategories((prev) => [...prev, response.data]);
         } catch (error: any) {
+            console.error("Error adding category:", error);
             Alert.alert("Erro ao adicionar categoria", error.message || "Erro desconhecido.");
         }
     };
 
     const handleEditCategory = async (id: number, updatedCategory: Partial<CategoryProps>) => {
+        console.log("Editing category:", { id, updatedCategory });
         try {
-            const response = await api.put(`/categorias-registro-financeiros/${id}`, updatedCategory);
+            const response = await api.put(
+                `/categorias-registro-financeiros/${id}`,
+                updatedCategory
+            );
+            console.log("Category edited successfully:", response.data);
             setCategories((prev) =>
                 prev.map((category) => (category.id === id ? response.data : category))
             );
         } catch (error: any) {
+            console.error("Error editing category:", error);
             Alert.alert("Erro ao editar categoria", error.message || "Erro desconhecido.");
         }
     };
 
     const handleRemoveCategory = async (id: number) => {
+        console.log("Removing category with ID:", id);
         try {
             await api.delete(`/categorias-registro-financeiros/${id}`);
+            console.log("Category removed successfully");
             setCategories((prev) => prev.filter((category) => category.id !== id));
         } catch (error: any) {
+            console.error("Error removing category:", error);
             Alert.alert("Erro ao remover categoria", error.message || "Erro desconhecido.");
         }
     };
 
     const confirmRemoveCategory = (id: number) => {
+        console.log("Confirming removal for category ID:", id);
         Alert.alert(
             "Confirmar Remoção",
             "Tem certeza que deseja remover esta categoria?",
@@ -72,22 +89,26 @@ export function CategoryScreen() {
         );
     };
 
-    const renderRightActions = (id: number) => (
-        <View style={stylesCategoryScreen.actionContainer}>
-            <TouchableOpacity
-                style={stylesCategoryScreen.deleteButton}
-                onPress={() => confirmRemoveCategory(id)}
-            >
-                <Icon name="delete" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-    );
+    const renderRightActions = (id: number) => {
+        console.log("Rendering right actions for category ID:", id);
+        return (
+            <View style={stylesCategoryScreen.actionContainer}>
+                <TouchableOpacity
+                    style={stylesCategoryScreen.deleteButton}
+                    onPress={() => confirmRemoveCategory(id)}
+                >
+                    <Icon name="delete" size={24} color="#FFF" />
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
     return (
         <View style={stylesCategoryScreen.container}>
             <TouchableOpacity
                 style={stylesCategoryScreen.addButton}
                 onPress={() => {
+                    console.log("Opening modal to add new category");
                     setCategoryToEdit(null);
                     setIsCategoryModalVisible(true);
                 }}
@@ -99,25 +120,32 @@ export function CategoryScreen() {
             <FlatList
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
-                        <TouchableOpacity
-                            style={stylesCategoryScreen.categoryCard}
-                            onPress={() => {
-                                setCategoryToEdit(item);
-                                setIsCategoryModalVisible(true);
-                            }}
-                        >
-                            <Category {...item} />
-                        </TouchableOpacity>
-                    </Swipeable>
-                )}
+                renderItem={({ item }) => {
+                    console.log("Rendering category:", item);
+                    return (
+                        <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+                            <TouchableOpacity
+                                style={stylesCategoryScreen.categoryCard}
+                                onPress={() => {
+                                    console.log("Opening modal to edit category:", item);
+                                    setCategoryToEdit(item);
+                                    setIsCategoryModalVisible(true);
+                                }}
+                            >
+                                <Category {...item} />
+                            </TouchableOpacity>
+                        </Swipeable>
+                    );
+                }}
                 showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                    <Text style={stylesCategoryScreen.listEmptyText}>
-                        Nenhuma categoria registrada.
-                    </Text>
-                )}
+                ListEmptyComponent={() => {
+                    console.log("No categories to display");
+                    return (
+                        <Text style={stylesCategoryScreen.listEmptyText}>
+                            Nenhuma categoria registrada.
+                        </Text>
+                    );
+                }}
             />
 
             {isCategoryModalVisible && (
@@ -125,6 +153,12 @@ export function CategoryScreen() {
                     visible={isCategoryModalVisible}
                     category={categoryToEdit}
                     onSave={(category: Partial<CategoryProps>) => {
+                        console.log(
+                            categoryToEdit
+                                ? "Saving edited category"
+                                : "Saving new category",
+                            category
+                        );
                         if (categoryToEdit) {
                             handleEditCategory(categoryToEdit.id, category);
                         } else {
@@ -132,7 +166,10 @@ export function CategoryScreen() {
                         }
                         setIsCategoryModalVisible(false);
                     }}
-                    onClose={() => setIsCategoryModalVisible(false)}
+                    onClose={() => {
+                        console.log("Closing category modal");
+                        setIsCategoryModalVisible(false);
+                    }}
                 />
             )}
         </View>

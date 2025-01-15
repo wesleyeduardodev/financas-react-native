@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Home } from "./src/screens/components/Home";
 import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
 import { CategoryScreen } from "./src/screens/components/CategoryScreen";
-import { FinancialSummary } from "./src/screens/components/FinancialSummary"; // Importando o resumo financeiro
+import { FinancialSummary } from "./src/screens/components/FinancialSummary";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Drawer = createDrawerNavigator();
 const Tab = createMaterialTopTabNavigator();
 
+// Log para detectar problemas na navegação de abas
 function Tabs() {
+    useEffect(() => {
+        console.log("Tabs component initialized");
+    }, []);
+
     return (
         <Tab.Navigator
             initialRouteName="Expenses"
@@ -19,7 +24,7 @@ function Tabs() {
                 tabBarStyle: { backgroundColor: "#1144bd" },
                 tabBarActiveTintColor: "#FFF",
                 tabBarIndicatorStyle: { backgroundColor: "#FFF" },
-                swipeEnabled: false, // Desativando o swipe entre as telas
+                swipeEnabled: false,
             }}
         >
             <Tab.Screen
@@ -31,6 +36,9 @@ function Tabs() {
                     ),
                     tabBarLabel: "Registro Financeiro",
                 }}
+                listeners={{
+                    focus: () => console.log("Navigated to Expenses tab"),
+                }}
             />
             <Tab.Screen
                 name="Summary"
@@ -40,6 +48,9 @@ function Tabs() {
                         <Icon name="bar-chart" size={20} color={color} />
                     ),
                     tabBarLabel: "Resumo Financeiro",
+                }}
+                listeners={{
+                    focus: () => console.log("Navigated to Summary tab"),
                 }}
             />
             <Tab.Screen
@@ -51,6 +62,9 @@ function Tabs() {
                     ),
                     tabBarLabel: "Categorias",
                 }}
+                listeners={{
+                    focus: () => console.log("Navigated to Categories tab"),
+                }}
             />
             <Tab.Screen
                 name="Subcategories"
@@ -61,14 +75,24 @@ function Tabs() {
                     ),
                     tabBarLabel: "SubCategorias",
                 }}
+                listeners={{
+                    focus: () => console.log("Navigated to Subcategories tab"),
+                }}
             />
         </Tab.Navigator>
     );
 }
 
 export default function App() {
+    useEffect(() => {
+        console.log("App component initialized");
+    }, []);
+
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            onReady={() => console.log("Navigation container ready")}
+            onStateChange={(state) => console.log("Navigation state changed", state)}
+        >
             <Drawer.Navigator
                 screenOptions={{
                     drawerStyle: { backgroundColor: "#f4f4f4", width: 240 },
@@ -85,6 +109,9 @@ export default function App() {
                         ),
                         title: "Menus",
                     }}
+                    listeners={{
+                        focus: () => console.log("Drawer navigated to Home"),
+                    }}
                 />
                 <Drawer.Screen
                     name="Categories"
@@ -95,6 +122,9 @@ export default function App() {
                         ),
                         title: "Categorias",
                     }}
+                    listeners={{
+                        focus: () => console.log("Drawer navigated to Categories"),
+                    }}
                 />
                 <Drawer.Screen
                     name="Subcategories"
@@ -104,6 +134,9 @@ export default function App() {
                             <Icon name="subdirectory-arrow-right" size={20} color={color} />
                         ),
                         title: "Subcategorias",
+                    }}
+                    listeners={{
+                        focus: () => console.log("Drawer navigated to Subcategories"),
                     }}
                 />
             </Drawer.Navigator>

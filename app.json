@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/financas.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/financas.png",
       "resizeMode": "contain",

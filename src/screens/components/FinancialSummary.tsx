@@ -15,19 +15,24 @@ export function FinancialSummary() {
     const [saldoTotal, setSaldoTotal] = useState(0);
 
     useEffect(() => {
+        console.log("FinancialSummary mounted");
         fetchFinancialData();
     }, []);
 
     useEffect(() => {
+        console.log("Filtered data updated:", filteredData);
         calculateSummary(filteredData);
     }, [filteredData]);
 
     const fetchFinancialData = async () => {
+        console.log("Fetching financial data...");
         try {
             const response = await api.get("/registros-financeiros");
+            console.log("Financial data fetched successfully:", response.data);
             setOriginalData(response.data);
             setFilteredData(response.data);
         } catch (error: any) {
+            console.error("Error fetching financial data:", error);
             Alert.alert(
                 "Erro ao carregar dados financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os dados financeiros."
@@ -36,6 +41,7 @@ export function FinancialSummary() {
     };
 
     const calculateSummary = (data: any[]) => {
+        console.log("Calculating summary...");
         const entrada = data
             .filter((item: any) => item.tipoRegistro === 0)
             .reduce((acc: number, curr: any) => acc + curr.valor, 0);
@@ -44,6 +50,7 @@ export function FinancialSummary() {
             .filter((item: any) => item.tipoRegistro === 1)
             .reduce((acc: number, curr: any) => acc + curr.valor, 0);
 
+        console.log("Total Entrada:", entrada, "Total Saída:", saida);
         setTotalEntrada(entrada);
         setTotalSaida(saida);
         setSaldoTotal(entrada - saida);
@@ -71,11 +78,13 @@ export function FinancialSummary() {
     ];
 
     const formatCurrency = (value: number) => {
-        return value.toLocaleString("pt-BR", {
+        const formattedValue = value.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
             minimumFractionDigits: 2,
         });
+        console.log("Formatted currency:", formattedValue);
+        return formattedValue;
     };
 
     return (
@@ -84,7 +93,10 @@ export function FinancialSummary() {
                 <Text style={stylesFinancialSummary.title}>Resumo Financeiro</Text>
                 <TouchableOpacity
                     style={stylesFinancialSummary.filterButton}
-                    onPress={() => setIsFilterModalVisible(true)}
+                    onPress={() => {
+                        console.log("Opening filter modal");
+                        setIsFilterModalVisible(true);
+                    }}
                 >
                     <Text style={stylesFinancialSummary.filterButtonText}>Filtros</Text>
                 </TouchableOpacity>
@@ -112,9 +124,9 @@ export function FinancialSummary() {
                     color: item.color,
                     legendFontColor: item.legendFontColor,
                     legendFontSize: item.legendFontSize,
-                    label: `${item.percent}%`, // Percentual como label
+                    label: `${item.percent}%`,
                 }))}
-                width={Dimensions.get("window").width - 40} // Ajusta ao tamanho da tela
+                width={Dimensions.get("window").width - 40}
                 height={220}
                 chartConfig={{
                     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
@@ -123,13 +135,17 @@ export function FinancialSummary() {
                 accessor={"total"}
                 backgroundColor={"transparent"}
                 paddingLeft={"10"}
-                absolute={false} // Exibe percentuais dentro do gráfico
+                absolute={false}
             />
 
             <SummaryFilterModal
                 visible={isFilterModalVisible}
-                onClose={() => setIsFilterModalVisible(false)}
+                onClose={() => {
+                    console.log("Closing filter modal");
+                    setIsFilterModalVisible(false);
+                }}
                 onApplyFilters={(filters) => {
+                    console.log("Applying filters:", filters);
                     let filtered = [...originalData];
 
                     if (filters.tipoRegistro !== null) {
@@ -145,6 +161,7 @@ export function FinancialSummary() {
                         filtered = filtered.filter((item) => item.idSubCategoria === filters.subCategoria);
                     }
 
+                    console.log("Filtered data after applying filters:", filtered);
                     setFilteredData(filtered);
                     setIsFilterModalVisible(false);
                 }}

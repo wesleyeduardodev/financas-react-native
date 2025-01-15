@@ -18,17 +18,22 @@ export function Home() {
     const [expenseToEdit, setExpenseToEdit] = useState<ExpenseProps | null>(null);
     const [modalKey, setModalKey] = useState<number>(0);
 
+    // Log inicial para acompanhar a renderização do componente
     useEffect(() => {
+        console.log("Home component mounted");
         fetchExpenses();
         fetchCategories();
     }, []);
 
     const fetchExpenses = async () => {
+        console.log("Fetching expenses...");
         try {
             const response = await api.get("/registros-financeiros");
+            console.log("Expenses fetched successfully", response.data);
             setExpenses(response.data);
             setFilteredExpenses(response.data);
         } catch (error: any) {
+            console.error("Error fetching expenses", error);
             Alert.alert(
                 "Erro ao carregar registros financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os registros financeiros."
@@ -37,10 +42,13 @@ export function Home() {
     };
 
     const fetchCategories = async () => {
+        console.log("Fetching categories...");
         try {
             const response = await api.get("/categorias-registro-financeiros");
+            console.log("Categories fetched successfully", response.data);
             setCategories(response.data);
         } catch (error: any) {
+            console.error("Error fetching categories", error);
             Alert.alert(
                 "Erro ao carregar categorias",
                 error.response?.data?.message || error.message || "Não foi possível carregar as categorias."
@@ -49,15 +57,18 @@ export function Home() {
     };
 
     const handleAddExpense = async (newExpense: Partial<ExpenseProps>) => {
+        console.log("Adding new expense", newExpense);
         try {
             const response = await api.post("/registros-financeiros", {
                 ...newExpense,
                 idCategoria: undefined,
                 idSubCategoria: newExpense.idSubCategoria,
             });
+            console.log("Expense added successfully", response.data);
             setExpenses((prev) => [...prev, response.data]);
             setFilteredExpenses((prev) => [...prev, response.data]);
         } catch (error: any) {
+            console.error("Error adding expense", error);
             Alert.alert(
                 "Erro ao adicionar registro financeiro",
                 error.message || "Erro desconhecido."
@@ -66,8 +77,10 @@ export function Home() {
     };
 
     const handleEditExpense = async (id: number, updatedExpense: Partial<ExpenseProps>) => {
+        console.log("Editing expense", { id, updatedExpense });
         try {
             const response = await api.put(`/registros-financeiros/${id}`, updatedExpense);
+            console.log("Expense edited successfully", response.data);
             setExpenses((prev) =>
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
@@ -75,34 +88,20 @@ export function Home() {
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
         } catch (error: any) {
+            console.error("Error editing expense", error);
             Alert.alert("Erro ao editar registro financeiro", error.message || "Erro desconhecido.");
         }
     };
 
-    const confirmRemoveExpense = (id: number) => {
-        Alert.alert(
-            "Confirmar Remoção",
-            "Tem certeza de que deseja remover este registro financeiro?",
-            [
-                {
-                    text: "Cancelar",
-                    style: "cancel",
-                },
-                {
-                    text: "Remover",
-                    style: "destructive",
-                    onPress: () => handleRemoveExpense(id), // Chama a função de remoção ao confirmar
-                },
-            ]
-        );
-    };
-
     const handleRemoveExpense = async (id: number) => {
+        console.log("Removing expense with id:", id);
         try {
             await api.delete(`/registros-financeiros/${id}`);
+            console.log("Expense removed successfully");
             setExpenses((prev) => prev.filter((expense) => expense.id !== id));
             setFilteredExpenses((prev) => prev.filter((expense) => expense.id !== id));
         } catch (error: any) {
+            console.error("Error removing expense", error);
             Alert.alert("Erro ao remover registro financeiro", error.message || "Erro desconhecido.");
         }
     };
@@ -113,6 +112,7 @@ export function Home() {
         categoria: number | null;
         subCategoria: number | null;
     }) => {
+        console.log("Applying filters", filters);
         let filtered = [...expenses];
 
         if (filters.tipoRegistro !== null) {
@@ -131,15 +131,18 @@ export function Home() {
             filtered = filtered.filter((expense) => expense.idSubCategoria === filters.subCategoria);
         }
 
+        console.log("Filtered expenses", filtered);
         setFilteredExpenses(filtered);
     };
 
     return (
         <View style={stylesHome.container}>
+            {/* Logs de eventos ao abrir modais */}
             <View style={stylesHome.header}>
                 <TouchableOpacity
                     style={stylesHome.addButton}
                     onPress={() => {
+                        console.log("Opening expense modal");
                         setExpenseToEdit(null);
                         setModalKey((prevKey) => prevKey + 1);
                         setIsExpenseModalVisible(true);
@@ -151,7 +154,10 @@ export function Home() {
 
                 <TouchableOpacity
                     style={stylesHome.filterButton}
-                    onPress={() => setIsFilterModalVisible(true)}
+                    onPress={() => {
+                        console.log("Opening filter modal");
+                        setIsFilterModalVisible(true);
+                    }}
                 >
                     <Icon name="filter-list" size={28} color="#FFF" />
                     <Text style={stylesHome.filterButtonText}>Filtros</Text>
@@ -181,6 +187,7 @@ export function Home() {
                         <TouchableOpacity
                             style={stylesHome.editButton}
                             onPress={() => {
+                                console.log("Editing expense", item);
                                 setExpenseToEdit(item);
                                 setIsExpenseModalVisible(true);
                             }}
@@ -189,7 +196,10 @@ export function Home() {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={stylesHome.deleteButton}
-                            onPress={() => confirmRemoveExpense(item.id)}
+                            onPress={() => {
+                                console.log("Deleting expense", item);
+                                handleRemoveExpense(item.id);
+                            }}
                         >
                             <Icon name="delete" size={24} color="#FFF" />
                         </TouchableOpacity>
@@ -207,6 +217,7 @@ export function Home() {
                 expense={expenseToEdit}
                 categories={categories}
                 onSave={(expense: Partial<ExpenseProps>) => {
+                    console.log("Saving expense", expense);
                     setIsExpenseModalVisible(false);
                     if (expenseToEdit) {
                         handleEditExpense(expenseToEdit.id, expense);
@@ -214,14 +225,21 @@ export function Home() {
                         handleAddExpense(expense as ExpenseProps);
                     }
                 }}
-                onClose={() => setIsExpenseModalVisible(false)}
+                onClose={() => {
+                    console.log("Closing expense modal");
+                    setIsExpenseModalVisible(false);
+                }}
             />
 
             <FilterModal
                 visible={isFilterModalVisible}
                 categories={categories}
-                onClose={() => setIsFilterModalVisible(false)}
+                onClose={() => {
+                    console.log("Closing filter modal");
+                    setIsFilterModalVisible(false);
+                }}
                 onApplyFilters={(filters) => {
+                    console.log("Applying filters from modal", filters);
                     applyFilters(filters);
                     setIsFilterModalVisible(false);
                 }}

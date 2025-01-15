@@ -31,17 +31,22 @@ export function SubCategoryFormModal({
         subCategory?.idCategoria || null
     );
 
+    // Log para acompanhar a inicialização ou atualização do modal
     useEffect(() => {
+        console.log(visible ? "SubCategoryFormModal opened" : "SubCategoryFormModal closed");
         if (subCategory) {
+            console.log("Editing subcategory:", subCategory);
             setName(subCategory.nome);
             setDescricao(subCategory.descricao);
             setSelectedCategory(subCategory.idCategoria || null);
         } else {
+            console.log("Creating new subcategory");
             resetForm();
         }
-    }, [subCategory]);
+    }, [subCategory, visible]);
 
     const resetForm = () => {
+        console.log("Resetting form fields");
         setName("");
         setDescricao("");
         setSelectedCategory(null);
@@ -61,7 +66,10 @@ export function SubCategoryFormModal({
                         placeholder="Nome da Subcategoria"
                         placeholderTextColor="#A9A9A9"
                         value={name}
-                        onChangeText={setName}
+                        onChangeText={(text) => {
+                            console.log("Nome updated:", text);
+                            setName(text);
+                        }}
                     />
                 </View>
 
@@ -77,7 +85,10 @@ export function SubCategoryFormModal({
                         value={descricao}
                         multiline={true}
                         maxLength={250}
-                        onChangeText={setDescricao}
+                        onChangeText={(text) => {
+                            console.log("Descrição updated:", text);
+                            setDescricao(text);
+                        }}
                     />
                     <Text style={stylesSubCategoryFormModal.charCounter}>
                         {descricao.length}/250
@@ -89,8 +100,11 @@ export function SubCategoryFormModal({
                     <View style={stylesSubCategoryFormModal.pickerContainer}>
                         <Picker
                             selectedValue={selectedCategory}
-                            onValueChange={(itemValue) => setSelectedCategory(itemValue as number)}
-                            style={stylesSubCategoryFormModal.picker} // Estilo aplicado ao Picker
+                            onValueChange={(itemValue) => {
+                                console.log("Categoria selected:", itemValue);
+                                setSelectedCategory(itemValue as number);
+                            }}
+                            style={stylesSubCategoryFormModal.picker}
                         >
                             <Picker.Item label="Selecione uma categoria" value={null} />
                             {categories.map((category) => (
@@ -101,8 +115,6 @@ export function SubCategoryFormModal({
                                 />
                             ))}
                         </Picker>
-
-
                     </View>
                 </View>
 
@@ -110,9 +122,15 @@ export function SubCategoryFormModal({
                     style={stylesSubCategoryFormModal.saveButton}
                     onPress={() => {
                         if (!name.trim() || !selectedCategory) {
+                            console.log("Save failed: Missing required fields");
                             alert("Todos os campos são obrigatórios.");
                             return;
                         }
+                        console.log("Saving subcategory:", {
+                            nome: name,
+                            descricao,
+                            idCategoria: selectedCategory,
+                        });
                         onSave({ nome: name, descricao, idCategoria: selectedCategory });
                     }}
                 >
@@ -122,6 +140,7 @@ export function SubCategoryFormModal({
                 <TouchableOpacity
                     style={stylesSubCategoryFormModal.cancelButton}
                     onPress={() => {
+                        console.log("Closing modal without saving");
                         resetForm();
                         onClose();
                     }}

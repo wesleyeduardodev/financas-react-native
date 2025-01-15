@@ -14,6 +14,13 @@ export function SubCategory({
                                 descricao,
                                 categoryName,
                             }: SubCategoryProps & { categoryName: string }) {
+    // Log para acompanhar a renderização do componente e os dados recebidos
+    console.log("Rendering SubCategory component", {
+        nome,
+        descricao,
+        categoryName,
+    });
+
     return (
         <View style={stylesSubCategory.container}>
             <Text style={stylesSubCategory.name}>{nome}</Text>
