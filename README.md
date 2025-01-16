@@ -93,6 +93,11 @@ expo install react-native-gesture-handler react-native-reanimated react-native-s
 npm install react-native-chart-kit react-native-svg
 
 
+Comando executados para novo build em sequencia
+npm install @react-native-community/cli --save-dev
+npm run start-native
+npx expo prebuild
+npm run android-native
 
 ---
 
