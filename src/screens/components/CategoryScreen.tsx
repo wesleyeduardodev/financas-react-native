@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
-import Swipeable from "react-native-gesture-handler/Swipeable";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 import { Category, CategoryProps } from "./Category";
 import { CategoryFormModal } from "./CategoryFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -96,28 +96,23 @@ export function CategoryScreen() {
                 <Text style={stylesCategoryScreen.addButtonText}>Adicionar Categoria</Text>
             </TouchableOpacity>
 
-            <FlatList
+            <SwipeListView
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
-                        <TouchableOpacity
-                            style={stylesCategoryScreen.categoryCard}
-                            onPress={() => {
-                                setCategoryToEdit(item);
-                                setIsCategoryModalVisible(true);
-                            }}
-                        >
-                            <Category {...item} />
-                        </TouchableOpacity>
-                    </Swipeable>
+                    <TouchableOpacity
+                        style={stylesCategoryScreen.categoryCard}
+                        onPress={() => {
+                            setCategoryToEdit(item);
+                            setIsCategoryModalVisible(true);
+                        }}
+                    >
+                        <Category {...item} />
+                    </TouchableOpacity>
                 )}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                    <Text style={stylesCategoryScreen.listEmptyText}>
-                        Nenhuma categoria registrada.
-                    </Text>
-                )}
+                renderHiddenItem={({ item }) => renderRightActions(item.id)}
+                rightOpenValue={-75} // Valor que define a distância de deslizamento
+                disableRightSwipe={false}
             />
 
             {isCategoryModalVisible && (

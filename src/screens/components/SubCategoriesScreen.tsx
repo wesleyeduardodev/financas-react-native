@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
-import Swipeable from "react-native-gesture-handler/Swipeable";
+import { SwipeListView } from "react-native-swipe-list-view"; // Atualizado para SwipeListView
 import { SubCategory, SubCategoryProps } from "./SubCategory";
 import { SubCategoryFormModal } from "./SubCategoryFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -150,28 +150,23 @@ export function SubCategoriesScreen() {
                 </TouchableOpacity>
             </View>
 
-            <FlatList
+            <SwipeListView
                 data={filteredSubCategories}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
-                        <TouchableOpacity
-                            style={stylesSubCategoriesScreen.subCategoryCard}
-                            onPress={() => {
-                                setSubCategoryToEdit(item);
-                                setIsModalVisible(true);
-                            }}
-                        >
-                            <SubCategory {...item} categoryName={getCategoryName(item.idCategoria)} />
-                        </TouchableOpacity>
-                    </Swipeable>
+                    <TouchableOpacity
+                        style={stylesSubCategoriesScreen.subCategoryCard}
+                        onPress={() => {
+                            setSubCategoryToEdit(item);
+                            setIsModalVisible(true);
+                        }}
+                    >
+                        <SubCategory {...item} categoryName={getCategoryName(item.idCategoria)} />
+                    </TouchableOpacity>
                 )}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                    <Text style={stylesSubCategoriesScreen.listEmptyText}>
-                        Nenhuma subcategoria registrada.
-                    </Text>
-                )}
+                renderHiddenItem={({ item }) => renderRightActions(item.id)}
+                rightOpenValue={-75} // Valor que define a distância de deslizamento
+                disableRightSwipe={false}
             />
 
             {isModalVisible && (
