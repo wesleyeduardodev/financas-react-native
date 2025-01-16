@@ -95,7 +95,7 @@ npm install react-native-chart-kit react-native-svg
 
 Comando executados para novo build em sequencia
 npm install @react-native-community/cli --save-dev
-npm run start-native
+npm run start-native ou npx react-native start
 npx expo prebuild
 npm run android-native
 
