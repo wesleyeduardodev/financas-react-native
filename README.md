@@ -83,15 +83,8 @@ Certifique-se de instalar as dependências necessárias para o projeto. Abaixo e
 
 npm install @react-navigation/native @react-navigation/stack
 npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons @react-native-community/masked-view
-npm install react-native-swipe-list-view
-npm install date-fns
-npm install @react-navigation/material-top-tabs react-native-tab-view
-npm install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context react-native-vector-icons react-native-get-random-values
-expo install react-native-reanimated
-npm install @react-navigation/drawer
-expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context react-native-vector-icons react-native-get-random-values
-npm install react-native-chart-kit react-native-svg
 
+npm install date-fns
 
 
 ---
@@ -101,3 +94,9 @@ npm install react-native-chart-kit react-native-svg
 - Certifique-se de ter o **Node.js** e o **Expo CLI** instalados corretamente no ambiente.
 - Use o aplicativo **Expo Go** no dispositivo para testar o projeto durante o desenvolvimento.
 - Para outras plataformas (iOS ou Web), o **Expo** suporta execução direta com comandos semelhantes.
+
+Comando executados para novo build em sequencia
+npm install @react-native-community/cli --save-dev
+npm run start-native ou npx react-native start 
+npx expo prebuild 
+npm run android-native
