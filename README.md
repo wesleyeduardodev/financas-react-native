@@ -87,16 +87,23 @@ npm install react-native-screens react-native-safe-area-context react-native-ges
 npm install date-fns
 
 
----
+EXECUTAR ESSES ABAIXO
+npm install react-native-svg-transformer
 
-## 💡 Observações
 
-- Certifique-se de ter o **Node.js** e o **Expo CLI** instalados corretamente no ambiente.
-- Use o aplicativo **Expo Go** no dispositivo para testar o projeto durante o desenvolvimento.
-- Para outras plataformas (iOS ou Web), o **Expo** suporta execução direta com comandos semelhantes.
+------------------------------------------------------------------
+
+
+NOVA SEQUENCIA DE INSTALAÇÃO DE PACOTES
+-apaguei o node modules
+-rodei o npm install
+-npm install @react-native-picker/picker@2.9.0 --save
+
 
 Comando executados para novo build em sequencia
 npm install @react-native-community/cli --save-dev
-npm run start-native ou npx react-native start 
-npx expo prebuild 
+npx expo prebuild
 npm run android-native
+npm run start-native ou npx react-native start
+
+
