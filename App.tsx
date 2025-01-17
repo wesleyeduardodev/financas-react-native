@@ -5,7 +5,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { Home } from "./src/screens/components/Home";
 import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
 import { CategoryScreen } from "./src/screens/components/CategoryScreen";
-import { FinancialSummary } from "./src/screens/components/FinancialSummary"; // Importando o resumo financeiro
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Drawer = createDrawerNavigator();
@@ -31,17 +30,7 @@ function Tabs() {
                     ),
                     tabBarLabel: "Registro Financeiro",
                 }}
-            />
-            <Tab.Screen
-                name="Summary"
-                component={FinancialSummary}
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon name="bar-chart" size={20} color={color} />
-                    ),
-                    tabBarLabel: "Resumo Financeiro",
-                }}
-            />
+            />           
             <Tab.Screen
                 name="Categories"
                 component={CategoryScreen}
