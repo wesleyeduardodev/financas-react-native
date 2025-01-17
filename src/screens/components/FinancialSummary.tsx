@@ -14,6 +14,8 @@ export function FinancialSummary() {
     const [totalSaida, setTotalSaida] = useState(0);
     const [saldoTotal, setSaldoTotal] = useState(0);
 
+    // Log 61: Fetching financial data on component mount
+    console.log("Log 61: Fetching financial data...");
     useEffect(() => {
         fetchFinancialData();
     }, []);
@@ -24,10 +26,15 @@ export function FinancialSummary() {
 
     const fetchFinancialData = async () => {
         try {
+            // Log 62: Making API call to fetch financial records
+            console.log("Log 62: Making API call to fetch financial records...");
             const response = await api.get("/registros-financeiros");
+            console.log("Log 63: Financial data loaded successfully", response.data);
             setOriginalData(response.data);
             setFilteredData(response.data);
         } catch (error: any) {
+            // Log 64: Error fetching financial records
+            console.error("Log 64: Error fetching financial records", error);
             Alert.alert(
                 "Erro ao carregar dados financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os dados financeiros."
@@ -39,7 +46,6 @@ export function FinancialSummary() {
         const entrada = data
             .filter((item: any) => item.tipoRegistro === 0)
             .reduce((acc: number, curr: any) => acc + curr.valor, 0);
-
         const saida = data
             .filter((item: any) => item.tipoRegistro === 1)
             .reduce((acc: number, curr: any) => acc + curr.valor, 0);
@@ -47,6 +53,9 @@ export function FinancialSummary() {
         setTotalEntrada(entrada);
         setTotalSaida(saida);
         setSaldoTotal(entrada - saida);
+
+        // Log 65: Calculated summary values
+        console.log("Log 65: Calculated summary values: Entrada:", entrada, "Saída:", saida, "Saldo Total:", entrada - saida);
     };
 
     const total = totalEntrada + totalSaida;

@@ -14,6 +14,9 @@ export function SubCategory({
                                 descricao,
                                 categoryName,
                             }: SubCategoryProps & { categoryName: string }) {
+
+    console.log("Log 96: Displaying SubCategory", { nome, descricao, categoryName })
+
     return (
         <View style={stylesSubCategory.container}>
             <Text style={stylesSubCategory.name}>{nome}</Text>

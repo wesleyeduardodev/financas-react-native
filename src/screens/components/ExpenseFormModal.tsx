@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
     Modal,
     View,
@@ -43,6 +43,7 @@ export function ExpenseFormModal({
 
     useEffect(() => {
         if (expense) {
+            console.log("Log 26: Populating form with expense data", expense); // Log 26
             setTipoRegistro(expense.tipoRegistro || 0);
             setTipoTransacao(expense.tipoTransacao || 0);
             setValue(expense.valor ? expense.valor.toFixed(2).replace(".", ",") : "");
@@ -56,6 +57,7 @@ export function ExpenseFormModal({
     }, [expense]);
 
     const resetForm = () => {
+        console.log("Log 27: Resetting form fields to default values"); // Log 27
         setTipoRegistro(0);
         setTipoTransacao(0);
         setValue("");
@@ -67,11 +69,13 @@ export function ExpenseFormModal({
     };
 
     const loadSubCategories = async (categoryId: number) => {
+        console.log("Log 28: Loading subcategories for category ID", categoryId); // Log 28
         try {
             const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            console.log("Log 29: Subcategories loaded successfully", response.data); // Log 29
             setSubCategories(response.data);
         } catch (error) {
-            console.error("Erro ao carregar subcategorias:", error);
+            console.error("Log 30: Error loading subcategories", error); // Log 30
         }
     };
 
@@ -84,6 +88,7 @@ export function ExpenseFormModal({
     }, [category]);
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
+        console.log("Log 31: Date picker changed", selectedDate); // Log 31
         setShowDatePicker(false);
         if (selectedDate) {
             const currentDate = new Date(dateTimeISO);
@@ -97,6 +102,7 @@ export function ExpenseFormModal({
     };
 
     const handleTimeChange = (event: any, selectedTime?: Date) => {
+        console.log("Log 32: Time picker changed", selectedTime); // Log 32
         setShowTimePicker(false);
         if (selectedTime) {
             const currentDate = new Date(dateTimeISO);
@@ -107,150 +113,115 @@ export function ExpenseFormModal({
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
-                <ScrollView contentContainerStyle={stylesExpenseFormModal.scrollView}>
-                    <View style={stylesExpenseFormModal.container}>
-                        <View style={stylesExpenseFormModal.fieldContainer}>
-                            <Text style={stylesExpenseFormModal.label}>Título</Text>
-                            <TextInput
-                                style={stylesExpenseFormModal.input}
-                                value={titulo}
-                                onChangeText={setTitulo}
-                            />
-                        </View>
+            <View style={stylesExpenseFormModal.container}>
+                <Text style={stylesExpenseFormModal.title}>
+                    {expense ? "Editar Registro" : "Novo Registro"}
+                </Text>
 
-                        <View style={stylesExpenseFormModal.fieldContainer}>
-                            <Text style={stylesExpenseFormModal.label}>Valor</Text>
-                            <TextInput
-                                style={stylesExpenseFormModal.input}
-                                keyboardType="numeric"
-                                value={value}
-                                onChangeText={(text) => {
-                                    const formattedText = text
-                                        .replace(/[^0-9.,]/g, "")
-                                        .replace(".", ",");
-                                    if (/^(\d{1,15})(,\d{0,2})?$/.test(formattedText) || formattedText === "") {
-                                        setValue(formattedText);
-                                    }
-                                }}
-                            />
-                        </View>
+                <Text style={stylesExpenseFormModal.label}>Título</Text>
+                <TextInput
+                    style={stylesExpenseFormModal.input}
+                    value={titulo}
+                    onChangeText={setTitulo}
+                />
 
-                        <Picker
-                            selectedValue={tipoRegistro}
-                            style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setTipoRegistro(itemValue)}
-                        >
-                            <Picker.Item label="Entrada" value={0} />
-                            <Picker.Item label="Saída" value={1} />
-                        </Picker>
+                <Text style={stylesExpenseFormModal.label}>Valor</Text>
+                <TextInput
+                    style={stylesExpenseFormModal.input}
+                    keyboardType="numeric"
+                    value={value}
+                    onChangeText={(text) => {
+                        const formattedText = text
+                            .replace(/[^0-9.,]/g, "")
+                            .replace(".", ",");
+                        const regex = /^(\d{1,15})(,\d{0,2})?$/;
+                        if (regex.test(formattedText) || formattedText === "") {
+                            setValue(formattedText);
+                        }
+                    }}
+                />
 
-                        <Picker
-                            selectedValue={tipoTransacao}
-                            style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setTipoTransacao(itemValue)}
-                        >
-                            <Picker.Item label="Pix" value={0} />
-                            <Picker.Item label="Cartão de Crédito" value={1} />
-                            <Picker.Item label="Cartão de Débito" value={2} />
-                            <Picker.Item label="Dinheiro" value={3} />
-                            <Picker.Item label="Boleto" value={4} />
-                        </Picker>
+                <Picker
+                    selectedValue={tipoRegistro}
+                    style={stylesExpenseFormModal.picker}
+                    onValueChange={(itemValue) => setTipoRegistro(itemValue)}
+                >
+                    <Picker.Item label="Entrada" value={0} />
+                    <Picker.Item label="Saída" value={1} />
+                </Picker>
 
-                        <Picker
-                            selectedValue={category}
-                            style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setCategory(itemValue)}
-                        >
-                            <Picker.Item label="Selecione uma categoria" value={null} />
-                            {categories.map((cat) => (
-                                <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
-                            ))}
-                        </Picker>
+                <Picker
+                    selectedValue={tipoTransacao}
+                    style={stylesExpenseFormModal.picker}
+                    onValueChange={(itemValue) => setTipoTransacao(itemValue)}
+                >
+                    <Picker.Item label="Pix" value={0} />
+                    <Picker.Item label="Cartão de Crédito" value={1} />
+                    <Picker.Item label="Cartão de Débito" value={2} />
+                    <Picker.Item label="Dinheiro" value={3} />
+                    <Picker.Item label="Boleto" value={4} />
+                </Picker>
 
-                        {subCategories.length > 0 && (
-                            <Picker
-                                selectedValue={subCategory}
-                                style={stylesExpenseFormModal.picker}
-                                onValueChange={(itemValue) => setSubCategory(itemValue)}
-                            >
-                                <Picker.Item label="Selecione uma subcategoria" value={null} />
-                                {subCategories.map((subCat) => (
-                                    <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
-                                ))}
-                            </Picker>
-                        )}
+                <Picker
+                    selectedValue={category}
+                    style={stylesExpenseFormModal.picker}
+                    onValueChange={(itemValue) => setCategory(itemValue)}
+                >
+                    <Picker.Item label="Selecione uma categoria" value={null} />
+                    {categories.map((cat) => (
+                        <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
+                    ))}
+                </Picker>
 
-                        <View style={stylesExpenseFormModal.dateTimeContainer}>
-                            <TouchableOpacity
-                                style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowDatePicker(true)}
-                            >
-                                <Text style={stylesExpenseFormModal.datePickerText}>
-                                    Data: {new Date(dateTimeISO).toLocaleDateString()}
-                                </Text>
-                            </TouchableOpacity>
+                {subCategories.length > 0 && (
+                    <Picker
+                        selectedValue={subCategory}
+                        style={stylesExpenseFormModal.picker}
+                        onValueChange={(itemValue) => setSubCategory(itemValue)}
+                    >
+                        <Picker.Item label="Selecione uma subcategoria" value={null} />
+                        {subCategories.map((subCat) => (
+                            <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
+                        ))}
+                    </Picker>
+                )}
 
-                            <TouchableOpacity
-                                style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowTimePicker(true)}
-                            >
-                                <Text style={stylesExpenseFormModal.datePickerText}>
-                                    Hora: {new Date(dateTimeISO).toLocaleTimeString()}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                <TouchableOpacity
+                    style={stylesExpenseFormModal.saveButton}
+                    onPress={() => {
+                        console.log("Log 33: Saving expense", {
+                            titulo,
+                            tipoRegistro,
+                            tipoTransacao,
+                            valor: parseFloat(value.replace(",", ".")),
+                            idCategoria: category,
+                            idSubCategoria: subCategory,
+                            dataTransacao: dateTimeISO,
+                        }); // Log 33
+                        if (!subCategory) {
+                            alert("Selecione uma subcategoria antes de salvar.");
+                            return;
+                        }
+                        onSave({
+                            titulo,
+                            tipoRegistro,
+                            tipoTransacao,
+                            valor: parseFloat(value.replace(",", ".")),
+                            idSubCategoria: subCategory,
+                            dataTransacao: dateTimeISO,
+                        });
+                    }}
+                >
+                    <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
+                </TouchableOpacity>
 
-                        {showDatePicker && (
-                            <DateTimePicker
-                                value={new Date(dateTimeISO)}
-                                mode="date"
-                                display="default"
-                                onChange={handleDateChange}
-                            />
-                        )}
-
-                        {showTimePicker && (
-                            <DateTimePicker
-                                value={new Date(dateTimeISO)}
-                                mode="time"
-                                display="default"
-                                onChange={handleTimeChange}
-                            />
-                        )}
-
-                        <TouchableOpacity
-                            style={stylesExpenseFormModal.saveButton}
-                            onPress={() => {
-                                if (!subCategory) {
-                                    alert("Selecione uma subcategoria antes de salvar.");
-                                    return;
-                                }
-                                onSave({
-                                    titulo,
-                                    tipoRegistro,
-                                    tipoTransacao,
-                                    valor: parseFloat(value.replace(",", ".")),
-                                    idSubCategoria: subCategory,
-                                    dataTransacao: dateTimeISO,
-                                });
-                            }}
-                        >
-                            <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={stylesExpenseFormModal.cancelButton}
-                            onPress={onClose}
-                        >
-                            <Text style={stylesExpenseFormModal.buttonText}>Cancelar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
+                <TouchableOpacity
+                    style={stylesExpenseFormModal.cancelButton}
+                    onPress={onClose}
+                >
+                    <Text style={stylesExpenseFormModal.buttonText}>Cancelar</Text>
+                </TouchableOpacity>
+            </View>
         </Modal>
     );
 }

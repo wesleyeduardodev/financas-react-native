@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -29,10 +29,14 @@ export function SummaryFilterModal({
     const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
 
     useEffect(() => {
+        // Log 88: Fetching categories when the component mounts
+        console.log("Log 88: Fetching categories");
         fetchCategories();
     }, []);
 
     useEffect(() => {
+        // Log 89: Fetching subcategories based on the selected category
+        console.log("Log 89: Fetching subcategories for category", categoria);
         if (categoria) {
             fetchSubCategories(categoria);
         } else {
@@ -56,6 +60,8 @@ export function SummaryFilterModal({
     const fetchSubCategories = async (categoryId: number) => {
         try {
             const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            // Log 90: Successfully fetched subcategories
+            console.log("Log 90: Successfully fetched subcategories", response.data);
             setSubCategories(response.data);
         } catch (error: any) {
             Alert.alert(
@@ -74,7 +80,11 @@ export function SummaryFilterModal({
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={tipoRegistro}
-                        onValueChange={(itemValue) => setTipoRegistro(itemValue)}
+                        onValueChange={(itemValue) => {
+                            // Log 91: Selected Tipo Registro
+                            console.log("Log 91: Selected Tipo Registro", itemValue);
+                            setTipoRegistro(itemValue);
+                        }}
                         style={stylesFilterModal.picker}
                     >
                         <Picker.Item label="Todos os Tipos de Registro" value={null} />
@@ -87,7 +97,11 @@ export function SummaryFilterModal({
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={tipoTransacao}
-                        onValueChange={(itemValue) => setTipoTransacao(itemValue)}
+                        onValueChange={(itemValue) => {
+                            // Log 92: Selected Tipo Transacao
+                            console.log("Log 92: Selected Tipo Transacao", itemValue);
+                            setTipoTransacao(itemValue);
+                        }}
                         style={stylesFilterModal.picker}
                     >
                         <Picker.Item label="Todos os Tipos de Transação" value={null} />
@@ -103,7 +117,11 @@ export function SummaryFilterModal({
                 <View style={stylesFilterModal.pickerContainer}>
                     <Picker
                         selectedValue={categoria}
-                        onValueChange={(itemValue) => setCategoria(itemValue)}
+                        onValueChange={(itemValue) => {
+                            // Log 93: Selected Categoria
+                            console.log("Log 93: Selected Categoria", itemValue);
+                            setCategoria(itemValue);
+                        }}
                         style={stylesFilterModal.picker}
                     >
                         <Picker.Item label="Todas as Categorias" value={null} />
@@ -118,7 +136,11 @@ export function SummaryFilterModal({
                     <View style={stylesFilterModal.pickerContainer}>
                         <Picker
                             selectedValue={subCategoria}
-                            onValueChange={(itemValue) => setSubCategoria(itemValue)}
+                            onValueChange={(itemValue) => {
+                                // Log 94: Selected Subcategoria
+                                console.log("Log 94: Selected Subcategoria", itemValue);
+                                setSubCategoria(itemValue);
+                            }}
                             style={stylesFilterModal.picker}
                         >
                             <Picker.Item label="Todas as Subcategorias" value={null} />
@@ -131,9 +153,16 @@ export function SummaryFilterModal({
 
                 <TouchableOpacity
                     style={stylesFilterModal.applyButton}
-                    onPress={() =>
-                        onApplyFilters({ tipoRegistro, tipoTransacao, categoria, subCategoria })
-                    }
+                    onPress={() => {
+                        // Log 95: Applying Filters
+                        console.log("Log 95: Applying filters", {
+                            tipoRegistro,
+                            tipoTransacao,
+                            categoria,
+                            subCategoria
+                        });
+                        onApplyFilters({ tipoRegistro, tipoTransacao, categoria, subCategoria });
+                    }}
                 >
                     <Text style={stylesFilterModal.applyButtonText}>Aplicar Filtros</Text>
                 </TouchableOpacity>

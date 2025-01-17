@@ -33,6 +33,8 @@ export function SubCategoryFormModal({
 
     useEffect(() => {
         if (subCategory) {
+            // Log 83: Subcategory received, setting initial values
+            console.log("Log 83: Subcategory received, setting initial values");
             setName(subCategory.nome);
             setDescricao(subCategory.descricao);
             setSelectedCategory(subCategory.idCategoria || null);
@@ -42,6 +44,8 @@ export function SubCategoryFormModal({
     }, [subCategory]);
 
     const resetForm = () => {
+        // Log 84: Resetting form fields
+        console.log("Log 84: Resetting form fields");
         setName("");
         setDescricao("");
         setSelectedCategory(null);
@@ -89,7 +93,11 @@ export function SubCategoryFormModal({
                     <View style={stylesSubCategoryFormModal.pickerContainer}>
                         <Picker
                             selectedValue={selectedCategory}
-                            onValueChange={(itemValue) => setSelectedCategory(itemValue as number)}
+                            onValueChange={(itemValue) => {
+                                // Log 85: Category selected, updating selectedCategory
+                                console.log("Log 85: Category selected, updating selectedCategory", itemValue);
+                                setSelectedCategory(itemValue as number);
+                            }}
                             style={stylesSubCategoryFormModal.picker} // Estilo aplicado ao Picker
                         >
                             <Picker.Item label="Selecione uma categoria" value={null} />
@@ -101,8 +109,6 @@ export function SubCategoryFormModal({
                                 />
                             ))}
                         </Picker>
-
-
                     </View>
                 </View>
 
@@ -113,6 +119,8 @@ export function SubCategoryFormModal({
                             alert("Todos os campos são obrigatórios.");
                             return;
                         }
+                        // Log 86: Saving subcategory
+                        console.log("Log 86: Saving subcategory with values", { nome: name, descricao, idCategoria: selectedCategory });
                         onSave({ nome: name, descricao, idCategoria: selectedCategory });
                     }}
                 >
@@ -122,6 +130,8 @@ export function SubCategoryFormModal({
                 <TouchableOpacity
                     style={stylesSubCategoryFormModal.cancelButton}
                     onPress={() => {
+                        // Log 87: Closing form
+                        console.log("Log 87: Closing form");
                         resetForm();
                         onClose();
                     }}

@@ -19,16 +19,20 @@ export function Home() {
     const [modalKey, setModalKey] = useState<number>(0);
 
     useEffect(() => {
+        console.log("Log 10: Fetching expenses and categories"); // Log 10
         fetchExpenses();
         fetchCategories();
     }, []);
 
     const fetchExpenses = async () => {
         try {
+            console.log("Log 11: Fetching expenses from API"); // Log 11
             const response = await api.get("/registros-financeiros");
+            console.log("Log 12: Expenses loaded successfully", response.data); // Log 12
             setExpenses(response.data);
             setFilteredExpenses(response.data);
         } catch (error: any) {
+            console.error("Log 13: Error loading expenses", error); // Log 13
             Alert.alert(
                 "Erro ao carregar registros financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os registros financeiros."
@@ -38,9 +42,12 @@ export function Home() {
 
     const fetchCategories = async () => {
         try {
+            console.log("Log 14: Fetching categories from API"); // Log 14
             const response = await api.get("/categorias-registro-financeiros");
+            console.log("Log 15: Categories loaded successfully", response.data); // Log 15
             setCategories(response.data);
         } catch (error: any) {
+            console.error("Log 16: Error loading categories", error); // Log 16
             Alert.alert(
                 "Erro ao carregar categorias",
                 error.response?.data?.message || error.message || "Não foi possível carregar as categorias."
@@ -50,14 +57,17 @@ export function Home() {
 
     const handleAddExpense = async (newExpense: Partial<ExpenseProps>) => {
         try {
+            console.log("Log 17: Adding a new expense", newExpense); // Log 17
             const response = await api.post("/registros-financeiros", {
                 ...newExpense,
                 idCategoria: undefined,
                 idSubCategoria: newExpense.idSubCategoria,
             });
+            console.log("Log 18: Expense added successfully", response.data); // Log 18
             setExpenses((prev) => [...prev, response.data]);
             setFilteredExpenses((prev) => [...prev, response.data]);
         } catch (error: any) {
+            console.error("Log 19: Error adding expense", error); // Log 19
             Alert.alert(
                 "Erro ao adicionar registro financeiro",
                 error.message || "Erro desconhecido."
@@ -67,7 +77,9 @@ export function Home() {
 
     const handleEditExpense = async (id: number, updatedExpense: Partial<ExpenseProps>) => {
         try {
+            console.log("Log 20: Editing expense with ID", id, updatedExpense); // Log 20
             const response = await api.put(`/registros-financeiros/${id}`, updatedExpense);
+            console.log("Log 21: Expense edited successfully", response.data); // Log 21
             setExpenses((prev) =>
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
@@ -75,6 +87,7 @@ export function Home() {
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
         } catch (error: any) {
+            console.error("Log 22: Error editing expense", error); // Log 22
             Alert.alert("Erro ao editar registro financeiro", error.message || "Erro desconhecido.");
         }
     };
@@ -82,7 +95,7 @@ export function Home() {
     const confirmRemoveExpense = (id: number) => {
         Alert.alert(
             "Confirmar Remoção",
-            "Tem certeza de que deseja remover este registro financeiro?",
+            "Tem certeza que deseja remover este registro financeiro?",
             [
                 {
                     text: "Cancelar",
@@ -99,10 +112,13 @@ export function Home() {
 
     const handleRemoveExpense = async (id: number) => {
         try {
+            console.log("Log 23: Removing expense with ID", id); // Log 23
             await api.delete(`/registros-financeiros/${id}`);
+            console.log("Log 24: Expense removed successfully"); // Log 24
             setExpenses((prev) => prev.filter((expense) => expense.id !== id));
             setFilteredExpenses((prev) => prev.filter((expense) => expense.id !== id));
         } catch (error: any) {
+            console.error("Log 25: Error removing expense", error); // Log 25
             Alert.alert("Erro ao remover registro financeiro", error.message || "Erro desconhecido.");
         }
     };

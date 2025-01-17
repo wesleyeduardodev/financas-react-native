@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -12,6 +12,10 @@ const Drawer = createDrawerNavigator();
 const Tab = createMaterialTopTabNavigator();
 
 function Tabs() {
+    useEffect(() => {
+        console.log("Log 1: Initializing Tabs Component"); // Log 1
+    }, []);
+
     return (
         <Tab.Navigator
             initialRouteName="Expenses"
@@ -26,9 +30,10 @@ function Tabs() {
                 name="Expenses"
                 component={Home}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon name="attach-money" size={20} color={color} />
-                    ),
+                    tabBarIcon: ({ color }) => {
+                        console.log("Log 2: Rendering Expenses Tab Icon"); // Log 2
+                        return <Icon name="attach-money" size={20} color={color} />;
+                    },
                     tabBarLabel: "Registro Financeiro",
                 }}
             />
@@ -36,9 +41,10 @@ function Tabs() {
                 name="Summary"
                 component={FinancialSummary}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon name="bar-chart" size={20} color={color} />
-                    ),
+                    tabBarIcon: ({ color }) => {
+                        console.log("Log 3: Rendering Summary Tab Icon"); // Log 3
+                        return <Icon name="bar-chart" size={20} color={color} />;
+                    },
                     tabBarLabel: "Resumo Financeiro",
                 }}
             />
@@ -46,9 +52,10 @@ function Tabs() {
                 name="Categories"
                 component={CategoryScreen}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon name="category" size={20} color={color} />
-                    ),
+                    tabBarIcon: ({ color }) => {
+                        console.log("Log 4: Rendering Categories Tab Icon"); // Log 4
+                        return <Icon name="category" size={20} color={color} />;
+                    },
                     tabBarLabel: "Categorias",
                 }}
             />
@@ -56,9 +63,10 @@ function Tabs() {
                 name="Subcategories"
                 component={SubCategoriesScreen}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon name="subdirectory-arrow-right" size={20} color={color} />
-                    ),
+                    tabBarIcon: ({ color }) => {
+                        console.log("Log 5: Rendering Subcategories Tab Icon"); // Log 5
+                        return <Icon name="subdirectory-arrow-right" size={20} color={color} />;
+                    },
                     tabBarLabel: "SubCategorias",
                 }}
             />
@@ -67,6 +75,10 @@ function Tabs() {
 }
 
 export default function App() {
+    useEffect(() => {
+        console.log("Log 6: Initializing App Component"); // Log 6
+    }, []);
+
     return (
         <NavigationContainer>
             <Drawer.Navigator
@@ -80,9 +92,10 @@ export default function App() {
                     name="Home"
                     component={Tabs}
                     options={{
-                        drawerIcon: ({ color }) => (
-                            <Icon name="home" size={20} color={color} />
-                        ),
+                        drawerIcon: ({ color }) => {
+                            console.log("Log 7: Rendering Home Drawer Icon"); // Log 7
+                            return <Icon name="home" size={20} color={color} />;
+                        },
                         title: "Menus",
                     }}
                 />
@@ -90,9 +103,10 @@ export default function App() {
                     name="Categories"
                     component={CategoryScreen}
                     options={{
-                        drawerIcon: ({ color }) => (
-                            <Icon name="category" size={20} color={color} />
-                        ),
+                        drawerIcon: ({ color }) => {
+                            console.log("Log 8: Rendering Categories Drawer Icon"); // Log 8
+                            return <Icon name="category" size={20} color={color} />;
+                        },
                         title: "Categorias",
                     }}
                 />
@@ -100,9 +114,10 @@ export default function App() {
                     name="Subcategories"
                     component={SubCategoriesScreen}
                     options={{
-                        drawerIcon: ({ color }) => (
-                            <Icon name="subdirectory-arrow-right" size={20} color={color} />
-                        ),
+                        drawerIcon: ({ color }) => {
+                            console.log("Log 9: Rendering Subcategories Drawer Icon"); // Log 9
+                            return <Icon name="subdirectory-arrow-right" size={20} color={color} />;
+                        },
                         title: "Subcategorias",
                     }}
                 />

@@ -16,6 +16,8 @@ export function SubCategoriesScreen() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [subCategoryToEdit, setSubCategoryToEdit] = useState<SubCategoryProps | null>(null);
 
+    // Log 66: Fetching categories and subcategories on component mount
+    console.log("Log 66: Fetching categories and subcategories...");
     useEffect(() => {
         fetchCategories();
         fetchSubCategories();
@@ -27,18 +29,26 @@ export function SubCategoriesScreen() {
 
     const fetchCategories = async () => {
         try {
+            // Log 67: Making API call to fetch categories
+            console.log("Log 67: Making API call to fetch categories...");
             const response = await api.get("/categorias-registro-financeiros");
+            console.log("Log 68: Categories loaded successfully", response.data);
             setCategories(response.data);
         } catch (error: any) {
+            console.error("Log 69: Error loading categories", error);
             Alert.alert("Erro ao carregar categorias.", error.message || "Tente novamente.");
         }
     };
 
     const fetchSubCategories = async () => {
         try {
+            // Log 70: Making API call to fetch subcategories
+            console.log("Log 70: Making API call to fetch subcategories...");
             const response = await api.get("/subcategorias-registro-financeiros");
+            console.log("Log 71: Subcategories loaded successfully", response.data);
             setSubCategories(response.data);
         } catch (error: any) {
+            console.error("Log 72: Error loading subcategories", error);
             Alert.alert("Erro ao carregar subcategorias.", error.message || "Tente novamente.");
         }
     };
@@ -47,6 +57,8 @@ export function SubCategoriesScreen() {
         if (categoryId === null) {
             setFilteredSubCategories(subCategories);
         } else {
+            // Log 73: Filtering subcategories by category
+            console.log("Log 73: Filtering subcategories by category", categoryId);
             setFilteredSubCategories(
                 subCategories.filter((subCategory) => subCategory.idCategoria === categoryId)
             );
@@ -55,9 +67,13 @@ export function SubCategoriesScreen() {
 
     const handleAddSubCategory = async (newSubCategory: Partial<SubCategoryProps>) => {
         try {
+            // Log 74: Adding new subcategory
+            console.log("Log 74: Adding new subcategory", newSubCategory);
             const response = await api.post("/subcategorias-registro-financeiros", newSubCategory);
             await fetchSubCategories(); // Atualiza a lista completa após a adição
+            console.log("Log 75: Subcategory added successfully", response.data);
         } catch (error: any) {
+            console.error("Log 76: Error adding subcategory", error);
             Alert.alert("Erro ao adicionar subcategoria.", error.message || "Tente novamente.");
         }
     };
@@ -67,25 +83,30 @@ export function SubCategoriesScreen() {
         updatedSubCategory: Partial<SubCategoryProps>
     ) => {
         try {
-            const response = await api.put(
-                `/subcategorias-registro-financeiros/${id}`,
-                updatedSubCategory
-            );
+            // Log 77: Editing subcategory
+            console.log("Log 77: Editing subcategory", id, updatedSubCategory);
+            const response = await api.put(`/subcategorias-registro-financeiros/${id}`, updatedSubCategory);
             setSubCategories((prev) =>
                 prev.map((subCategory) =>
                     subCategory.id === id ? response.data : subCategory
                 )
             );
+            console.log("Log 78: Subcategory edited successfully", response.data);
         } catch (error: any) {
+            console.error("Log 79: Error editing subcategory", error);
             Alert.alert("Erro ao editar subcategoria.", error.message || "Tente novamente.");
         }
     };
 
     const handleRemoveSubCategory = async (id: number) => {
         try {
+            // Log 80: Removing subcategory
+            console.log("Log 80: Removing subcategory", id);
             await api.delete(`/subcategorias-registro-financeiros/${id}`);
             setSubCategories((prev) => prev.filter((subCategory) => subCategory.id !== id));
+            console.log("Log 81: Subcategory removed successfully");
         } catch (error: any) {
+            console.error("Log 82: Error removing subcategory", error);
             Alert.alert("Erro ao remover subcategoria.", error.message || "Tente novamente.");
         }
     };
@@ -162,7 +183,10 @@ export function SubCategoriesScreen() {
                                 setIsModalVisible(true);
                             }}
                         >
-                            <SubCategory {...item} categoryName={getCategoryName(item.idCategoria)} />
+                            <SubCategory
+                                {...item}
+                                categoryName={getCategoryName(item.idCategoria)}
+                            />
                         </TouchableOpacity>
                     </Swipeable>
                 )}

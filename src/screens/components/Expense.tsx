@@ -1,5 +1,6 @@
-import {View, Text} from "react-native";
-import {stylesExpense} from "./styleExpense";
+import { useState, useEffect } from "react";
+import { View, Text } from "react-native";
+import { stylesExpense } from "./styleExpense";
 
 export type ExpenseProps = {
     id: number;
@@ -42,6 +43,18 @@ export function Expense({
                             onEdit,
                             onRemove,
                         }: ExpenseProps) {
+
+    // Log 38: Logging data received for expense rendering
+    console.log("Log 38: Expense data received:", {
+        titulo,
+        tipoRegistro,
+        tipoTransacao,
+        nomeCategoria,
+        nomeSubCategoria,
+        valor,
+        dataTransacao
+    });
+
     return (
         <View style={stylesExpense.container}>
             <View style={stylesExpense.info}>

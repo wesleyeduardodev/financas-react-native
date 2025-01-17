@@ -27,14 +27,20 @@ export function CategoryFormModal({
 
     useEffect(() => {
         if (category) {
+            // Log 52: Category received, setting fields for editing
+            console.log("Log 52: Category received for editing", category);
             setName(category.nome || "");
             setDescricao(category.descricao || "");
         } else {
+            // Log 53: No category received, resetting form for new category
+            console.log("Log 53: No category received, resetting form.");
             resetForm();
         }
     }, [category]);
 
     const resetForm = () => {
+        // Log 54: Resetting form fields
+        console.log("Log 54: Resetting form fields.");
         setName("");
         setDescricao("");
     };
@@ -75,10 +81,16 @@ export function CategoryFormModal({
                 <TouchableOpacity
                     style={stylesCategoryFormModal.saveButton}
                     onPress={() => {
+                        // Log 55: Saving the category, checking for name validity
+                        console.log("Log 55: Saving the category with name:", name, "and description:", descricao);
+
                         if (!name.trim()) {
                             alert("O nome da categoria é obrigatório.");
                             return;
                         }
+
+                        // Log 56: Invoking onSave with the category data
+                        console.log("Log 56: Invoking onSave with category data", { nome: name, descricao });
                         onSave({ nome: name, descricao });
                         resetForm();
                     }}
@@ -89,6 +101,8 @@ export function CategoryFormModal({
                 <TouchableOpacity
                     style={stylesCategoryFormModal.cancelButton}
                     onPress={() => {
+                        // Log 57: Cancelling the form, resetting fields
+                        console.log("Log 57: Cancelling the form and resetting fields.");
                         resetForm();
                         onClose();
                     }}

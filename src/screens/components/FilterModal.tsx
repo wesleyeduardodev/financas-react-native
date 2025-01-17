@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Modal, View, Text, TouchableOpacity, Alert } from "react-native";
+import { useState, useEffect } from "react";
+import { Alert, Text, TouchableOpacity, View, Modal } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { stylesFilterModal } from "./styleFilterModal";
@@ -34,6 +34,7 @@ export function FilterModal({
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
     useEffect(() => {
+        console.log("Log 34: Fetching subcategories for category", categoria); // Log 34
         if (categoria) {
             fetchSubCategories(categoria);
         } else {
@@ -44,9 +45,12 @@ export function FilterModal({
 
     const fetchSubCategories = async (categoryId: number) => {
         try {
+            console.log("Log 35: Fetching subcategories from API", categoryId); // Log 35
             const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
+            console.log("Log 36: Subcategories loaded successfully", response.data); // Log 36
             setSubCategories(response.data);
         } catch (error: any) {
+            console.error("Log 37: Error loading subcategories", error); // Log 37
             Alert.alert(
                 "Erro ao carregar subcategorias",
                 error.response?.data?.message || error.message || "Não foi possível carregar as subcategorias."
