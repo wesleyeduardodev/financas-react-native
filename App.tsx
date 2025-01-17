@@ -1,18 +1,20 @@
 import React from "react";
 import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Home } from "./src/screens/components/Home";
-import { CategoryScreen } from "./src/screens/components/CategoryScreen"; // Certifique-se de criar/importar esta tela
+import { CategoryScreen } from "./src/screens/components/CategoryScreen";
+import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
 
 // Tipos das rotas
-export type RootStackParamList = {
+export type DrawerParamList = {
     Home: undefined;
     CategoryScreen: undefined;
+    SubCategoriesScreen: undefined;
 };
 
-// Configuração do Stack Navigator
-const Stack = createStackNavigator<RootStackParamList>();
+// Configuração do Drawer Navigator
+const Drawer = createDrawerNavigator<DrawerParamList>();
 
 export default function App() {
     return (
@@ -23,20 +25,34 @@ export default function App() {
                 translucent
             />
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="Home">
-                    {/* Tela inicial */}
-                    <Stack.Screen
+                <Drawer.Navigator
+                    initialRouteName="Home"
+                    screenOptions={{
+                        headerStyle: { backgroundColor: "#6200EE" },
+                        headerTintColor: "#FFF",
+                        drawerStyle: { backgroundColor: "#F4F4F4" },
+                        drawerLabelStyle: { fontSize: 16 },
+                    }}
+                >
+                    {/* Tela Home */}
+                    <Drawer.Screen
                         name="Home"
                         component={Home}
-                        options={{ title: "Gastos", headerShown: false }}
+                        options={{ title: "Tela Inicial" }}
                     />
                     {/* Tela de Categorias */}
-                    <Stack.Screen
+                    <Drawer.Screen
                         name="CategoryScreen"
                         component={CategoryScreen}
                         options={{ title: "Categorias" }}
                     />
-                </Stack.Navigator>
+                    {/* Tela de Subcategorias */}
+                    <Drawer.Screen
+                        name="SubCategoriesScreen"
+                        component={SubCategoriesScreen}
+                        options={{ title: "Subcategorias" }}
+                    />
+                </Drawer.Navigator>
             </NavigationContainer>
         </>
     );
