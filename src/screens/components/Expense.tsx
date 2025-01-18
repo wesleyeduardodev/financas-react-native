@@ -7,7 +7,7 @@ export type ExpenseProps = {
     titulo: string;
     tipoRegistro: number;
     tipoTransacao: number;
-    idCategoria: number;
+    idCategoria: number; // Já presente, mas vale garantir
     nomeCategoria: string;
     idSubCategoria: number;
     nomeSubCategoria: string;

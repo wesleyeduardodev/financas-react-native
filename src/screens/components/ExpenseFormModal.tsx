@@ -233,8 +233,8 @@ export function ExpenseFormModal({
                         <TouchableOpacity
                             style={stylesExpenseFormModal.saveButton}
                             onPress={() => {
-                                if (!subCategory) {
-                                    alert("Selecione uma subcategoria antes de salvar.");
+                                if (!subCategory || !category) { // Certifique-se de que ambas as seleções estão presentes
+                                    alert("Selecione uma categoria e uma subcategoria antes de salvar.");
                                     return;
                                 }
                                 onSave({
@@ -242,6 +242,7 @@ export function ExpenseFormModal({
                                     tipoRegistro,
                                     tipoTransacao,
                                     valor: parseFloat(value.replace(",", ".")),
+                                    idCategoria: category, // Enviar idCategoria selecionado
                                     idSubCategoria: subCategory,
                                     dataTransacao: dateTimeISO,
                                 });
@@ -249,6 +250,7 @@ export function ExpenseFormModal({
                         >
                             <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
                         </TouchableOpacity>
+
 
                         <TouchableOpacity
                             style={stylesExpenseFormModal.cancelButton}

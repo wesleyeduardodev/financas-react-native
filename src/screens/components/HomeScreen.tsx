@@ -64,7 +64,7 @@ export function HomeScreen() {
             console.log("Log 17: Adding a new expense", newExpense);
             const response = await api.post("/registros-financeiros", {
                 ...newExpense,
-                idCategoria: undefined,
+                idCategoria: newExpense.idCategoria, // Inclui o idCategoria no payload
                 idSubCategoria: newExpense.idSubCategoria,
             });
             console.log("Log 18: Expense added successfully", response.data);
