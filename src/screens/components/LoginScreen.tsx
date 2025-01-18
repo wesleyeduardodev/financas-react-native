@@ -1,12 +1,11 @@
-import React, {useState} from "react";
-import {Alert, Text, TextInput, TouchableOpacity, View} from "react-native";
-import {useNavigation, NavigationProp} from "@react-navigation/native";
-import {StackParamList} from "../../../App";
-import {api, setApiAuth} from "../services/api";
-import {stylesLogin} from "./stylesLogin";
+import React, { useState } from "react";
+import { Alert, Text, TextInput, TouchableOpacity, View, Linking } from "react-native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { StackParamList } from "../../../App";
+import { api, setApiAuth } from "../services/api";
+import { stylesLogin } from "./stylesLogin";
 
 export function LoginScreen() {
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigation = useNavigation<NavigationProp<StackParamList>>();
@@ -27,6 +26,13 @@ export function LoginScreen() {
         }
     };
 
+    const handleOpenInstagram = () => {
+        const instagramUrl = "https://www.instagram.com/wesleyeduardo.dev";
+        Linking.openURL(instagramUrl).catch(() =>
+            Alert.alert("Erro", "Não foi possível abrir o Instagram.")
+        );
+    };
+
     return (
         <View style={stylesLogin.container}>
             <Text style={stylesLogin.title}>Bem-vindo</Text>
@@ -45,6 +51,9 @@ export function LoginScreen() {
             />
             <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
                 <Text style={stylesLogin.buttonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOpenInstagram}>
+                <Text style={stylesLogin.footerText}>Desenvolvido por @wesleyeduardo.dev</Text>
             </TouchableOpacity>
         </View>
     );

@@ -35,4 +35,10 @@ export const stylesLogin = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
     },
+    footerText: {
+        marginTop: 24,
+        fontSize: 14,
+        color: "#6200EE",
+        textDecorationLine: "underline",
+    },
 });
