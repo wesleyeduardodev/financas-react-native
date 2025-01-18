@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View, Linking } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View, Linking, Image } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { StackParamList } from "../../../App";
 import { api, setApiAuth } from "../services/api";
@@ -35,12 +35,17 @@ export function LoginScreen() {
 
     return (
         <View style={stylesLogin.container}>
-            <Text style={stylesLogin.title}>Bem-vindo</Text>
+            <Image
+                source={require("../../../assets/logo.png")} // Ajustado o caminho relativo
+                style={stylesLogin.logo}
+            />
+            <Text style={stylesLogin.title}>Controle Financeiro</Text>
             <TextInput
                 style={stylesLogin.input}
                 placeholder="Nome"
                 value={username}
                 onChangeText={setUsername}
+                placeholderTextColor="#A3A3A3"
             />
             <TextInput
                 style={stylesLogin.input}
@@ -48,9 +53,10 @@ export function LoginScreen() {
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
+                placeholderTextColor="#A3A3A3"
             />
             <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
-                <Text style={stylesLogin.buttonText}>Login</Text>
+                <Text style={stylesLogin.buttonText}>Entrar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleOpenInstagram}>
                 <Text style={stylesLogin.footerText}>Desenvolvido por @wesleyeduardo.dev</Text>
