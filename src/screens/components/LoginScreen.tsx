@@ -59,7 +59,7 @@ export function LoginScreen() {
                     stylesLogin.input,
                     !isValidEmail && { borderColor: "red" }, // Borda vermelha se inválido
                 ]}
-                placeholder="Email"
+                placeholder="E-mail"
                 value={username}
                 onChangeText={(text) => {
                     setUsername(text);
