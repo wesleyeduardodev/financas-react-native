@@ -1,22 +1,21 @@
-import React, { useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { StackParamList } from "../../../App"; // Ajustar o caminho conforme necessário
-import { api } from "../services/api";
-import { stylesLogin } from "./stylesLogin";
+import React, {useState} from "react";
+import {Alert, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {useNavigation, NavigationProp} from "@react-navigation/native";
+import {StackParamList} from "../../../App";
+import {api, setApiAuth} from "../services/api";
+import {stylesLogin} from "./stylesLogin";
 
 export function LoginScreen() {
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-    // Tipagem da navegação
     const navigation = useNavigation<NavigationProp<StackParamList>>();
 
     const handleLogin = async () => {
         try {
+            setApiAuth(username, password);
             const response = await api.get("/registros-financeiros");
             if (response.status === 200) {
-                // Navegar para MainApp que contém o Drawer.Navigator
                 navigation.navigate("MainApp");
             }
         } catch (error: any) {
