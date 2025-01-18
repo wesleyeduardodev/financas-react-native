@@ -2,15 +2,18 @@ import React from "react";
 import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Home } from "./src/screens/components/Home";
+import { HomeScreen } from "./src/screens/components/HomeScreen";
 import { CategoryScreen } from "./src/screens/components/CategoryScreen";
 import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
+import { FinancialSummaryScreen } from "./src/screens/components/FinancialSummaryScreen";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Tipos das rotas
 export type DrawerParamList = {
-    Home: undefined;
+    HomeScreen: undefined;
     CategoryScreen: undefined;
     SubCategoriesScreen: undefined;
+    FinancialSummaryScreen: undefined;
 };
 
 // Configuração do Drawer Navigator
@@ -26,7 +29,7 @@ export default function App() {
             />
             <NavigationContainer>
                 <Drawer.Navigator
-                    initialRouteName="Home"
+                    initialRouteName="HomeScreen"
                     screenOptions={{
                         headerStyle: { backgroundColor: "#6200EE" },
                         headerTintColor: "#FFF",
@@ -34,23 +37,50 @@ export default function App() {
                         drawerLabelStyle: { fontSize: 16 },
                     }}
                 >
-                    {/* Tela Home */}
+                    {/* Tela HomeScreen */}
                     <Drawer.Screen
-                        name="Home"
-                        component={Home}
-                        options={{ title: "Tela Inicial" }}
+                        name="HomeScreen"
+                        component={HomeScreen}
+                        options={{
+                            title: "Início", // Nome na barra lateral
+                            headerTitle: "Menus", // Nome no cabeçalho da tela
+                            drawerIcon: ({ color, size }) => (
+                                <Icon name="home-outline" color={color} size={size} />
+                            ),
+                        }}
                     />
                     {/* Tela de Categorias */}
                     <Drawer.Screen
                         name="CategoryScreen"
                         component={CategoryScreen}
-                        options={{ title: "Categorias" }}
+                        options={{
+                            title: "Categorias",
+                            drawerIcon: ({ color, size }) => (
+                                <Icon name="shape-outline" color={color} size={size} />
+                            ),
+                        }}
                     />
                     {/* Tela de Subcategorias */}
                     <Drawer.Screen
                         name="SubCategoriesScreen"
                         component={SubCategoriesScreen}
-                        options={{ title: "Subcategorias" }}
+                        options={{
+                            title: "Subcategorias",
+                            drawerIcon: ({ color, size }) => (
+                                <Icon name="subdirectory-arrow-right" color={color} size={size} />
+                            ),
+                        }}
+                    />
+                    {/* Tela de Resumo Financeiro */}
+                    <Drawer.Screen
+                        name="FinancialSummaryScreen"
+                        component={FinancialSummaryScreen}
+                        options={{
+                            title: "Resumo Financeiro",
+                            drawerIcon: ({ color, size }) => (
+                                <Icon name="chart-pie" color={color} size={size} />
+                            ),
+                        }}
                     />
                 </Drawer.Navigator>
             </NavigationContainer>

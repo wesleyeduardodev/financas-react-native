@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SubCategory, SubCategoryProps } from "./SubCategory";
@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { Picker } from "@react-native-picker/picker"; // Para o seletor de categoria
 import { stylesSubCategoriesScreen } from "./styleSubCategoriesScreen";
 import { api } from "../services/api";
+import {useFocusEffect} from "@react-navigation/native";
 
 export function SubCategoriesScreen() {
     const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
@@ -18,10 +19,12 @@ export function SubCategoriesScreen() {
 
     // Log 66: Fetching categories and subcategories on component mount
     console.log("Log 66: Fetching categories and subcategories...");
-    useEffect(() => {
-        fetchCategories();
-        fetchSubCategories();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchCategories();
+            fetchSubCategories();
+        }, [])
+    );
 
     useEffect(() => {
         filterSubCategoriesByCategory(selectedCategory);

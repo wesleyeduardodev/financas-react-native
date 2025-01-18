@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -8,8 +8,9 @@ import { FilterModal } from "./FilterModal";
 import { stylesHome } from "./styleHome";
 import { api } from "../services/api";
 import { CategoryProps } from "./Category";
+import { useFocusEffect } from "@react-navigation/native";
 
-export function Home() {
+export function HomeScreen() {
     const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
     const [categories, setCategories] = useState<CategoryProps[]>([]);
     const [filteredExpenses, setFilteredExpenses] = useState<ExpenseProps[]>([]);
@@ -18,21 +19,24 @@ export function Home() {
     const [expenseToEdit, setExpenseToEdit] = useState<ExpenseProps | null>(null);
     const [modalKey, setModalKey] = useState<number>(0);
 
-    useEffect(() => {
-        console.log("Log 10: Fetching expenses and categories"); // Log 10
-        fetchExpenses();
-        fetchCategories();
-    }, []);
+    // Carregar despesas e categorias ao entrar na tela
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log("Log 10: Fetching expenses and categories on screen focus");
+            fetchExpenses();
+            fetchCategories();
+        }, [])
+    );
 
     const fetchExpenses = async () => {
         try {
-            console.log("Log 11: Fetching expenses from API"); // Log 11
+            console.log("Log 11: Fetching expenses from API");
             const response = await api.get("/registros-financeiros");
-            console.log("Log 12: Expenses loaded successfully", response.data); // Log 12
+            console.log("Log 12: Expenses loaded successfully", response.data);
             setExpenses(response.data);
             setFilteredExpenses(response.data);
         } catch (error: any) {
-            console.error("Log 13: Error loading expenses", error); // Log 13
+            console.error("Log 13: Error loading expenses", error);
             Alert.alert(
                 "Erro ao carregar registros financeiros",
                 error.response?.data?.message || error.message || "Não foi possível carregar os registros financeiros."
@@ -42,12 +46,12 @@ export function Home() {
 
     const fetchCategories = async () => {
         try {
-            console.log("Log 14: Fetching categories from API"); // Log 14
+            console.log("Log 14: Fetching categories from API");
             const response = await api.get("/categorias-registro-financeiros");
-            console.log("Log 15: Categories loaded successfully", response.data); // Log 15
+            console.log("Log 15: Categories loaded successfully", response.data);
             setCategories(response.data);
         } catch (error: any) {
-            console.error("Log 16: Error loading categories", error); // Log 16
+            console.error("Log 16: Error loading categories", error);
             Alert.alert(
                 "Erro ao carregar categorias",
                 error.response?.data?.message || error.message || "Não foi possível carregar as categorias."
@@ -57,17 +61,17 @@ export function Home() {
 
     const handleAddExpense = async (newExpense: Partial<ExpenseProps>) => {
         try {
-            console.log("Log 17: Adding a new expense", newExpense); // Log 17
+            console.log("Log 17: Adding a new expense", newExpense);
             const response = await api.post("/registros-financeiros", {
                 ...newExpense,
                 idCategoria: undefined,
                 idSubCategoria: newExpense.idSubCategoria,
             });
-            console.log("Log 18: Expense added successfully", response.data); // Log 18
+            console.log("Log 18: Expense added successfully", response.data);
             setExpenses((prev) => [...prev, response.data]);
             setFilteredExpenses((prev) => [...prev, response.data]);
         } catch (error: any) {
-            console.error("Log 19: Error adding expense", error); // Log 19
+            console.error("Log 19: Error adding expense", error);
             Alert.alert(
                 "Erro ao adicionar registro financeiro",
                 error.message || "Erro desconhecido."
@@ -77,9 +81,9 @@ export function Home() {
 
     const handleEditExpense = async (id: number, updatedExpense: Partial<ExpenseProps>) => {
         try {
-            console.log("Log 20: Editing expense with ID", id, updatedExpense); // Log 20
+            console.log("Log 20: Editing expense with ID", id, updatedExpense);
             const response = await api.put(`/registros-financeiros/${id}`, updatedExpense);
-            console.log("Log 21: Expense edited successfully", response.data); // Log 21
+            console.log("Log 21: Expense edited successfully", response.data);
             setExpenses((prev) =>
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
@@ -87,7 +91,7 @@ export function Home() {
                 prev.map((expense) => (expense.id === id ? response.data : expense))
             );
         } catch (error: any) {
-            console.error("Log 22: Error editing expense", error); // Log 22
+            console.error("Log 22: Error editing expense", error);
             Alert.alert("Erro ao editar registro financeiro", error.message || "Erro desconhecido.");
         }
     };
@@ -104,7 +108,7 @@ export function Home() {
                 {
                     text: "Remover",
                     style: "destructive",
-                    onPress: () => handleRemoveExpense(id), // Chama a função de remoção ao confirmar
+                    onPress: () => handleRemoveExpense(id),
                 },
             ]
         );
@@ -112,13 +116,13 @@ export function Home() {
 
     const handleRemoveExpense = async (id: number) => {
         try {
-            console.log("Log 23: Removing expense with ID", id); // Log 23
+            console.log("Log 23: Removing expense with ID", id);
             await api.delete(`/registros-financeiros/${id}`);
-            console.log("Log 24: Expense removed successfully"); // Log 24
+            console.log("Log 24: Expense removed successfully");
             setExpenses((prev) => prev.filter((expense) => expense.id !== id));
             setFilteredExpenses((prev) => prev.filter((expense) => expense.id !== id));
         } catch (error: any) {
-            console.error("Log 25: Error removing expense", error); // Log 25
+            console.error("Log 25: Error removing expense", error);
             Alert.alert("Erro ao remover registro financeiro", error.message || "Erro desconhecido.");
         }
     };

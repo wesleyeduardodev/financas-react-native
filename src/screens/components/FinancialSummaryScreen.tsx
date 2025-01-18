@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, Alert, TouchableOpacity } from "react-native";
 import { api } from "../services/api";
 import { stylesFinancialSummary } from "./styleSummayFilterModal";
-import { PieChart } from "react-native-chart-kit";
 import { SummaryFilterModal } from "./SummaryFilterModal"; // Novo componente de filtro
+import { useFocusEffect } from "@react-navigation/native";
 
-export function FinancialSummary() {
+export function FinancialSummaryScreen() {
     const [originalData, setOriginalData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
@@ -14,11 +14,13 @@ export function FinancialSummary() {
     const [totalSaida, setTotalSaida] = useState(0);
     const [saldoTotal, setSaldoTotal] = useState(0);
 
-    // Log 61: Fetching financial data on component mount
-    console.log("Log 61: Fetching financial data...");
-    useEffect(() => {
-        fetchFinancialData();
-    }, []);
+    // Recarregar os dados ao acessar a tela
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log("Log 61: Fetching financial data on screen focus...");
+            fetchFinancialData();
+        }, [])
+    );
 
     useEffect(() => {
         calculateSummary(filteredData);
@@ -26,14 +28,12 @@ export function FinancialSummary() {
 
     const fetchFinancialData = async () => {
         try {
-            // Log 62: Making API call to fetch financial records
             console.log("Log 62: Making API call to fetch financial records...");
             const response = await api.get("/registros-financeiros");
             console.log("Log 63: Financial data loaded successfully", response.data);
             setOriginalData(response.data);
             setFilteredData(response.data);
         } catch (error: any) {
-            // Log 64: Error fetching financial records
             console.error("Log 64: Error fetching financial records", error);
             Alert.alert(
                 "Erro ao carregar dados financeiros",
@@ -54,30 +54,8 @@ export function FinancialSummary() {
         setTotalSaida(saida);
         setSaldoTotal(entrada - saida);
 
-        // Log 65: Calculated summary values
         console.log("Log 65: Calculated summary values: Entrada:", entrada, "Saída:", saida, "Saldo Total:", entrada - saida);
     };
-
-    const total = totalEntrada + totalSaida;
-
-    const pieChartData = [
-        {
-            name: "Entrada",
-            total: totalEntrada,
-            color: "#28A745",
-            legendFontColor: "#333",
-            legendFontSize: 14,
-            percent: total > 0 ? ((totalEntrada / total) * 100).toFixed(2) : "0.00",
-        },
-        {
-            name: "Saída",
-            total: totalSaida,
-            color: "#DC3545",
-            legendFontColor: "#333",
-            legendFontSize: 14,
-            percent: total > 0 ? ((totalSaida / total) * 100).toFixed(2) : "0.00",
-        },
-    ];
 
     const formatCurrency = (value: number) => {
         return value.toLocaleString("pt-BR", {
@@ -111,29 +89,6 @@ export function FinancialSummary() {
                 <Text style={stylesFinancialSummary.label}>Saldo Total:</Text>
                 <Text style={stylesFinancialSummary.valueSaldo}>{formatCurrency(saldoTotal)}</Text>
             </View>
-
-            {/* Gráfico de Pizza */}
-            <Text style={stylesFinancialSummary.title}>Comparação de Totais</Text>
-            <PieChart
-                data={pieChartData.map((item) => ({
-                    name: item.name,
-                    total: item.total,
-                    color: item.color,
-                    legendFontColor: item.legendFontColor,
-                    legendFontSize: item.legendFontSize,
-                    label: `${item.percent}%`, // Percentual como label
-                }))}
-                width={Dimensions.get("window").width - 40} // Ajusta ao tamanho da tela
-                height={220}
-                chartConfig={{
-                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                }}
-                accessor={"total"}
-                backgroundColor={"transparent"}
-                paddingLeft={"10"}
-                absolute={false} // Exibe percentuais dentro do gráfico
-            />
 
             <SummaryFilterModal
                 visible={isFilterModalVisible}
