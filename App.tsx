@@ -11,6 +11,7 @@ import { HomeScreen } from "./src/screens/components/HomeScreen";
 import { CategoryScreen } from "./src/screens/components/CategoryScreen";
 import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
 import { FinancialSummaryScreen } from "./src/screens/components/FinancialSummaryScreen";
+import { UsuarioScreen } from "./src/screens/components/UsuarioScreen";
 
 // Tipos das rotas
 export type StackParamList = {
@@ -23,6 +24,7 @@ export type DrawerParamList = {
     CategoryScreen: undefined;
     SubCategoriesScreen: undefined;
     FinancialSummaryScreen: undefined;
+    UsuarioScreen: undefined;
 };
 
 // Configuração dos navegadores
@@ -109,6 +111,16 @@ function MainApp() {
                     title: "Resumo Financeiro",
                     drawerIcon: ({ color, size }) => (
                         <Icon name="chart-pie" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="UsuarioScreen"
+                component={UsuarioScreen}
+                options={{
+                    title: "Usuário",
+                    drawerIcon: ({ color, size }) => (
+                        <Icon name="account" color={color} size={size} /> // Ícone ajustado para "account"
                     ),
                 }}
             />
