@@ -8,9 +8,19 @@ import { stylesLogin } from "./stylesLogin";
 export function LoginScreen() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isValidEmail, setIsValidEmail] = useState(true); // Estado para validar email
     const navigation = useNavigation<NavigationProp<StackParamList>>();
 
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expressão regular para validar email
+        setIsValidEmail(emailRegex.test(email));
+    };
+
     const handleLogin = async () => {
+        if (!isValidEmail) {
+            Alert.alert("Erro", "Por favor, insira um email válido.");
+            return;
+        }
         try {
             setApiAuth(username, password);
             const response = await api.get("/registros-financeiros");
@@ -40,17 +50,28 @@ export function LoginScreen() {
     return (
         <View style={stylesLogin.container}>
             <Image
-                source={require("../../../assets/logo.png")} // Ajustado o caminho relativo
+                source={require("../../../assets/logo.png")}
                 style={stylesLogin.logo}
             />
             <Text style={stylesLogin.title}>Controle Financeiro</Text>
             <TextInput
-                style={stylesLogin.input}
+                style={[
+                    stylesLogin.input,
+                    !isValidEmail && { borderColor: "red" }, // Borda vermelha se inválido
+                ]}
                 placeholder="Email"
                 value={username}
-                onChangeText={setUsername}
+                onChangeText={(text) => {
+                    setUsername(text);
+                    validateEmail(text); // Valida o email enquanto o usuário digita
+                }}
                 placeholderTextColor="#A3A3A3"
             />
+            {!isValidEmail && (
+                <Text style={{ color: "red", marginTop: 4 }}>
+                    Por favor, insira um email válido.
+                </Text>
+            )}
             <TextInput
                 style={stylesLogin.input}
                 placeholder="Senha"
@@ -71,4 +92,3 @@ export function LoginScreen() {
         </View>
     );
 }
-

@@ -5,7 +5,7 @@ import { api } from "../services/api";
 import { stylesUsuarioScreen } from "./styleCadastroUsuarioScreen";
 
 type UsuarioScreenParams = {
-    UsuarioScreen: {
+    CadastroUsuarioScreen: {
         usuario?: { id: number; nome: string; email: string };
     };
 };
@@ -18,6 +18,7 @@ export function CadastroUsuarioScreen() {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [isValidEmail, setIsValidEmail] = useState(true); // Estado para validar email
 
     useEffect(() => {
         if (usuario) {
@@ -31,7 +32,17 @@ export function CadastroUsuarioScreen() {
         }
     }, [usuario]);
 
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expressão regular para validar email
+        setIsValidEmail(emailRegex.test(email));
+    };
+
     const handleSaveUsuario = async () => {
+        if (!isValidEmail) {
+            Alert.alert("Erro", "Por favor, insira um email válido.");
+            return;
+        }
+
         try {
             const newUsuario = { nome, email, senha };
             console.log("Log 17: Adding a new newUsuario", newUsuario);
@@ -50,6 +61,11 @@ export function CadastroUsuarioScreen() {
     };
 
     const handleEditUsuario = async () => {
+        if (!isValidEmail) {
+            Alert.alert("Erro", "Por favor, insira um email válido.");
+            return;
+        }
+
         try {
             if (!usuario) return;
             const updatedUsuario = { id: usuario.id, nome, email, senha };
@@ -78,12 +94,23 @@ export function CadastroUsuarioScreen() {
                 onChangeText={setNome}
             />
             <TextInput
-                style={stylesUsuarioScreen.input}
+                style={[
+                    stylesUsuarioScreen.input,
+                    !isValidEmail && { borderColor: "red" }, // Borda vermelha se inválido
+                ]}
                 placeholder="E-mail"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(text) => {
+                    setEmail(text);
+                    validateEmail(text); // Valida o email enquanto o usuário digita
+                }}
                 keyboardType="email-address"
             />
+            {!isValidEmail && (
+                <Text style={{ color: "red", marginTop: 4 }}>
+                    Por favor, insira um email válido.
+                </Text>
+            )}
             <TextInput
                 style={stylesUsuarioScreen.input}
                 placeholder="Senha"
