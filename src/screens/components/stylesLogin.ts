@@ -43,6 +43,14 @@ export const stylesLogin = StyleSheet.create({
         shadowRadius: 3,
         elevation: 5, // Adiciona sombra para destaque
     },
+    createAccountText: {
+        marginTop: 20,
+        color: "#007BFF", // Cor para destacar
+        textDecorationLine: "underline", // Para sublinhar
+        fontSize: 16,
+        textAlign: "center",
+    },
+
     buttonText: {
         color: "#FFF",
         fontSize: 18,

@@ -33,6 +33,10 @@ export function LoginScreen() {
         );
     };
 
+    const handleNavigateToCreateAccount = () => {
+        navigation.navigate("UsuarioScreen");
+    };
+
     return (
         <View style={stylesLogin.container}>
             <Image
@@ -58,9 +62,13 @@ export function LoginScreen() {
             <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
                 <Text style={stylesLogin.buttonText}>Entrar</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={handleNavigateToCreateAccount}>
+                <Text style={stylesLogin.createAccountText}>Criar Conta</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleOpenInstagram}>
                 <Text style={stylesLogin.footerText}>Desenvolvido por @wesleyeduardo.dev</Text>
             </TouchableOpacity>
         </View>
     );
 }
+

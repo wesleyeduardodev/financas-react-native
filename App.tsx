@@ -16,6 +16,7 @@ import { UsuarioScreen } from "./src/screens/components/UsuarioScreen";
 // Tipos das rotas
 export type StackParamList = {
     LoginScreen: undefined;
+    UsuarioScreen: undefined;
     MainApp: undefined; // O Drawer Navigator ficará dentro desta rota
 };
 
@@ -24,7 +25,6 @@ export type DrawerParamList = {
     CategoryScreen: undefined;
     SubCategoriesScreen: undefined;
     FinancialSummaryScreen: undefined;
-    UsuarioScreen: undefined;
 };
 
 // Configuração dos navegadores
@@ -114,16 +114,6 @@ function MainApp() {
                     ),
                 }}
             />
-            <Drawer.Screen
-                name="UsuarioScreen"
-                component={UsuarioScreen}
-                options={{
-                    title: "Usuário",
-                    drawerIcon: ({ color, size }) => (
-                        <Icon name="account" color={color} size={size} /> // Ícone ajustado para "account"
-                    ),
-                }}
-            />
         </Drawer.Navigator>
     );
 }
@@ -139,6 +129,7 @@ export default function App() {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="LoginScreen" component={LoginScreen} />
+                    <Stack.Screen name="UsuarioScreen" component={UsuarioScreen} />
                     <Stack.Screen name="MainApp" component={MainApp} />
                 </Stack.Navigator>
             </NavigationContainer>
