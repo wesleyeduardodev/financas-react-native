@@ -9,7 +9,7 @@ export type ExpenseProps = {
     tipoTransacao: number;
     idCategoria: number; // Já presente, mas vale garantir
     nomeCategoria: string;
-    idSubCategoria: number;
+    idSubCategoria: number | undefined | null; // Permitir null
     nomeSubCategoria: string;
     valor: number;
     dataTransacao: string;
