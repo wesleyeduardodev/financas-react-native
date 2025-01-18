@@ -1,8 +1,9 @@
 import React from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, View, Text, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import { CommonActions } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { LoginScreen } from "./src/screens/components/LoginScreen";
@@ -14,7 +15,6 @@ import { FinancialSummaryScreen } from "./src/screens/components/FinancialSummar
 // Tipos das rotas
 export type StackParamList = {
     LoginScreen: undefined;
-    HomeScreen: undefined;
     MainApp: undefined; // O Drawer Navigator ficará dentro desta rota
 };
 
@@ -29,10 +29,41 @@ export type DrawerParamList = {
 const Stack = createStackNavigator<StackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
+function CustomDrawerContent(props: any) {
+    const { navigation } = props;
+
+    return (
+        <DrawerContentScrollView {...props}>
+            <DrawerItemList {...props} />
+            {/* Adiciona botão de logout no final do menu */}
+            <TouchableOpacity
+                style={{
+                    marginTop: 16,
+                    padding: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                }}
+                onPress={() => {
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: "LoginScreen" }],
+                        })
+                    );
+                }}
+            >
+                <Icon name="logout" size={24} color="#000" style={{ marginRight: 10 }} />
+                <Text style={{ fontSize: 16, color: "#000" }}>Sair</Text>
+            </TouchableOpacity>
+        </DrawerContentScrollView>
+    );
+}
+
 function MainApp() {
     return (
         <Drawer.Navigator
             initialRouteName="HomeScreen"
+            drawerContent={(props) => <CustomDrawerContent {...props} />}
             screenOptions={{
                 headerStyle: { backgroundColor: "#6200EE" },
                 headerTintColor: "#FFF",
