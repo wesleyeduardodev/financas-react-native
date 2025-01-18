@@ -34,7 +34,7 @@ export function LoginScreen() {
     };
 
     const handleNavigateToCreateAccount = () => {
-        navigation.navigate("UsuarioScreen");
+        navigation.navigate("CadastroUsuarioScreen");
     };
 
     return (
@@ -46,7 +46,7 @@ export function LoginScreen() {
             <Text style={stylesLogin.title}>Controle Financeiro</Text>
             <TextInput
                 style={stylesLogin.input}
-                placeholder="Nome"
+                placeholder="Email"
                 value={username}
                 onChangeText={setUsername}
                 placeholderTextColor="#A3A3A3"

@@ -11,12 +11,12 @@ import { HomeScreen } from "./src/screens/components/HomeScreen";
 import { CategoryScreen } from "./src/screens/components/CategoryScreen";
 import { SubCategoriesScreen } from "./src/screens/components/SubCategoriesScreen";
 import { FinancialSummaryScreen } from "./src/screens/components/FinancialSummaryScreen";
-import { UsuarioScreen } from "./src/screens/components/UsuarioScreen";
+import { CadastroUsuarioScreen } from "./src/screens/components/CadastroUsuarioScreen";
 
 // Tipos das rotas
 export type StackParamList = {
     LoginScreen: undefined;
-    UsuarioScreen: undefined;
+    CadastroUsuarioScreen: undefined;
     MainApp: undefined; // O Drawer Navigator ficará dentro desta rota
 };
 
@@ -129,7 +129,7 @@ export default function App() {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="LoginScreen" component={LoginScreen} />
-                    <Stack.Screen name="UsuarioScreen" component={UsuarioScreen} />
+                    <Stack.Screen name="CadastroUsuarioScreen" component={CadastroUsuarioScreen} />
                     <Stack.Screen name="MainApp" component={MainApp} />
                 </Stack.Navigator>
             </NavigationContainer>

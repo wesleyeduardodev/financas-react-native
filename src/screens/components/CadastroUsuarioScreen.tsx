@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { api } from "../services/api";
-import { stylesUsuarioScreen } from "./styleUsuarioScreen";
+import { stylesUsuarioScreen } from "./styleCadastroUsuarioScreen";
 
 type UsuarioScreenParams = {
     UsuarioScreen: {
@@ -10,9 +10,9 @@ type UsuarioScreenParams = {
     };
 };
 
-export function UsuarioScreen() {
+export function CadastroUsuarioScreen() {
     const navigation = useNavigation();
-    const route = useRoute<RouteProp<UsuarioScreenParams, "UsuarioScreen">>();
+    const route = useRoute<RouteProp<UsuarioScreenParams, "CadastroUsuarioScreen">>();
     const usuario = route.params?.usuario;
 
     const [nome, setNome] = useState("");
