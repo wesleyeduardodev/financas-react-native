@@ -8,12 +8,13 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
+    FlatList,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ExpenseProps } from "./Expense";
 import { stylesExpenseFormModal } from "./styleExpenseFormModal";
 import { api } from "../services/api";
+import {Picker} from "@react-native-picker/picker";
 
 type ExpenseFormModalProps = {
     visible: boolean;
@@ -40,6 +41,11 @@ export function ExpenseFormModal({
     const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
+
+    const [iosPickerVisible, setIosPickerVisible] = useState<{
+        type: "tipoRegistro" | "tipoTransacao" | "category" | "subCategory";
+        visible: boolean;
+    }>({ type: "category", visible: false });
 
     useEffect(() => {
         if (expense) {
@@ -83,6 +89,89 @@ export function ExpenseFormModal({
         }
     }, [category]);
 
+    const handleOptionSelect = (type: string, value: any) => {
+        switch (type) {
+            case "tipoRegistro":
+                setTipoRegistro(value);
+                break;
+            case "tipoTransacao":
+                setTipoTransacao(value);
+                break;
+            case "category":
+                setCategory(value);
+                break;
+            case "subCategory":
+                setSubCategory(value);
+                break;
+        }
+        setIosPickerVisible({ ...iosPickerVisible, visible: false });
+    };
+
+    const renderIosPicker = (type: string, options: { label: string; value: any }[]) => (
+        <Modal
+            visible={iosPickerVisible.visible && iosPickerVisible.type === type}
+            animationType="slide"
+            transparent={true}
+        >
+            <View style={stylesExpenseFormModal.modalOverlay}>
+                <View style={stylesExpenseFormModal.modalContent}>
+                    <FlatList
+                        data={options}
+                        keyExtractor={(item) => item.value.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={stylesExpenseFormModal.modalOption}
+                                onPress={() => handleOptionSelect(type, item.value)}
+                            >
+                                <Text style={stylesExpenseFormModal.modalOptionText}>{item.label}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <TouchableOpacity
+                        style={stylesExpenseFormModal.modalCancelButton}
+                        onPress={() => setIosPickerVisible({ ...iosPickerVisible, visible: false })}
+                    >
+                        <Text style={stylesExpenseFormModal.modalCancelButtonText}>Cancelar</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
+
+    const renderPickerForPlatform = (
+        type: "tipoRegistro" | "tipoTransacao" | "category" | "subCategory",
+        selectedValue: any,
+        options: { label: string; value: any }[]
+    ) => {
+        if (Platform.OS === "ios") {
+            const selectedOption = options.find((option) => option.value === selectedValue)?.label || "Selecione";
+            return (
+                <>
+                    <TouchableOpacity
+                        style={stylesExpenseFormModal.pickerButton}
+                        onPress={() => setIosPickerVisible({ type, visible: true })}
+                    >
+                        <Text style={stylesExpenseFormModal.pickerButtonText}>{selectedOption}</Text>
+                    </TouchableOpacity>
+                    {renderIosPicker(type, options)}
+                </>
+            );
+        } else {
+            return (
+                <Picker
+                    selectedValue={selectedValue}
+                    style={stylesExpenseFormModal.picker}
+                    onValueChange={(itemValue) => handleOptionSelect(type, itemValue)}
+                >
+                    {options.map((option) => (
+                        <Picker.Item key={option.value} label={option.label} value={option.value} />
+                    ))}
+                </Picker>
+            );
+        }
+    };
+
+
     const handleDateChange = (event: any, selectedDate?: Date) => {
         setShowDatePicker(false);
         if (selectedDate) {
@@ -104,6 +193,7 @@ export function ExpenseFormModal({
             setDateTimeISO(currentDate.toISOString());
         }
     };
+
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
@@ -140,115 +230,34 @@ export function ExpenseFormModal({
                         </View>
 
                         {/* Tipo de Registro */}
-                        {Platform.OS === "ios" ? (
-                            <Picker
-                                selectedValue={tipoRegistro.toString()}
-                                style={[stylesExpenseFormModal.picker, { height: 150 }]}
-                                onValueChange={(itemValue) => setTipoRegistro(Number(itemValue))}
-                            >
-                                <Picker.Item label="Entrada" value="0" />
-                                <Picker.Item label="Saída" value="1" />
-                            </Picker>
-                        ) : (
-                            <Picker
-                                selectedValue={tipoRegistro}
-                                style={stylesExpenseFormModal.picker}
-                                onValueChange={(itemValue) => setTipoRegistro(itemValue)}
-                            >
-                                <Picker.Item label="Entrada" value={0} />
-                                <Picker.Item label="Saída" value={1} />
-                            </Picker>
-                        )}
+                        {renderPickerForPlatform("tipoRegistro", tipoRegistro, [
+                            { label: "Entrada", value: 0 },
+                            { label: "Saída", value: 1 },
+                        ])}
 
                         {/* Tipo de Transação */}
-                        {Platform.OS === "ios" ? (
-                            <Picker
-                                selectedValue={tipoTransacao.toString()}
-                                style={[stylesExpenseFormModal.picker, { height: 150 }]}
-                                onValueChange={(itemValue) => setTipoTransacao(Number(itemValue))}
-                            >
-                                <Picker.Item label="Pix" value="0" />
-                                <Picker.Item label="Cartão de Crédito" value="1" />
-                                <Picker.Item label="Cartão de Débito" value="2" />
-                                <Picker.Item label="Dinheiro" value="3" />
-                                <Picker.Item label="Boleto" value="4" />
-                            </Picker>
-                        ) : (
-                            <Picker
-                                selectedValue={tipoTransacao}
-                                style={stylesExpenseFormModal.picker}
-                                onValueChange={(itemValue) => setTipoTransacao(itemValue)}
-                            >
-                                <Picker.Item label="Pix" value={0} />
-                                <Picker.Item label="Cartão de Crédito" value={1} />
-                                <Picker.Item label="Cartão de Débito" value={2} />
-                                <Picker.Item label="Dinheiro" value={3} />
-                                <Picker.Item label="Boleto" value={4} />
-                            </Picker>
-                        )}
+                        {renderPickerForPlatform("tipoTransacao", tipoTransacao, [
+                            { label: "Pix", value: 0 },
+                            { label: "Cartão de Crédito", value: 1 },
+                            { label: "Cartão de Débito", value: 2 },
+                            { label: "Dinheiro", value: 3 },
+                            { label: "Boleto", value: 4 },
+                        ])}
 
                         {/* Categoria */}
-                        {Platform.OS === "ios" ? (
-                            <Picker
-                                selectedValue={category !== null ? category.toString() : "none"}
-                                style={[stylesExpenseFormModal.picker, { height: 150 }]}
-                                onValueChange={(itemValue) =>
-                                    setCategory(itemValue !== "none" ? Number(itemValue) : null)
-                                }
-                            >
-                                <Picker.Item label="Selecione uma categoria" value="none" />
-                                {categories.map((cat) => (
-                                    <Picker.Item key={cat.id} label={cat.nome} value={cat.id.toString()} />
-                                ))}
-                            </Picker>
-                        ) : (
-                            <Picker
-                                selectedValue={category}
-                                style={stylesExpenseFormModal.picker}
-                                onValueChange={(itemValue) => setCategory(itemValue)}
-                            >
-                                <Picker.Item label="Selecione uma categoria" value={null} />
-                                {categories.map((cat) => (
-                                    <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
-                                ))}
-                            </Picker>
+                        {renderPickerForPlatform(
+                            "category",
+                            category,
+                            categories.map((cat) => ({ label: cat.nome, value: cat.id }))
                         )}
 
                         {/* Subcategoria */}
                         {subCategories.length > 0 &&
-                            (Platform.OS === "ios" ? (
-                                <Picker
-                                    selectedValue={subCategory !== null ? subCategory.toString() : "none"}
-                                    style={[stylesExpenseFormModal.picker, { height: 150 }]}
-                                    onValueChange={(itemValue) =>
-                                        setSubCategory(itemValue !== "none" ? Number(itemValue) : null)
-                                    }
-                                >
-                                    <Picker.Item label="Selecione uma subcategoria" value="none" />
-                                    {subCategories.map((subCat) => (
-                                        <Picker.Item
-                                            key={subCat.id}
-                                            label={subCat.nome}
-                                            value={subCat.id.toString()}
-                                        />
-                                    ))}
-                                </Picker>
-                            ) : (
-                                <Picker
-                                    selectedValue={subCategory}
-                                    style={stylesExpenseFormModal.picker}
-                                    onValueChange={(itemValue) => setSubCategory(itemValue)}
-                                >
-                                    <Picker.Item label="Selecione uma subcategoria" value={null} />
-                                    {subCategories.map((subCat) => (
-                                        <Picker.Item
-                                            key={subCat.id}
-                                            label={subCat.nome}
-                                            value={subCat.id}
-                                        />
-                                    ))}
-                                </Picker>
-                            ))}
+                            renderPickerForPlatform(
+                                "subCategory",
+                                subCategory,
+                                subCategories.map((subCat) => ({ label: subCat.nome, value: subCat.id }))
+                            )}
 
                         {/* Data e Hora */}
                         <View style={stylesExpenseFormModal.dateTimeContainer}>
