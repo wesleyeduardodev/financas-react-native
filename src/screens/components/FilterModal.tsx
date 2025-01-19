@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
-import { Alert, Text, TouchableOpacity, View, Modal } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState, useEffect } from "react";
+import {
+    Alert,
+    Text,
+    TouchableOpacity,
+    View,
+    Modal,
+    FlatList,
+    Platform,
+} from "react-native";
 import { stylesFilterModal } from "./styleFilterModal";
 import { api } from "../services/api";
+import {Picker} from "@react-native-picker/picker";
 
 type FilterModalProps = {
     visible: boolean;
@@ -28,13 +35,12 @@ export function FilterModal({
     const [categoria, setCategoria] = useState<number | null>(null);
     const [subCategoria, setSubCategoria] = useState<number | null>(null);
     const [subCategories, setSubCategories] = useState<{ id: number; nome: string }[]>([]);
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
-    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const [iosPickerVisible, setIosPickerVisible] = useState<{
+        type: "tipoRegistro" | "tipoTransacao" | "categoria" | "subCategoria";
+        visible: boolean;
+    }>({ type: "categoria", visible: false });
 
     useEffect(() => {
-        console.log("Log 34: Fetching subcategories for category", categoria); // Log 34
         if (categoria) {
             fetchSubCategories(categoria);
         } else {
@@ -45,12 +51,11 @@ export function FilterModal({
 
     const fetchSubCategories = async (categoryId: number) => {
         try {
-            console.log("Log 35: Fetching subcategories from API", categoryId); // Log 35
-            const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
-            console.log("Log 36: Subcategories loaded successfully", response.data); // Log 36
+            const response = await api.get(
+                `/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`
+            );
             setSubCategories(response.data);
         } catch (error: any) {
-            console.error("Log 37: Error loading subcategories", error); // Log 37
             Alert.alert(
                 "Erro ao carregar subcategorias",
                 error.response?.data?.message || error.message || "Não foi possível carregar as subcategorias."
@@ -58,9 +63,87 @@ export function FilterModal({
         }
     };
 
-    const formatDateToISODateOnly = (date: Date | null): string | null => {
-        if (!date) return null;
-        return date.toISOString().split("T")[0]; // Retorna apenas a parte "YYYY-MM-DD"
+    const handleOptionSelect = (type: string, value: any) => {
+        switch (type) {
+            case "tipoRegistro":
+                setTipoRegistro(value);
+                break;
+            case "tipoTransacao":
+                setTipoTransacao(value);
+                break;
+            case "categoria":
+                setCategoria(value);
+                break;
+            case "subCategoria":
+                setSubCategoria(value);
+                break;
+        }
+        setIosPickerVisible({ ...iosPickerVisible, visible: false });
+    };
+
+    const renderIosPicker = (type: string, options: { label: string; value: any }[]) => (
+        <Modal
+            visible={iosPickerVisible.visible && iosPickerVisible.type === type}
+            animationType="slide"
+            transparent={true}
+        >
+            <View style={stylesFilterModal.modalOverlay}>
+                <View style={stylesFilterModal.modalContent}>
+                    <FlatList
+                        data={options}
+                        keyExtractor={(item) => String(item.value)}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={stylesFilterModal.modalOption}
+                                onPress={() => handleOptionSelect(type, item.value)}
+                            >
+                                <Text style={stylesFilterModal.modalOptionText}>{item.label}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <TouchableOpacity
+                        style={stylesFilterModal.modalCancelButton}
+                        onPress={() => setIosPickerVisible({ ...iosPickerVisible, visible: false })}
+                    >
+                        <Text style={stylesFilterModal.modalCancelButtonText}>Cancelar</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
+
+    const renderPickerForPlatform = (
+        type: "tipoRegistro" | "tipoTransacao" | "categoria" | "subCategoria",
+        selectedValue: any,
+        options: { label: string; value: any }[]
+    ) => {
+        if (Platform.OS === "ios") {
+            const selectedOption =
+                options.find((option) => option.value === selectedValue)?.label || "Selecione";
+            return (
+                <>
+                    <TouchableOpacity
+                        style={stylesFilterModal.pickerButton}
+                        onPress={() => setIosPickerVisible({ type, visible: true })}
+                    >
+                        <Text style={stylesFilterModal.pickerButtonText}>{selectedOption}</Text>
+                    </TouchableOpacity>
+                    {renderIosPicker(type, options)}
+                </>
+            );
+        } else {
+            return (
+                <Picker
+                    selectedValue={selectedValue}
+                    style={stylesFilterModal.picker}
+                    onValueChange={(itemValue) => handleOptionSelect(type, itemValue)}
+                >
+                    {options.map((option) => (
+                        <Picker.Item key={option.value} label={option.label} value={option.value} />
+                    ))}
+                </Picker>
+            );
+        }
     };
 
     return (
@@ -68,89 +151,49 @@ export function FilterModal({
             <View style={stylesFilterModal.container}>
                 <Text style={stylesFilterModal.title}>Filtros</Text>
 
-                {/* Filtro de Tipo de Registro */}
-                <View style={stylesFilterModal.pickerContainer}>
-                    <Picker
-                        selectedValue={tipoRegistro}
-                        onValueChange={(itemValue) => setTipoRegistro(itemValue)}
-                        style={stylesFilterModal.picker}
-                    >
-                        <Picker.Item label="Todos os Tipos de Registro" value={null} />
-                        <Picker.Item label="Entrada" value={0} />
-                        <Picker.Item label="Saída" value={1} />
-                    </Picker>
-                </View>
+                {/* Tipo de Registro */}
+                {renderPickerForPlatform("tipoRegistro", tipoRegistro, [
+                    { label: "Todos os Tipos de Registro", value: null },
+                    { label: "Entrada", value: 0 },
+                    { label: "Saída", value: 1 },
+                ])}
 
-                {/* Filtro de Tipo de Transação */}
-                <View style={stylesFilterModal.pickerContainer}>
-                    <Picker
-                        selectedValue={tipoTransacao}
-                        onValueChange={(itemValue) => setTipoTransacao(itemValue)}
-                        style={stylesFilterModal.picker}
-                    >
-                        <Picker.Item label="Todos os Tipos de Transação" value={null} />
-                        <Picker.Item label="Pix" value={0} />
-                        <Picker.Item label="Cartão de Crédito" value={1} />
-                        <Picker.Item label="Cartão de Débito" value={2} />
-                        <Picker.Item label="Dinheiro" value={3} />
-                        <Picker.Item label="Boleto" value={4} />
-                    </Picker>
-                </View>
-
-                {/* Filtro de Categoria */}
-                <View style={stylesFilterModal.pickerContainer}>
-                    <Picker
-                        selectedValue={categoria}
-                        onValueChange={(itemValue) => setCategoria(itemValue)}
-                        style={stylesFilterModal.picker}
-                    >
-                        <Picker.Item label="Todas as Categorias" value={null} />
-                        {categories.map((cat) => (
-                            <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
-                        ))}
-                    </Picker>
-                </View>
-
-                {/* Filtro de Subcategoria */}
-                {subCategories.length > 0 && (
-                    <View style={stylesFilterModal.pickerContainer}>
-                        <Picker
-                            selectedValue={subCategoria}
-                            onValueChange={(itemValue) => setSubCategoria(itemValue)}
-                            style={stylesFilterModal.picker}
-                        >
-                            <Picker.Item label="Todas as Subcategorias" value={null} />
-                            {subCategories.map((subCat) => (
-                                <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
-                            ))}
-                        </Picker>
-                    </View>
+                {/* Tipo de Transação */}
+                {renderPickerForPlatform("tipoTransacao", tipoTransacao, [
+                    { label: "Todos os Tipos de Transação", value: null },
+                    { label: "Pix", value: 0 },
+                    { label: "Cartão de Crédito", value: 1 },
+                    { label: "Cartão de Débito", value: 2 },
+                    { label: "Dinheiro", value: 3 },
+                    { label: "Boleto", value: 4 },
+                ])}
+                {renderPickerForPlatform(
+                    "categoria",
+                    categoria,
+                    [
+                        { label: "Todas as Categorias", value: null },
+                        ...categories.map<{ label: string; value: number | null }>((cat) => ({
+                            label: cat.nome,
+                            value: cat.id,
+                        })),
+                    ]
                 )}
 
-                {/* DateTimePickers */}
-                {showStartDatePicker && (
-                    <DateTimePicker
-                        value={startDate || new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={(event, selectedDate) => {
-                            setShowStartDatePicker(false);
-                            if (selectedDate) setStartDate(selectedDate);
-                        }}
-                    />
-                )}
 
-                {showEndDatePicker && (
-                    <DateTimePicker
-                        value={endDate || new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={(event, selectedDate) => {
-                            setShowEndDatePicker(false);
-                            if (selectedDate) setEndDate(selectedDate);
-                        }}
-                    />
-                )}
+                {/* Subcategoria */}
+                {subCategories.length > 0 &&
+                    renderPickerForPlatform(
+                        "subCategoria",
+                        subCategoria,
+                        [
+                            { label: "Todas as Subcategorias", value: null },
+                            ...subCategories.map<{ label: string; value: number | null }>((subCat) => ({
+                                label: subCat.nome,
+                                value: subCat.id,
+                            })),
+                        ]
+                    )}
+
 
                 {/* Botões */}
                 <TouchableOpacity
@@ -160,7 +203,7 @@ export function FilterModal({
                             tipoRegistro,
                             tipoTransacao,
                             categoria,
-                            subCategoria
+                            subCategoria,
                         })
                     }
                 >

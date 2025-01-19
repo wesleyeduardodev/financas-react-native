@@ -4,28 +4,36 @@ export const stylesFilterModal = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.9)", // Fundo escuro semi-transparente
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
         padding: 20,
         borderRadius: 10,
     },
     title: {
-        color: "#FFFFFF", // Texto branco
+        color: "#FFFFFF",
         fontSize: 20,
         fontWeight: "bold",
         marginBottom: 20,
         textAlign: "center",
     },
-    pickerContainer: {
-        backgroundColor: "#4c4b4b", // Fundo cinza escuro
+    picker: {
+        backgroundColor: "#4c4b4b",
+        color: "#FFF",
         borderRadius: 5,
         marginBottom: 15,
-        paddingHorizontal: 10,
     },
-    picker: {
-        color: "#FFFFFF", // Texto branco
+    pickerButton: {
+        backgroundColor: "#4c4b4b",
+        padding: 12,
+        borderRadius: 5,
+        marginBottom: 15,
+        justifyContent: "center",
+    },
+    pickerButtonText: {
+        color: "#FFF",
+        fontSize: 16,
     },
     applyButton: {
-        backgroundColor: "#28A745", // Verde para o botão de aplicar filtros
+        backgroundColor: "#28A745",
         padding: 12,
         borderRadius: 5,
         marginBottom: 10,
@@ -37,7 +45,7 @@ export const stylesFilterModal = StyleSheet.create({
         fontSize: 16,
     },
     cancelButton: {
-        backgroundColor: "#DC3545", // Vermelho para o botão de cancelar
+        backgroundColor: "#DC3545",
         padding: 12,
         borderRadius: 5,
         alignItems: "center",
@@ -47,23 +55,46 @@ export const stylesFilterModal = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
     },
-    datePickerContainer: {
-        marginBottom: 15,
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
     },
-    label: {
-        color: "#FFF",
-        fontSize: 14,
-        fontWeight: "bold",
-        marginBottom: 5,
+    modalContent: {
+        width: "80%",
+        backgroundColor: "#ffffff",
+        borderRadius: 10,
+        padding: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
-    dateButton: {
-        backgroundColor: "#4c4b4b",
-        padding: 10,
-        borderRadius: 5,
+    modalOption: {
+        width: "100%",
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#444",
         alignItems: "center",
     },
-    dateButtonText: {
-        color: "#FFF",
+    modalOptionText: {
         fontSize: 16,
+        color: "#000000",
+    },
+    modalCancelButton: {
+        marginTop: 20,
+        padding: 12,
+        backgroundColor: "#E23C44",
+        borderRadius: 5,
+        alignItems: "center",
+        width: "100%",
+    },
+    modalCancelButtonText: {
+        fontSize: 16,
+        color: "#FFF",
+        fontWeight: "bold",
     },
 });
