@@ -5,7 +5,7 @@ export const stylesSubCategoryFormModal = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.9)", // Fundo com opacidade para foco no modal
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
         padding: 20,
     },
     title: {
@@ -35,7 +35,7 @@ export const stylesSubCategoryFormModal = StyleSheet.create({
     },
     textarea: {
         height: 120,
-        textAlignVertical: "top", // Alinha o texto no topo
+        textAlignVertical: "top",
     },
     charCounter: {
         color: "#A9A9A9",
@@ -71,6 +71,58 @@ export const stylesSubCategoryFormModal = StyleSheet.create({
         fontSize: 16,
     },
     picker: {
-        color: "#FFF", // Apenas o texto do item selecionado será branco
+        color: "#FFF",
+    },
+    pickerButton: {
+        backgroundColor: "#2D2D2D",
+        padding: 12,
+        borderRadius: 5,
+        justifyContent: "center",
+    },
+    pickerButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+    },
+    modalContent: {
+        width: "80%",
+        backgroundColor: "#ffffff",
+        borderRadius: 10,
+        padding: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalOption: {
+        width: "100%",
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#444",
+        alignItems: "center",
+    },
+    modalOptionText: {
+        fontSize: 16,
+        color: "#000000",
+    },
+    modalCancelButton: {
+        marginTop: 20,
+        padding: 12,
+        backgroundColor: "#E23C44",
+        borderRadius: 5,
+        alignItems: "center",
+        width: "100%",
+    },
+    modalCancelButtonText: {
+        fontSize: 16,
+        color: "#FFF",
+        fontWeight: "bold",
     },
 });

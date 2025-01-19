@@ -5,10 +5,12 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    FlatList,
+    Platform,
 } from "react-native";
 import { SubCategoryProps } from "./SubCategory";
-import { Picker } from "@react-native-picker/picker";
 import { stylesSubCategoryFormModal } from "./styleSubCategoryFormModal";
+import {Picker} from "@react-native-picker/picker";
 
 type SubCategoryFormModalProps = {
     visible: boolean;
@@ -30,11 +32,10 @@ export function SubCategoryFormModal({
     const [selectedCategory, setSelectedCategory] = useState<number | null>(
         subCategory?.idCategoria || null
     );
+    const [iosPickerVisible, setIosPickerVisible] = useState(false);
 
     useEffect(() => {
         if (subCategory) {
-            // Log 83: Subcategory received, setting initial values
-            console.log("Log 83: Subcategory received, setting initial values");
             setName(subCategory.nome);
             setDescricao(subCategory.descricao);
             setSelectedCategory(subCategory.idCategoria || null);
@@ -44,12 +45,44 @@ export function SubCategoryFormModal({
     }, [subCategory]);
 
     const resetForm = () => {
-        // Log 84: Resetting form fields
-        console.log("Log 84: Resetting form fields");
         setName("");
         setDescricao("");
         setSelectedCategory(null);
     };
+
+    const renderIosPicker = () => (
+        <Modal visible={iosPickerVisible} animationType="slide" transparent={true}>
+            <View style={stylesSubCategoryFormModal.modalOverlay}>
+                <View style={stylesSubCategoryFormModal.modalContent}>
+                    <FlatList
+                        data={categories}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={stylesSubCategoryFormModal.modalOption}
+                                onPress={() => {
+                                    setSelectedCategory(item.id);
+                                    setIosPickerVisible(false);
+                                }}
+                            >
+                                <Text style={stylesSubCategoryFormModal.modalOptionText}>
+                                    {item.nome}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <TouchableOpacity
+                        style={stylesSubCategoryFormModal.modalCancelButton}
+                        onPress={() => setIosPickerVisible(false)}
+                    >
+                        <Text style={stylesSubCategoryFormModal.modalCancelButtonText}>
+                            Cancelar
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
@@ -90,26 +123,39 @@ export function SubCategoryFormModal({
 
                 <View style={stylesSubCategoryFormModal.fieldContainer}>
                     <Text style={stylesSubCategoryFormModal.label}>Categoria</Text>
-                    <View style={stylesSubCategoryFormModal.pickerContainer}>
-                        <Picker
-                            selectedValue={selectedCategory}
-                            onValueChange={(itemValue) => {
-                                // Log 85: Category selected, updating selectedCategory
-                                console.log("Log 85: Category selected, updating selectedCategory", itemValue);
-                                setSelectedCategory(itemValue as number);
-                            }}
-                            style={stylesSubCategoryFormModal.picker} // Estilo aplicado ao Picker
-                        >
-                            <Picker.Item label="Selecione uma categoria" value={null} />
-                            {categories.map((category) => (
-                                <Picker.Item
-                                    key={category.id}
-                                    label={category.nome}
-                                    value={category.id}
-                                />
-                            ))}
-                        </Picker>
-                    </View>
+                    {Platform.OS === "ios" ? (
+                        <>
+                            <TouchableOpacity
+                                style={stylesSubCategoryFormModal.pickerButton}
+                                onPress={() => setIosPickerVisible(true)}
+                            >
+                                <Text style={stylesSubCategoryFormModal.pickerButtonText}>
+                                    {categories.find((cat) => cat.id === selectedCategory)?.nome ||
+                                        "Selecione uma categoria"}
+                                </Text>
+                            </TouchableOpacity>
+                            {renderIosPicker()}
+                        </>
+                    ) : (
+                        <View style={stylesSubCategoryFormModal.pickerContainer}>
+                            <Picker
+                                selectedValue={selectedCategory}
+                                onValueChange={(itemValue) =>
+                                    setSelectedCategory(itemValue as number)
+                                }
+                                style={stylesSubCategoryFormModal.picker}
+                            >
+                                <Picker.Item label="Selecione uma categoria" value={null} />
+                                {categories.map((category) => (
+                                    <Picker.Item
+                                        key={category.id}
+                                        label={category.nome}
+                                        value={category.id}
+                                    />
+                                ))}
+                            </Picker>
+                        </View>
+                    )}
                 </View>
 
                 <TouchableOpacity
@@ -119,8 +165,6 @@ export function SubCategoryFormModal({
                             alert("Todos os campos são obrigatórios.");
                             return;
                         }
-                        // Log 86: Saving subcategory
-                        console.log("Log 86: Saving subcategory with values", { nome: name, descricao, idCategoria: selectedCategory });
                         onSave({ nome: name, descricao, idCategoria: selectedCategory });
                     }}
                 >
@@ -130,8 +174,6 @@ export function SubCategoryFormModal({
                 <TouchableOpacity
                     style={stylesSubCategoryFormModal.cancelButton}
                     onPress={() => {
-                        // Log 87: Closing form
-                        console.log("Log 87: Closing form");
                         resetForm();
                         onClose();
                     }}
