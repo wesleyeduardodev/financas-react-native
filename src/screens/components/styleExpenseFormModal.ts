@@ -95,7 +95,7 @@ export const stylesExpenseFormModal = StyleSheet.create({
     },
     modalContent: {
         width: "80%",
-        backgroundColor: "#2C2C2C",
+        backgroundColor: "#ffffff",
         borderRadius: 10,
         padding: 20,
         alignItems: "center",
@@ -114,7 +114,7 @@ export const stylesExpenseFormModal = StyleSheet.create({
     },
     modalOptionText: {
         fontSize: 16,
-        color: "#FFF",
+        color: "#000000",
     },
     modalCancelButton: {
         marginTop: 20,
