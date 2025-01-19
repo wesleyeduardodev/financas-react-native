@@ -43,7 +43,7 @@ export function ExpenseFormModal({
     const [showTimePicker, setShowTimePicker] = useState(false);
 
     const [iosPickerVisible, setIosPickerVisible] = useState<{
-        type: "tipoRegistro" | "tipoTransacao" | "category" | "subCategory";
+        type: "tipoRegistro" | "tipoTransacao" | "category" | "subCategory" | "date" | "time";
         visible: boolean;
     }>({ type: "category", visible: false });
 
@@ -259,11 +259,14 @@ export function ExpenseFormModal({
                                 subCategories.map((subCat) => ({ label: subCat.nome, value: subCat.id }))
                             )}
 
-                        {/* Data e Hora */}
                         <View style={stylesExpenseFormModal.dateTimeContainer}>
                             <TouchableOpacity
                                 style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowDatePicker(true)}
+                                onPress={() =>
+                                    Platform.OS === "ios"
+                                        ? setIosPickerVisible({ type: "date", visible: true })
+                                        : setShowDatePicker(true)
+                                }
                             >
                                 <Text style={stylesExpenseFormModal.datePickerText}>
                                     Data: {new Date(dateTimeISO).toLocaleDateString()}
@@ -272,7 +275,11 @@ export function ExpenseFormModal({
 
                             <TouchableOpacity
                                 style={stylesExpenseFormModal.datePickerButton}
-                                onPress={() => setShowTimePicker(true)}
+                                onPress={() =>
+                                    Platform.OS === "ios"
+                                        ? setIosPickerVisible({ type: "time", visible: true })
+                                        : setShowTimePicker(true)
+                                }
                             >
                                 <Text style={stylesExpenseFormModal.datePickerText}>
                                     Hora: {new Date(dateTimeISO).toLocaleTimeString()}
@@ -280,7 +287,52 @@ export function ExpenseFormModal({
                             </TouchableOpacity>
                         </View>
 
-                        {showDatePicker && (
+                        {Platform.OS === "ios" && iosPickerVisible.visible && (
+                            <Modal
+                                visible={iosPickerVisible.visible}
+                                animationType="slide"
+                                transparent={true}
+                            >
+                                <View style={stylesExpenseFormModal.modalOverlay}>
+                                    <View style={stylesExpenseFormModal.modalContent}>
+                                        <DateTimePicker
+                                            value={new Date(dateTimeISO)}
+                                            mode={iosPickerVisible.type === "date" ? "date" : "time"}
+                                            display="spinner"
+                                            onChange={(event, selectedDate) => {
+                                                if (selectedDate) {
+                                                    const currentDate = new Date(dateTimeISO);
+                                                    if (iosPickerVisible.type === "date") {
+                                                        currentDate.setFullYear(
+                                                            selectedDate.getFullYear(),
+                                                            selectedDate.getMonth(),
+                                                            selectedDate.getDate()
+                                                        );
+                                                    } else {
+                                                        currentDate.setHours(
+                                                            selectedDate.getHours(),
+                                                            selectedDate.getMinutes()
+                                                        );
+                                                    }
+                                                    setDateTimeISO(currentDate.toISOString());
+                                                }
+                                                setIosPickerVisible({ type: iosPickerVisible.type, visible: false });
+                                            }}
+                                        />
+                                        <TouchableOpacity
+                                            style={stylesExpenseFormModal.modalCancelButton}
+                                            onPress={() => setIosPickerVisible({ ...iosPickerVisible, visible: false })}
+                                        >
+                                            <Text style={stylesExpenseFormModal.modalCancelButtonText}>
+                                                Cancelar
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </Modal>
+                        )}
+
+                        {showDatePicker && Platform.OS === "android" && (
                             <DateTimePicker
                                 value={new Date(dateTimeISO)}
                                 mode="date"
@@ -289,7 +341,7 @@ export function ExpenseFormModal({
                             />
                         )}
 
-                        {showTimePicker && (
+                        {showTimePicker && Platform.OS === "android" && (
                             <DateTimePicker
                                 value={new Date(dateTimeISO)}
                                 mode="time"
