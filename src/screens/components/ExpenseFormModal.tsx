@@ -43,7 +43,6 @@ export function ExpenseFormModal({
 
     useEffect(() => {
         if (expense) {
-            console.log("Log 26: Expense found, updating state");
             setTipoRegistro(expense.tipoRegistro || 0);
             setTipoTransacao(expense.tipoTransacao || 0);
             setValue(expense.valor ? expense.valor.toFixed(2).replace(".", ",") : "");
@@ -52,13 +51,11 @@ export function ExpenseFormModal({
             setTitulo(expense.titulo || "");
             setDateTimeISO(expense.dataTransacao || new Date().toISOString());
         } else {
-            console.log("Log 27: No expense provided, resetting form");
             resetForm();
         }
     }, [expense]);
 
     const resetForm = () => {
-        console.log("Log 28: Resetting form");
         setTipoRegistro(0);
         setTipoTransacao(0);
         setValue("");
@@ -70,27 +67,23 @@ export function ExpenseFormModal({
     };
 
     const loadSubCategories = async (categoryId: number) => {
-        console.log(`Log 29: Loading subcategories for category ${categoryId}`);
         try {
             const response = await api.get(`/subcategorias-registro-financeiros/findByIdCategoria/${categoryId}`);
             setSubCategories(response.data);
         } catch (error) {
-            console.error("Log 30: Error loading subcategories", error);
+            console.error("Error loading subcategories", error);
         }
     };
 
     useEffect(() => {
         if (category) {
-            console.log("Log 31: Category selected, fetching subcategories");
             loadSubCategories(category);
         } else {
-            console.log("Log 32: No category selected, clearing subcategories");
             setSubCategories([]);
         }
     }, [category]);
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
-        console.log("Log 33: Date changed");
         setShowDatePicker(false);
         if (selectedDate) {
             const currentDate = new Date(dateTimeISO);
@@ -104,7 +97,6 @@ export function ExpenseFormModal({
     };
 
     const handleTimeChange = (event: any, selectedTime?: Date) => {
-        console.log("Log 34: Time changed");
         setShowTimePicker(false);
         if (selectedTime) {
             const currentDate = new Date(dateTimeISO);
@@ -147,51 +139,118 @@ export function ExpenseFormModal({
                             />
                         </View>
 
-                        <Picker
-                            selectedValue={tipoRegistro}
-                            style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setTipoRegistro(itemValue)}
-                        >
-                            <Picker.Item label="Entrada" value={0} />
-                            <Picker.Item label="Saída" value={1} />
-                        </Picker>
-
-                        <Picker
-                            selectedValue={tipoTransacao}
-                            style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setTipoTransacao(itemValue)}
-                        >
-                            <Picker.Item label="Pix" value={0} />
-                            <Picker.Item label="Cartão de Crédito" value={1} />
-                            <Picker.Item label="Cartão de Débito" value={2} />
-                            <Picker.Item label="Dinheiro" value={3} />
-                            <Picker.Item label="Boleto" value={4} />
-                        </Picker>
-
-                        <Picker
-                            selectedValue={category}
-                            style={stylesExpenseFormModal.picker}
-                            onValueChange={(itemValue) => setCategory(itemValue)}
-                        >
-                            <Picker.Item label="Selecione uma categoria" value={null} />
-                            {categories.map((cat) => (
-                                <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
-                            ))}
-                        </Picker>
-
-                        {subCategories.length > 0 && (
+                        {/* Tipo de Registro */}
+                        {Platform.OS === "ios" ? (
                             <Picker
-                                selectedValue={subCategory}
-                                style={stylesExpenseFormModal.picker}
-                                onValueChange={(itemValue) => setSubCategory(itemValue)}
+                                selectedValue={tipoRegistro.toString()}
+                                style={[stylesExpenseFormModal.picker, { height: 150 }]}
+                                onValueChange={(itemValue) => setTipoRegistro(Number(itemValue))}
                             >
-                                <Picker.Item label="Selecione uma subcategoria" value={null} />
-                                {subCategories.map((subCat) => (
-                                    <Picker.Item key={subCat.id} label={subCat.nome} value={subCat.id} />
+                                <Picker.Item label="Entrada" value="0" />
+                                <Picker.Item label="Saída" value="1" />
+                            </Picker>
+                        ) : (
+                            <Picker
+                                selectedValue={tipoRegistro}
+                                style={stylesExpenseFormModal.picker}
+                                onValueChange={(itemValue) => setTipoRegistro(itemValue)}
+                            >
+                                <Picker.Item label="Entrada" value={0} />
+                                <Picker.Item label="Saída" value={1} />
+                            </Picker>
+                        )}
+
+                        {/* Tipo de Transação */}
+                        {Platform.OS === "ios" ? (
+                            <Picker
+                                selectedValue={tipoTransacao.toString()}
+                                style={[stylesExpenseFormModal.picker, { height: 150 }]}
+                                onValueChange={(itemValue) => setTipoTransacao(Number(itemValue))}
+                            >
+                                <Picker.Item label="Pix" value="0" />
+                                <Picker.Item label="Cartão de Crédito" value="1" />
+                                <Picker.Item label="Cartão de Débito" value="2" />
+                                <Picker.Item label="Dinheiro" value="3" />
+                                <Picker.Item label="Boleto" value="4" />
+                            </Picker>
+                        ) : (
+                            <Picker
+                                selectedValue={tipoTransacao}
+                                style={stylesExpenseFormModal.picker}
+                                onValueChange={(itemValue) => setTipoTransacao(itemValue)}
+                            >
+                                <Picker.Item label="Pix" value={0} />
+                                <Picker.Item label="Cartão de Crédito" value={1} />
+                                <Picker.Item label="Cartão de Débito" value={2} />
+                                <Picker.Item label="Dinheiro" value={3} />
+                                <Picker.Item label="Boleto" value={4} />
+                            </Picker>
+                        )}
+
+                        {/* Categoria */}
+                        {Platform.OS === "ios" ? (
+                            <Picker
+                                selectedValue={category !== null ? category.toString() : "none"}
+                                style={[stylesExpenseFormModal.picker, { height: 150 }]}
+                                onValueChange={(itemValue) =>
+                                    setCategory(itemValue !== "none" ? Number(itemValue) : null)
+                                }
+                            >
+                                <Picker.Item label="Selecione uma categoria" value="none" />
+                                {categories.map((cat) => (
+                                    <Picker.Item key={cat.id} label={cat.nome} value={cat.id.toString()} />
+                                ))}
+                            </Picker>
+                        ) : (
+                            <Picker
+                                selectedValue={category}
+                                style={stylesExpenseFormModal.picker}
+                                onValueChange={(itemValue) => setCategory(itemValue)}
+                            >
+                                <Picker.Item label="Selecione uma categoria" value={null} />
+                                {categories.map((cat) => (
+                                    <Picker.Item key={cat.id} label={cat.nome} value={cat.id} />
                                 ))}
                             </Picker>
                         )}
 
+                        {/* Subcategoria */}
+                        {subCategories.length > 0 &&
+                            (Platform.OS === "ios" ? (
+                                <Picker
+                                    selectedValue={subCategory !== null ? subCategory.toString() : "none"}
+                                    style={[stylesExpenseFormModal.picker, { height: 150 }]}
+                                    onValueChange={(itemValue) =>
+                                        setSubCategory(itemValue !== "none" ? Number(itemValue) : null)
+                                    }
+                                >
+                                    <Picker.Item label="Selecione uma subcategoria" value="none" />
+                                    {subCategories.map((subCat) => (
+                                        <Picker.Item
+                                            key={subCat.id}
+                                            label={subCat.nome}
+                                            value={subCat.id.toString()}
+                                        />
+                                    ))}
+                                </Picker>
+                            ) : (
+                                <Picker
+                                    selectedValue={subCategory}
+                                    style={stylesExpenseFormModal.picker}
+                                    onValueChange={(itemValue) => setSubCategory(itemValue)}
+                                >
+                                    <Picker.Item label="Selecione uma subcategoria" value={null} />
+                                    {subCategories.map((subCat) => (
+                                        <Picker.Item
+                                            key={subCat.id}
+                                            label={subCat.nome}
+                                            value={subCat.id}
+                                        />
+                                    ))}
+                                </Picker>
+                            ))}
+
+                        {/* Data e Hora */}
                         <View style={stylesExpenseFormModal.dateTimeContainer}>
                             <TouchableOpacity
                                 style={stylesExpenseFormModal.datePickerButton}
@@ -230,10 +289,11 @@ export function ExpenseFormModal({
                             />
                         )}
 
+                        {/* Botões */}
                         <TouchableOpacity
                             style={stylesExpenseFormModal.saveButton}
                             onPress={() => {
-                                if (!category) { // Verifica apenas se a categoria está presente
+                                if (!category) {
                                     alert("Selecione uma categoria antes de salvar.");
                                     return;
                                 }
@@ -242,16 +302,14 @@ export function ExpenseFormModal({
                                     tipoRegistro,
                                     tipoTransacao,
                                     valor: parseFloat(value.replace(",", ".")),
-                                    idCategoria: category, // Enviar idCategoria selecionado
-                                    idSubCategoria: subCategory || null, // Subcategoria é opcional
+                                    idCategoria: category,
+                                    idSubCategoria: subCategory || null,
                                     dataTransacao: dateTimeISO,
                                 });
                             }}
                         >
                             <Text style={stylesExpenseFormModal.buttonText}>Salvar</Text>
                         </TouchableOpacity>
-
-
 
                         <TouchableOpacity
                             style={stylesExpenseFormModal.cancelButton}
