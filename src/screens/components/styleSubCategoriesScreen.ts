@@ -44,11 +44,22 @@ export const stylesSubCategoriesScreen = StyleSheet.create({
         flex: 1,
         backgroundColor: "#4CAF50",
         borderRadius: 8,
-        marginRight: 10, // Espaçamento entre o seletor e o botão
+        marginRight: 10,
     },
     picker: {
         color: "#FFF",
         paddingHorizontal: 10,
+    },
+    pickerButton: {
+        backgroundColor: "#4CAF50",
+        padding: 12,
+        borderRadius: 8,
+        justifyContent: "center",
+    },
+    pickerButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        textAlign: "center",
     },
     addButton: {
         flexDirection: "row",
@@ -63,5 +74,47 @@ export const stylesSubCategoriesScreen = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginLeft: 5,
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+    },
+    modalContent: {
+        width: "80%",
+        backgroundColor: "#FFF",
+        borderRadius: 10,
+        padding: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalOption: {
+        width: "100%",
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#DDD",
+        alignItems: "center",
+    },
+    modalOptionText: {
+        fontSize: 16,
+        color: "#000",
+    },
+    modalCancelButton: {
+        marginTop: 20,
+        padding: 12,
+        backgroundColor: "#DC3545",
+        borderRadius: 8,
+        alignItems: "center",
+        width: "100%",
+    },
+    modalCancelButtonText: {
+        fontSize: 16,
+        color: "#FFF",
+        fontWeight: "bold",
     },
 });

@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
-import {Alert, FlatList, Platform, Text, TouchableOpacity, View} from "react-native";
+import {
+    Alert,
+    FlatList,
+    Platform,
+    Text,
+    TouchableOpacity,
+    View,
+    Modal,
+} from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SubCategory, SubCategoryProps } from "./SubCategory";
 import { SubCategoryFormModal } from "./SubCategoryFormModal";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { Picker } from "@react-native-picker/picker"; // Para o seletor de categoria
 import { stylesSubCategoriesScreen } from "./styleSubCategoriesScreen";
 import { api } from "../services/api";
-import {useFocusEffect} from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
 
 export function SubCategoriesScreen() {
     const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
-    const [filteredSubCategories, setFilteredSubCategories] = useState<SubCategoryProps[]>([]); // Para filtragem
+    const [filteredSubCategories, setFilteredSubCategories] = useState<SubCategoryProps[]>([]);
     const [categories, setCategories] = useState<{ id: number; nome: string }[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(null); // Categoria selecionada
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [subCategoryToEdit, setSubCategoryToEdit] = useState<SubCategoryProps | null>(null);
+    const [iosPickerVisible, setIosPickerVisible] = useState(false);
 
-    // Log 66: Fetching categories and subcategories on component mount
-    console.log("Log 66: Fetching categories and subcategories...");
     useFocusEffect(
         React.useCallback(() => {
             fetchCategories();
@@ -32,36 +39,26 @@ export function SubCategoriesScreen() {
 
     const fetchCategories = async () => {
         try {
-            // Log 67: Making API call to fetch categories
-            console.log("Log 67: Making API call to fetch categories...");
             const response = await api.get("/categorias-registro-financeiros");
-            console.log("Log 68: Categories loaded successfully", response.data);
-            setCategories(response.data);
+            setCategories([{ id: -1, nome: "Todas" }, ...response.data]); // Adiciona "Tudo" como opção padrão
         } catch (error: any) {
-            console.error("Log 69: Error loading categories", error);
             Alert.alert("Erro ao carregar categorias.", error.message || "Tente novamente.");
         }
     };
 
     const fetchSubCategories = async () => {
         try {
-            // Log 70: Making API call to fetch subcategories
-            console.log("Log 70: Making API call to fetch subcategories...");
             const response = await api.get("/subcategorias-registro-financeiros");
-            console.log("Log 71: Subcategories loaded successfully", response.data);
             setSubCategories(response.data);
         } catch (error: any) {
-            console.error("Log 72: Error loading subcategories", error);
             Alert.alert("Erro ao carregar subcategorias.", error.message || "Tente novamente.");
         }
     };
 
     const filterSubCategoriesByCategory = (categoryId: number | null) => {
-        if (categoryId === null) {
+        if (categoryId === null || categoryId === -1) {
             setFilteredSubCategories(subCategories);
         } else {
-            // Log 73: Filtering subcategories by category
-            console.log("Log 73: Filtering subcategories by category", categoryId);
             setFilteredSubCategories(
                 subCategories.filter((subCategory) => subCategory.idCategoria === categoryId)
             );
@@ -70,13 +67,9 @@ export function SubCategoriesScreen() {
 
     const handleAddSubCategory = async (newSubCategory: Partial<SubCategoryProps>) => {
         try {
-            // Log 74: Adding new subcategory
-            console.log("Log 74: Adding new subcategory", newSubCategory);
             const response = await api.post("/subcategorias-registro-financeiros", newSubCategory);
-            await fetchSubCategories(); // Atualiza a lista completa após a adição
-            console.log("Log 75: Subcategory added successfully", response.data);
+            await fetchSubCategories();
         } catch (error: any) {
-            console.error("Log 76: Error adding subcategory", error);
             Alert.alert("Erro ao adicionar subcategoria.", error.message || "Tente novamente.");
         }
     };
@@ -86,30 +79,22 @@ export function SubCategoriesScreen() {
         updatedSubCategory: Partial<SubCategoryProps>
     ) => {
         try {
-            // Log 77: Editing subcategory
-            console.log("Log 77: Editing subcategory", id, updatedSubCategory);
             const response = await api.put(`/subcategorias-registro-financeiros/${id}`, updatedSubCategory);
             setSubCategories((prev) =>
                 prev.map((subCategory) =>
                     subCategory.id === id ? response.data : subCategory
                 )
             );
-            console.log("Log 78: Subcategory edited successfully", response.data);
         } catch (error: any) {
-            console.error("Log 79: Error editing subcategory", error);
             Alert.alert("Erro ao editar subcategoria.", error.message || "Tente novamente.");
         }
     };
 
     const handleRemoveSubCategory = async (id: number) => {
         try {
-            // Log 80: Removing subcategory
-            console.log("Log 80: Removing subcategory", id);
             await api.delete(`/subcategorias-registro-financeiros/${id}`);
             setSubCategories((prev) => prev.filter((subCategory) => subCategory.id !== id));
-            console.log("Log 81: Subcategory removed successfully");
         } catch (error: any) {
-            console.error("Log 82: Error removing subcategory", error);
             Alert.alert("Erro ao remover subcategoria.", error.message || "Tente novamente.");
         }
     };
@@ -120,11 +105,7 @@ export function SubCategoriesScreen() {
             "Tem certeza que deseja remover esta subcategoria?",
             [
                 { text: "Cancelar", style: "cancel" },
-                {
-                    text: "Remover",
-                    style: "destructive",
-                    onPress: () => handleRemoveSubCategory(id),
-                },
+                { text: "Remover", style: "destructive", onPress: () => handleRemoveSubCategory(id) },
             ]
         );
     };
@@ -140,63 +121,67 @@ export function SubCategoriesScreen() {
         </View>
     );
 
-    const getCategoryName = (idCategoria: number | null) => {
-        const category = categories.find((cat) => cat.id === idCategoria);
-        return category ? category.nome : "Sem Categoria";
-    };
+    const renderIosPicker = () => (
+        <Modal visible={iosPickerVisible} animationType="slide" transparent={true}>
+            <View style={stylesSubCategoriesScreen.modalOverlay}>
+                <View style={stylesSubCategoriesScreen.modalContent}>
+                    <FlatList
+                        data={categories}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={stylesSubCategoriesScreen.modalOption}
+                                onPress={() => {
+                                    setSelectedCategory(item.id === -1 ? null : item.id);
+                                    setIosPickerVisible(false);
+                                }}
+                            >
+                                <Text style={stylesSubCategoriesScreen.modalOptionText}>
+                                    {item.nome}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <TouchableOpacity
+                        style={stylesSubCategoriesScreen.modalCancelButton}
+                        onPress={() => setIosPickerVisible(false)}
+                    >
+                        <Text style={stylesSubCategoriesScreen.modalCancelButtonText}>
+                            Cancelar
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
 
     return (
         <View style={stylesSubCategoriesScreen.container}>
             {/* Seletor de Categoria e Botão de Adicionar */}
             <View style={stylesSubCategoriesScreen.headerContainer}>
-
                 <View style={stylesSubCategoriesScreen.pickerContainer}>
                     {Platform.OS === "ios" ? (
-                        // Picker específico para iOS
-                        <Picker
-                            selectedValue={selectedCategory !== null ? selectedCategory.toString() : "none"} // "none" como fallback
-                            onValueChange={(itemValue) =>
-                                setSelectedCategory(itemValue !== "none" ? Number(itemValue) : null) // Converte para número ou null
-                            }
-                            style={[stylesSubCategoriesScreen.picker, { height: 150 }]} // Ajuste de altura no iOS
-                            itemStyle={{ fontSize: 16, color: "#000" }} // Estilo dos itens no iOS
-                        >
-                            {/* Item padrão para "Tudo" */}
-                            <Picker.Item label="Tudo" value="none" />
-                            {/* Iteração das categorias */}
-                            {categories.map((category) => {
-                                if (category.id !== undefined && category.nome) { // Valida categoria
-                                    return (
-                                        <Picker.Item
-                                            key={category.id}
-                                            label={category.nome}
-                                            value={category.id.toString()} // Converte ID para string
-                                        />
-                                    );
-                                }
-                                return null; // Garante que itens inválidos não sejam renderizados
-                            })}
-                        </Picker>
+                        <>
+                            <TouchableOpacity
+                                style={stylesSubCategoriesScreen.pickerButton}
+                                onPress={() => setIosPickerVisible(true)}
+                            >
+                                <Text style={stylesSubCategoriesScreen.pickerButtonText}>
+                                    {categories.find((cat) => cat.id === selectedCategory)?.nome ||
+                                        "Todas"}
+                                </Text>
+                            </TouchableOpacity>
+                            {renderIosPicker()}
+                        </>
                     ) : (
-                        // Picker específico para Android
                         <Picker
                             selectedValue={selectedCategory}
                             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
                             style={stylesSubCategoriesScreen.picker}
                         >
-                            <Picker.Item label="Tudo" value={null} />
-                            {categories.map((category) => {
-                                if (category.id !== undefined && category.nome) { // Valida categoria
-                                    return (
-                                        <Picker.Item
-                                            key={category.id}
-                                            label={category.nome}
-                                            value={category.id}
-                                        />
-                                    );
-                                }
-                                return null;
-                            })}
+                            {categories.map((category) => (
+                                <Picker.Item key={category.id} label={category.nome} value={category.id === -1 ? null : category.id} />
+                            ))}
                         </Picker>
                     )}
                 </View>
@@ -227,7 +212,9 @@ export function SubCategoriesScreen() {
                         >
                             <SubCategory
                                 {...item}
-                                categoryName={getCategoryName(item.idCategoria)}
+                                categoryName={
+                                    categories.find((cat) => cat.id === item.idCategoria)?.nome || "Sem Categoria"
+                                }
                             />
                         </TouchableOpacity>
                     </Swipeable>
@@ -244,7 +231,7 @@ export function SubCategoriesScreen() {
                 <SubCategoryFormModal
                     visible={isModalVisible}
                     subCategory={subCategoryToEdit}
-                    categories={categories}
+                    categories={categories.filter((cat) => cat.id !== -1)} // Exclui "Tudo" no modal de edição
                     onSave={(subCategory: Partial<SubCategoryProps>) => {
                         if (subCategoryToEdit) {
                             handleEditSubCategory(subCategoryToEdit.id, subCategory);
