@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import {Alert, FlatList, Platform, Text, TouchableOpacity, View} from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SubCategory, SubCategoryProps } from "./SubCategory";
 import { SubCategoryFormModal } from "./SubCategoryFormModal";
@@ -149,17 +149,56 @@ export function SubCategoriesScreen() {
         <View style={stylesSubCategoriesScreen.container}>
             {/* Seletor de Categoria e Botão de Adicionar */}
             <View style={stylesSubCategoriesScreen.headerContainer}>
+
                 <View style={stylesSubCategoriesScreen.pickerContainer}>
-                    <Picker
-                        selectedValue={selectedCategory}
-                        onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-                        style={stylesSubCategoriesScreen.picker}
-                    >
-                        <Picker.Item label="Tudo" value={null} />
-                        {categories.map((category) => (
-                            <Picker.Item key={category.id} label={category.nome} value={category.id} />
-                        ))}
-                    </Picker>
+                    {Platform.OS === "ios" ? (
+                        // Picker específico para iOS
+                        <Picker
+                            selectedValue={selectedCategory !== null ? selectedCategory.toString() : "none"} // "none" como fallback
+                            onValueChange={(itemValue) =>
+                                setSelectedCategory(itemValue !== "none" ? Number(itemValue) : null) // Converte para número ou null
+                            }
+                            style={[stylesSubCategoriesScreen.picker, { height: 150 }]} // Ajuste de altura no iOS
+                            itemStyle={{ fontSize: 16, color: "#000" }} // Estilo dos itens no iOS
+                        >
+                            {/* Item padrão para "Tudo" */}
+                            <Picker.Item label="Tudo" value="none" />
+                            {/* Iteração das categorias */}
+                            {categories.map((category) => {
+                                if (category.id !== undefined && category.nome) { // Valida categoria
+                                    return (
+                                        <Picker.Item
+                                            key={category.id}
+                                            label={category.nome}
+                                            value={category.id.toString()} // Converte ID para string
+                                        />
+                                    );
+                                }
+                                return null; // Garante que itens inválidos não sejam renderizados
+                            })}
+                        </Picker>
+                    ) : (
+                        // Picker específico para Android
+                        <Picker
+                            selectedValue={selectedCategory}
+                            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+                            style={stylesSubCategoriesScreen.picker}
+                        >
+                            <Picker.Item label="Tudo" value={null} />
+                            {categories.map((category) => {
+                                if (category.id !== undefined && category.nome) { // Valida categoria
+                                    return (
+                                        <Picker.Item
+                                            key={category.id}
+                                            label={category.nome}
+                                            value={category.id}
+                                        />
+                                    );
+                                }
+                                return null;
+                            })}
+                        </Picker>
+                    )}
                 </View>
 
                 <TouchableOpacity
